@@ -1,0 +1,42 @@
+# ===== Web 服务配置 =====
+server:
+  port: 8080
+
+spring:
+  application:
+    name: QuanForge-springboot
+  # 本地私有配置（如真实加密密钥），文件在 .gitignore 中，不存在也不报错
+  config:
+    import: "optional:application-local.yaml"
+
+  # ===== SQLite 数据源配置 =====
+  datasource:
+    # SQLite 为文件型数据库；开启 WAL 模式以提升读并发
+    url: jdbc:sqlite:data/quanforge.db?journal_mode=WAL&busy_timeout=5000
+    driver-class-name: org.sqlite.JDBC
+    username:
+    password:
+    hikari:
+      # SQLite 写操作会锁库，连接池收敛为 1 以避免 "database is locked"
+      maximum-pool-size: 1
+      minimum-idle: 1
+
+  # ===== JPA / Hibernate 配置 =====
+  jpa:
+    # SQLite 方言位于 hibernate-community-dialects 包
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      # 开发阶段自动根据实体建表/更新表结构
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    open-in-view: false
+
+# ===== 加密配置 =====
+app:
+  crypto:
+    # AES-256 主密钥（Base64，32 字节）。此处为随机示例值，仅保证开箱即用；
+    # 生产/自用请务必覆盖：环境变量 APP_CRYPTO_KEY，或 gitignore 掉的 application-local.yaml
+    key: ${APP_CRYPTO_KEY:6s2xvkv0JXhQ6s+uysNaZc7WPQUJgnl5qzHKGyDA1eA=}
