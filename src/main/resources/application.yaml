@@ -1,6 +1,6 @@
 # ===== Web 服务配置 =====
 server:
-  port: 8080
+  port: 40702
 
 spring:
   application:

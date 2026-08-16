@@ -63,7 +63,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now quanforge
 ```
 
-验证：`curl http://127.0.0.1:8080/api/ai/config`，然后浏览器访问 `http://<PI_IP>:8080`。
+验证：`curl http://127.0.0.1:40702/api/ai/config`，然后浏览器访问 `http://<PI_IP>:40702`。
 
 ## 三、日常运维
 

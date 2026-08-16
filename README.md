@@ -8,7 +8,7 @@ Bybit 演示盘（Demo Trading）合约交易工作站：Spring Boot 后端 + Re
 > 加密货币合约交易（含高杠杆）风险极高，可能损失全部本金；由本软件产生的任何
 > 研判、建议或自动行为，后果由使用者自行承担。
 >
-> **安全提示**：本服务**没有任何鉴权**，仅限本机使用——切勿将 8080 端口暴露到
+> **安全提示**：本服务**没有任何鉴权**，仅限本机使用——切勿将 40702 端口暴露到
 > 公网或共享网络；REAL（实盘）模式使用真实资金，请谨慎确认。
 > API 密钥以 AES-256-GCM 加密落库，主密钥通过环境变量 `APP_CRYPTO_KEY` 或
 > `application-local.yaml`（不入库）提供，请勿使用仓库内置的示例密钥存入真实凭证。
@@ -39,10 +39,10 @@ Bybit 演示盘（Demo Trading）合约交易工作站：Spring Boot 后端 + Re
 ## 运行
 
 ```powershell
-# 后端（8080）
+# 后端（40702）
 .\mvnw.cmd spring-boot:run "-Dspring-boot.run.jvmArguments=-Dfile.encoding=UTF-8"
 
-# 前端（5173，代理到 8080）
+# 前端（5173，代理到 40702）
 cd frontend; pnpm install; pnpm dev
 ```
 

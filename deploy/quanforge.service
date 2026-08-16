@@ -1,19 +1,18 @@
 [Unit]
-Description=QuanForge trading workstation
+Description=QuanForge trading workstation (springboot)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/opt/quanforge
-# 堆内存按树莓派内存调整（2GB 机器建议 512m；4GB 可给 1g）
-ExecStart=/usr/bin/java -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -jar /opt/quanforge/quanforge.jar
+User=xingfeng
+WorkingDirectory=/mnt/nvme/quanforge
+# JRE 路径按目标机调整；示例为树莓派外置 NVMe 上的解压版 JDK
+ExecStart=/mnt/nvme/jdk-24.0.1/bin/java -Xms256m -Xmx768m -Dfile.encoding=UTF-8 -jar /mnt/nvme/quanforge/quanforge.jar --server.port=40702
 Restart=always
 RestartSec=10
-# 数据与日志
-StandardOutput=append:/var/log/quanforge.log
-StandardError=append:/var/log/quanforge.log
+StandardOutput=append:/mnt/nvme/quanforge/logs/quanforge.log
+StandardError=append:/mnt/nvme/quanforge/logs/quanforge.log
 
 [Install]
 WantedBy=multi-user.target
