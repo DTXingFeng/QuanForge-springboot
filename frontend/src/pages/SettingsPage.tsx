@@ -598,7 +598,7 @@ function SettingsPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="ai-minmove" className="text-xs text-zinc-400">
-                      出手门槛（%）
+                      盈利目标下限（%）
                     </Label>
                     <Input
                       id="ai-minmove"
@@ -611,8 +611,8 @@ function SettingsPage() {
                       className="bg-zinc-950/60 border-zinc-800"
                     />
                     <p className="text-[11px] leading-relaxed text-zinc-500">
-                      预计短线单向变动超过该幅度才出手，需覆盖手续费
-                      （Bybit taker 往返约 0.11%，可设 0.12 以上留出利润空间）
+                      止盈目标距入场至少该幅度，用于覆盖手续费
+                      （Bybit taker 往返约 0.11%，设 0.12 以上才有利润空间）
                     </p>
                   </div>
                 </div>
@@ -632,8 +632,9 @@ function SettingsPage() {
                 </div>
                 <p className="text-[11px] leading-relaxed text-zinc-500">
                   {ai.leverage} 倍杠杆下，价格每变动 {ai.minMovePct}% 对应保证金盈亏约
-                  {" "}{(ai.leverage * ai.minMovePct).toFixed(1)}%——AI 会按此口径给出紧凑止损
-                  （距入场约 0.1%~0.4%）与不低于门槛的止盈目标。
+                  {" "}{(ai.leverage * ai.minMovePct).toFixed(1)}%——AI 以「损失可控」为先：
+                  方向倾向成立即可出手，止损放结构失效位并标注单笔最大亏损，止盈至少覆盖手续费，
+                  另给动态管理预案（跌破离场 / 守住持有）。
                 </p>
               </div>
               {aiMessage && (
