@@ -54,6 +54,7 @@ public class AiAnalysisService {
 	private final AiAlertRepository alertRepository;
 	private final AiAgentService agentService;
 	private final AiAdviceTracker adviceTracker;
+	private final TelegramBotService telegram;
 
 	/** 各品种上次告警时间（epoch millis） */
 	private final Map<String, Long> lastAlertAt = new ConcurrentHashMap<>();
@@ -64,7 +65,7 @@ public class AiAnalysisService {
 	public AiAnalysisService(AiConfigService configService, BybitService bybitService,
 			NewsService newsService, ProxiedHttpClients clients,
 			AiAlertRepository alertRepository, AiAgentService agentService,
-			AiAdviceTracker adviceTracker) {
+			AiAdviceTracker adviceTracker, TelegramBotService telegram) {
 		this.configService = configService;
 		this.bybitService = bybitService;
 		this.newsService = newsService;
@@ -72,6 +73,7 @@ public class AiAnalysisService {
 		this.alertRepository = alertRepository;
 		this.agentService = agentService;
 		this.adviceTracker = adviceTracker;
+		this.telegram = telegram;
 	}
 
 	/** 调度心跳：每 30 秒检查一次是否到达配置的扫描间隔 */
@@ -206,6 +208,7 @@ public class AiAnalysisService {
 		}
 		lastAlertAt.put(symbol, System.currentTimeMillis());
 		log.info("AI 告警已生成: {} [{}] {}", symbol, alert.getLevel(), alert.getTitle());
+		telegram.notifyAlert(alert);
 		return alert;
 	}
 

@@ -53,7 +53,21 @@ public class ProxiedHttpClients {
 		Optional<ProxyConfig> proxyOpt = proxyConfigService.getEnabledConfig()
 				// 「AI 与快讯走代理」开关关闭时，此通道一律直连（Bybit 客户端不受影响）
 				.filter(c -> !Boolean.FALSE.equals(c.getUseForAi()));
-		String suffix = ":" + readTimeoutMillis;
+		return build(proxyOpt, readTimeoutMillis, "");
+	}
+
+	/**
+	 * 强制代理档位：忽略「AI 与快讯走代理」开关，只要代理启用就走。
+	 * 供被墙服务使用（如 Telegram API）——直连必失败，跟随 Bybit 的代理策略。
+	 */
+	public OkHttpClient obtainAlwaysProxied(long readTimeoutMillis) {
+		Optional<ProxyConfig> proxyOpt = proxyConfigService.getEnabledConfig();
+		return build(proxyOpt, readTimeoutMillis, "force:");
+	}
+
+	private OkHttpClient build(Optional<ProxyConfig> proxyOpt, long readTimeoutMillis,
+			String keyPrefix) {
+		String suffix = keyPrefix + ":" + readTimeoutMillis;
 		if (proxyOpt.isEmpty()) {
 			return clients.computeIfAbsent(DIRECT_KEY + suffix,
 					k -> baseBuilder(readTimeoutMillis).build());

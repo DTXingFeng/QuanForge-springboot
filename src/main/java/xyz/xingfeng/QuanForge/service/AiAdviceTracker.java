@@ -38,10 +38,13 @@ public class AiAdviceTracker {
 
 	private final AiAdviceTrackRepository repository;
 	private final BybitService bybitService;
+	private final TelegramBotService telegram;
 
-	public AiAdviceTracker(AiAdviceTrackRepository repository, BybitService bybitService) {
+	public AiAdviceTracker(AiAdviceTrackRepository repository, BybitService bybitService,
+			TelegramBotService telegram) {
 		this.repository = repository;
 		this.bybitService = bybitService;
+		this.telegram = telegram;
 	}
 
 	/**
@@ -154,6 +157,9 @@ public class AiAdviceTracker {
 		repository.save(t);
 		log.info("纸面跟踪 #{} {} 结算: {} {}%", t.getId(), t.getSymbol(), status,
 				String.format(Locale.ROOT, "%.2f", resultPct));
+		if (AiAdviceTrack.STATUS_WIN.equals(status) || AiAdviceTrack.STATUS_LOSS.equals(status)) {
+			telegram.notifySettle(t);
+		}
 	}
 
 	private void expire(AiAdviceTrack t, String note) {

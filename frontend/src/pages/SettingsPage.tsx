@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { Globe, Network, Save, Trash2, Loader2, CheckCircle2, AlertTriangle, KeyRound, Bot, Zap } from "lucide-react"
+import { Globe, Network, Save, Trash2, Loader2, CheckCircle2, AlertTriangle, KeyRound, Bot, Zap, Send } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
@@ -141,6 +141,12 @@ function SettingsPage() {
   const [aiSaving, setAiSaving] = useState(false)
   const [aiMessage, setAiMessage] = useState<{ ok: boolean; text: string } | null>(null)
 
+  // Telegram 机器人
+  const [tg, setTg] = useState<{ tokenSet: boolean; maskedToken: string; chatId: string; enabled: boolean; bound: boolean }>({ tokenSet: false, maskedToken: "", chatId: "", enabled: false, bound: false })
+  const [tgForm, setTgForm] = useState<{ token: string; chatId: string; enabled: boolean }>({ token: "", chatId: "", enabled: false })
+  const [tgSaving, setTgSaving] = useState(false)
+  const [tgMessage, setTgMessage] = useState<{ ok: boolean; text: string } | null>(null)
+
   const load = useCallback(async () => {
     try {
       setModeState(await fetchMode())
@@ -179,7 +185,48 @@ function SettingsPage() {
     } catch {
       // AI 配置加载失败保持默认
     }
+    try {
+      const t = await fetch("/api/tg/config").then((r) => r.json())
+      setTg(t)
+      setTgForm({ token: "", chatId: t.chatId ?? "", enabled: t.enabled })
+    } catch {
+      // TG 配置加载失败保持默认
+    }
   }, [])
+
+  const saveTg = async () => {
+    setTgSaving(true)
+    setTgMessage(null)
+    try {
+      const res = await fetch("/api/tg/config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ botToken: tgForm.token, chatId: tgForm.chatId, enabled: tgForm.enabled }),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const saved = await res.json()
+      setTg(saved)
+      setTgForm((f) => ({ ...f, token: "" }))
+      setTgMessage({ ok: true, text: saved.enabled ? "TG 配置已保存，轮询已生效" : "TG 配置已保存（机器人未启用）" })
+    } catch (err) {
+      setTgMessage({ ok: false, text: err instanceof Error ? err.message : "保存失败" })
+    } finally {
+      setTgSaving(false)
+    }
+  }
+
+  const testTg = async () => {
+    setTgMessage(null)
+    try {
+      const res = await fetch("/api/tg/test", { method: "POST" })
+      const json = await res.json().catch(() => null)
+      setTgMessage(res.ok && json?.ok
+        ? { ok: true, text: "测试消息已发送，去 Telegram 查看" }
+        : { ok: false, text: json?.message || `发送失败 HTTP ${res.status}` })
+    } catch {
+      setTgMessage({ ok: false, text: "网络错误" })
+    }
+  }
 
   const handleSaveAi = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -647,6 +694,82 @@ function SettingsPage() {
                 保存 AI 配置
               </Button>
             </form>
+          </CardContent>
+        </Card>
+
+        <Card className="border-zinc-800 bg-zinc-900/40 h-fit lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Send className="h-4 w-4 text-sky-400" />
+              Telegram 机器人
+            </CardTitle>
+            <CardDescription className="text-xs">
+              公网任意环境接收告警推送、远程下指令；长轮询模式无需公网 IP，token 加密存储
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="rounded-lg border border-zinc-800 bg-zinc-950/40 p-3 text-xs leading-relaxed text-zinc-400">
+                <p className="text-zinc-300">三步接入：</p>
+                <p>1. Telegram 里找 <span className="font-mono text-sky-300">@BotFather</span> 发 <span className="font-mono">/newbot</span>，拿到 token 填到下面并保存</p>
+                <p>2. 给你的机器人发一条 <span className="font-mono">/start</span>（绑定你的账号，之后只有你能指挥它）</p>
+                <p>3. 回来点「发送测试消息」验证</p>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="space-y-1.5">
+                  <Label htmlFor="tg-token" className="text-xs text-zinc-400">
+                    Bot Token {tg.tokenSet && <span className="text-emerald-500">（已配置，留空则不修改）</span>}
+                  </Label>
+                  <Input
+                    id="tg-token"
+                    type="password"
+                    placeholder={tg.tokenSet ? tg.maskedToken : "123456:ABC-DEF..."}
+                    value={tgForm.token}
+                    onChange={(e) => setTgForm({ ...tgForm, token: e.target.value })}
+                    className="bg-zinc-950/60 border-zinc-800 font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="tg-chat" className="text-xs text-zinc-400">
+                    Chat ID {tg.bound ? <span className="text-emerald-500">（已绑定）</span> : <span className="text-amber-500">（给机器人发 /start 自动绑定）</span>}
+                  </Label>
+                  <Input
+                    id="tg-chat"
+                    value={tgForm.chatId}
+                    onChange={(e) => setTgForm({ ...tgForm, chatId: e.target.value })}
+                    placeholder="自动捕获，无需手填"
+                    className="bg-zinc-950/60 border-zinc-800 font-mono text-xs"
+                  />
+                </div>
+              </div>
+              <label className="flex items-start gap-2 text-sm text-zinc-300 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={tg.enabled}
+                  onChange={(e) => setTgForm({ ...tgForm, enabled: e.target.checked })}
+                  className="mt-0.5 h-4 w-4 rounded border-zinc-700 bg-zinc-900 accent-sky-500"
+                />
+                <span>
+                  启用机器人（轮询指令 + 告警/结算推送）
+                  <span className="ml-1 text-xs text-zinc-500">
+                    （同一 token 只能一处启用：Pi 与本机 dev 勿同时开，否则 TG 返回 409 冲突）
+                  </span>
+                </span>
+              </label>
+              {tgMessage && (
+                <p className={`text-xs ${tgMessage.ok ? "text-emerald-400" : "text-red-400"}`}>{tgMessage.text}</p>
+              )}
+              <div className="flex gap-2">
+                <Button onClick={saveTg} disabled={tgSaving} className="flex-1">
+                  {tgSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                  保存 TG 配置
+                </Button>
+                <Button variant="outline" onClick={testTg} disabled={!tg.tokenSet || !tg.bound}>
+                  <Send className="h-4 w-4" />
+                  发送测试消息
+                </Button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
