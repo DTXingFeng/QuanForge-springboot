@@ -1,0 +1,19 @@
+[Unit]
+Description=QuanForge trading workstation
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/opt/quanforge
+# 堆内存按树莓派内存调整（2GB 机器建议 512m；4GB 可给 1g）
+ExecStart=/usr/bin/java -Xms256m -Xmx512m -Dfile.encoding=UTF-8 -jar /opt/quanforge/quanforge.jar
+Restart=always
+RestartSec=10
+# 数据与日志
+StandardOutput=append:/var/log/quanforge.log
+StandardError=append:/var/log/quanforge.log
+
+[Install]
+WantedBy=multi-user.target

@@ -35,6 +35,7 @@ build/
 ### 前端 ###
 node_modules/
 frontend/dist/
+src/main/resources/static/
 *.local
 
 ### 调试与验证产物 ###
