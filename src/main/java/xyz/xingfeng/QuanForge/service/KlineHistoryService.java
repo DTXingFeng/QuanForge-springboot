@@ -42,7 +42,11 @@ public class KlineHistoryService {
 		this.bybitService = bybitService;
 	}
 
-	/** 后台批量下载：从 earliest 往前补到 now（幂等，可重复执行只补增量） */
+	/** 下载队列：SQLite 池只有 1 连接，多任务并发会互相饿死（含盯盘调度），必须全局串行 */
+	private final java.util.concurrent.locks.ReentrantLock downloadLock =
+			new java.util.concurrent.locks.ReentrantLock(true);
+
+	/** 后台批量下载：从 earliest 往前补到 now（幂等，可重复执行只补增量）。全局排队执行。 */
 	@Async
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	public CompletableFuture<String> download(String symbol, LocalDateTime earliest) {
@@ -50,6 +54,19 @@ public class KlineHistoryService {
 		if ("true".equals(String.valueOf(running.put(symbol, true)))) {
 			return CompletableFuture.completedFuture(symbol + " 已有下载任务在跑");
 		}
+		try {
+			downloadLock.lock();
+			try {
+				return CompletableFuture.completedFuture(doDownload(symbol, earliest));
+			} finally {
+				downloadLock.unlock();
+			}
+		} finally {
+			running.remove(symbol);
+		}
+	}
+
+	private String doDownload(String symbol, LocalDateTime earliest) {
 		try {
 			LocalDateTime from = earliest;
 			LocalDateTime latest = repository.latestOpenTime(symbol);
@@ -63,29 +80,27 @@ public class KlineHistoryService {
 				// Bybit: start/end 为毫秒时间戳，窗口 [start, end]，倒序返回
 				long startMs = cursor.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 				long endMs = startMs + 1000 * MINUTE_MS - 1;
-				int inserted = fetchAndSave(symbol, startMs, endMs);
-				total += inserted;
-				cursor = cursor.plusMinutes(1000);
-				if (inserted == 0 && cursor.isBefore(now.plusHours(1))) {
-					// 连续空窗（新上市币）跳过时间但继续
-					log.debug("{} 在 {} 后无数据", symbol, cursor);
+				// HTTP 在无事务上下文执行（不占连接）；仅 saveAll 开短事务
+				List<Kline1m> rows = fetch(symbol, startMs, endMs);
+				if (!rows.isEmpty()) {
+					saveBatch(rows);
 				}
+				total += rows.size();
+				cursor = cursor.plusMinutes(1000);
+				Thread.sleep(150); // 对 Bybit 限速礼貌：每窗之间歇一下
 			}
 			String msg = String.format("%s 下载完成：新增 %d 根，库内共 %d 根",
 					symbol, total, repository.countBySymbol(symbol));
 			log.info("[KlineDL] {}", msg);
-			return CompletableFuture.completedFuture(msg);
+			return msg;
 		} catch (Exception e) {
 			log.warn("[KlineDL] {} 下载失败: {}", symbol, e.getMessage());
-			return CompletableFuture.completedFuture(symbol + " 下载失败: " + e.getMessage());
-		} finally {
-			running.remove(symbol);
+			return symbol + " 下载失败: " + e.getMessage();
 		}
 	}
 
-	/** 拉一窗并入库；已存在的主键冲突行忽略 */
-	@Transactional
-	int fetchAndSave(String symbol, long startMs, long endMs) throws Exception {
+	/** 拉一窗 K 线（无事务上下文，不占数据库连接） */
+	private List<Kline1m> fetch(String symbol, long startMs, long endMs) throws Exception {
 		String json = bybitService.getPublicRaw("/v5/market/kline", Map.of(
 				"category", "linear", "symbol", symbol, "interval", "1",
 				"start", String.valueOf(startMs), "end", String.valueOf(endMs), "limit", "1000"));
@@ -105,12 +120,13 @@ public class KlineHistoryService {
 					k.getDouble(1), k.getDouble(2), k.getDouble(3), k.getDouble(4),
 					k.getDouble(5), k.getDouble(6)));
 		}
-		if (rows.isEmpty()) {
-			return 0;
-		}
-		// 主键已存在的行 save 会 merge 覆盖——历史 K 线值相同，无害；冲突行极少
+		return rows;
+	}
+
+	/** 批量入库（短事务：批量提交，减少连接占用时间） */
+	@Transactional
+	void saveBatch(List<Kline1m> rows) {
 		repository.saveAll(rows);
-		return rows.size();
 	}
 
 	public boolean isRunning(String symbol) {
