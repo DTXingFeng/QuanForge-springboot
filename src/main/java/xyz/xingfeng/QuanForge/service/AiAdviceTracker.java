@@ -49,14 +49,20 @@ public class AiAdviceTracker {
 
 	/**
 	 * 为告警创建纸面跟踪（带价位的建议才有）。
-	 * 同品种已有活跃跟踪时先将其标记为「被新建议取代」。
+	 * 纸面测量允许多条并行：TRACKING（已入场）的让市场自然结算，只有 PENDING
+	 * （等入场）的会被同品种新建议取代——旧建议还没入场就来了新建议，
+	 * 旧入场价已失去时效，保留只会污染样本。这是实测教训：全程取代式清理
+	 * 会掐死 60% 的样本，胜率统计严重失真。
 	 */
 	@Transactional
 	public void track(AiAlert alert, String action, double entry, double stopLoss, double takeProfit) {
 		for (AiAdviceTrack old : repository.findBySymbolAndStatusIn(alert.getSymbol(), ACTIVE)) {
+			if (!AiAdviceTrack.STATUS_PENDING.equals(old.getStatus())) {
+				continue;
+			}
 			old.setStatus(AiAdviceTrack.STATUS_EXPIRED);
 			old.setSettledAt(LocalDateTime.now());
-			old.setNote("被同品种新建议取代");
+			old.setNote("等入场期间被同品种新建议取代");
 			repository.save(old);
 		}
 		AiAdviceTrack t = new AiAdviceTrack();
