@@ -1,9 +1,14 @@
 package xyz.xingfeng.QuanForge.service;
 
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.xingfeng.QuanForge.client.ProxiedHttpClients;
 import xyz.xingfeng.QuanForge.entity.AiAlert;
@@ -37,6 +42,10 @@ public class AiToolRegistry {
 	private final BybitService bybitService;
 	private final NewsService newsService;
 	private final AiAlertRepository alertRepository;
+	private final ProxiedHttpClients clients;
+
+	/** 模型推理 sidecar 地址（model_server.py，仅本机） */
+	private final String modelServerUrl;
 
 	/** 工具执行器表（注册顺序即暴露给模型的顺序） */
 	private final Map<String, ToolExecutor> tools = new LinkedHashMap<>();
@@ -48,10 +57,13 @@ public class AiToolRegistry {
 	}
 
 	public AiToolRegistry(BybitService bybitService, NewsService newsService,
-			AiAlertRepository alertRepository) {
+			AiAlertRepository alertRepository, ProxiedHttpClients clients,
+			@Value("${app.model.server-url:http://127.0.0.1:40703}") String modelServerUrl) {
 		this.bybitService = bybitService;
 		this.newsService = newsService;
 		this.alertRepository = alertRepository;
+		this.clients = clients;
+		this.modelServerUrl = modelServerUrl;
 		registerAll();
 	}
 
@@ -218,6 +230,52 @@ public class AiToolRegistry {
 							.put("maxMktOrderQty", num(lot.optString("maxMktOrderQty")))
 							.put("tickSize", num(price.optString("tickSize")))
 							.toString();
+				});
+
+		// ---- 统计模型 ----
+		register("get_model_prediction",
+				"统计模型（LightGBM，77万 1m K线样本训练）预测未来 30 分钟方向概率。"
+				+ "返回 probUp（涨概率 0~1）与置信区间——模型输出按校准准确率分级使用："
+				+ "|p-0.5|>=0.15 为高置信（回测 58% 准确），0.05~0.15 中置信（54%），"
+				+ "<0.05 无参考价值应忽略。用于与你的定性判断交叉验证：与你的方向一致→confidence 上调；"
+				+ "明显分歧→倾向 HOLD 并在 detail 说明分歧点。"
+				+ "注意：模型仅用 BTC/ETH/SOL 训练，其他品种为分布外推断，参考意义降低。",
+				obj().put("symbol", obj().put("type", "string")),
+				list("symbol"),
+				args -> {
+					String symbol = sym(args);
+					try {
+						JSONArray rows = rawKlines(symbol, "1", 300);
+						if (rows.length() < 130) {
+							return err(symbol + " 1m K 线不足，无法预测");
+						}
+						JSONObject body = new JSONObject().put("klines", rows);
+						Request req = new Request.Builder()
+								.url(modelServerUrl + "/predict")
+								.post(RequestBody.create(body.toString(),
+										MediaType.parse("application/json; charset=utf-8")))
+								.build();
+						// model_server 在本机，ProxiedHttpClients 对 localhost 直连
+						try (Response resp = clients.obtain().newCall(req).execute()) {
+							String rb = resp.body() != null ? resp.body().string() : "";
+							if (!resp.isSuccessful()) {
+								return err("模型服务不可用(HTTP " + resp.code() + "): "
+										+ rb.substring(0, Math.min(rb.length(), 120)));
+							}
+							JSONObject r = new JSONObject(rb);
+							return new JSONObject()
+									.put("symbol", symbol)
+									.put("probUp", r.getDouble("probUp"))
+									.put("direction", r.getString("direction"))
+									.put("confidence", r.getDouble("confidence"))
+									.put("zone", r.getString("zone"))
+									.put("expectedAccuracy", r.opt("expectedAcc"))
+									.put("note", "未来30分钟方向概率；高置信区回测58%/中54%/低区间忽略")
+									.toString();
+						}
+					} catch (Exception e) {
+						return err("模型预测失败: " + e.getMessage());
+					}
 				});
 
 		// ---- 消息面 ----

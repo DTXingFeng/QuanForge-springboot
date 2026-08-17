@@ -179,9 +179,12 @@ public class AiAgentService {
 			 根据触发原因，自主调用工具获取你判断所需的数据（K线、技术指标、盘口、资金费率、快讯、\
 			 历史判断、当前持仓），数据充分后输出最终研判。
 			 规则：
-			 - 工具调用要节制，通常 2-4 次足够：先行情指标（get_indicators/get_kline，\
-			 剥头皮场景优先 1m/5m 周期），需要时再看消息面（get_news）与持仓（get_positions）。
-			 - 给出交易建议前必须先查当前持仓，避免与现有仓位矛盾。
+			 - 工具调用要节制，通常 2-5 次足够：先行情指标（get_indicators/get_kline，\
+			 剥头皮场景优先 1m/5m 周期），再调 get_model_prediction 获取统计模型方向参考，\
+			 需要时再看消息面（get_news）与持仓（get_positions）。
+			 - 给出 BUY/SELL 前必须：get_positions 查持仓防矛盾；get_instrument 查杠杆上限算仓位。
+			 - 模型交叉验证：get_model_prediction 的方向与你的定性判断一致→confidence 上调 5~10；\
+			 明显分歧→倾向 HOLD 并在 detail 说明分歧原因；低置信区(zone=low)的模型输出忽略。
 			 - 不构成投资建议，禁止"保证""必然"等绝对表述。
 			 - 最终只输出一个 JSON 对象（无其他文字/代码块标记），格式：
 			 {"alertLevel":"INFO|WARN|CRITICAL|NONE","action":"BUY|SELL|HOLD","entry":数字或null,\
