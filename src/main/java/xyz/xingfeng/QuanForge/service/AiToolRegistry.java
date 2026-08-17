@@ -190,6 +190,36 @@ public class AiToolRegistry {
 							.toString();
 				});
 
+		register("get_instrument",
+				"获取品种合约元数据：交易状态、最大可用杠杆、最小下单量、价格/数量步进、"
+				+ "市价单上限。给出建议前必须查询——山寨币杠杆上限常低于 100（如 12.5/25/75），"
+				+ "保证金盈亏换算必须用品种实际杠杆，而非用户画像里的惯用杠杆。",
+				obj().put("symbol", obj().put("type", "string")),
+				list("symbol"),
+				args -> {
+					String symbol = sym(args);
+					String json = bybitService.getPublicRaw("/v5/market/instruments-info",
+							Map.of("category", "linear", "symbol", symbol));
+					JSONArray list = new JSONObject(json).getJSONObject("result")
+							.getJSONArray("list");
+					if (list.isEmpty()) {
+						return err(symbol + " 无合约信息");
+					}
+					JSONObject i = list.getJSONObject(0);
+					JSONObject lev = i.getJSONObject("leverageFilter");
+					JSONObject lot = i.getJSONObject("lotSizeFilter");
+					JSONObject price = i.getJSONObject("priceFilter");
+					return new JSONObject()
+							.put("symbol", symbol)
+							.put("status", i.optString("status"))
+							.put("maxLeverage", num(lev.optString("maxLeverage")))
+							.put("minOrderQty", num(lot.optString("minOrderQty")))
+							.put("qtyStep", num(lot.optString("qtyStep")))
+							.put("maxMktOrderQty", num(lot.optString("maxMktOrderQty")))
+							.put("tickSize", num(price.optString("tickSize")))
+							.toString();
+				});
+
 		// ---- 消息面 ----
 		register("get_news",
 				"搜索快讯（华尔街见闻/Binance公告/CoinDesk/Cointelegraph 聚合，近 1-2 小时为主）。可按关键词过滤，如 ETF、监管、暴跌。",
