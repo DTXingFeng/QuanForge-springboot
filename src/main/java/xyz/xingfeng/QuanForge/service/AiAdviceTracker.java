@@ -25,8 +25,8 @@ import java.util.Map;
  *   <li>TRACKING：先触 TP → WIN，先触 SL → LOSS；同一根 1m K 线同时触发时保守判 LOSS</li>
  *   <li>持仓超过 {@link AiAdviceTrack#TRACKING_TTL_MINUTES} 未触发 → EXPIRED（按当时浮动结算）</li>
  * </ul>
- * 同品种同时只保留一条活跃跟踪（新建议发出时旧活跃记录标记取代过期），
- * 避免同一品种多条建议重复统计。
+ * 单仓纪律：同品种任意时刻最多一条活跃跟踪（同向新建议跳过、反向新建议
+ * 触发旧单市价平仓后开新单），避免同段行情重复计数或多空双计。
  */
 @Service
 public class AiAdviceTracker {
@@ -49,21 +49,37 @@ public class AiAdviceTracker {
 
 	/**
 	 * 为告警创建纸面跟踪（带价位的建议才有）。
-	 * 纸面测量允许多条并行：TRACKING（已入场）的让市场自然结算，只有 PENDING
-	 * （等入场）的会被同品种新建议取代——旧建议还没入场就来了新建议，
-	 * 旧入场价已失去时效，保留只会污染样本。这是实测教训：全程取代式清理
-	 * 会掐死 60% 的样本，胜率统计严重失真。
+	 * <p>
+	 * 单仓纪律（模拟真实单仓交易员，同品种任意时刻最多一条活跃跟踪）：
+	 * <ul>
+	 *   <li>旧 PENDING（等入场）+ 新建议（任意方向）：旧入场价已失去时效 → 旧 EXPIRED，开新</li>
+	 *   <li>旧 TRACKING + 新建议<b>同向</b>：跳过不开新跟踪——同一段行情计两遍会虚增期望，
+	 *       旧的继续自然结算</li>
+	 *   <li>旧 TRACKING + 新建议<b>反向</b>：close-and-reverse——旧单按市价平仓（EXPIRED），
+	 *       开新单。真人不会同时持有多空</li>
+	 * </ul>
+	 * 历史教训：全程取代式清理会掐死 60% 的样本（TRACKING 被强平导致胜率失真），
+	 * 因此 TRACKING 绝不因同向新建议被强制结算，只允许反向信号触发市价平仓。
 	 */
 	@Transactional
 	public void track(AiAlert alert, String action, double entry, double stopLoss, double takeProfit) {
 		for (AiAdviceTrack old : repository.findBySymbolAndStatusIn(alert.getSymbol(), ACTIVE)) {
-			if (!AiAdviceTrack.STATUS_PENDING.equals(old.getStatus())) {
+			if (AiAdviceTrack.STATUS_PENDING.equals(old.getStatus())) {
+				old.setStatus(AiAdviceTrack.STATUS_EXPIRED);
+				old.setSettledAt(LocalDateTime.now());
+				old.setNote("等入场期间被同品种新建议取代");
+				repository.save(old);
 				continue;
 			}
-			old.setStatus(AiAdviceTrack.STATUS_EXPIRED);
-			old.setSettledAt(LocalDateTime.now());
-			old.setNote("等入场期间被同品种新建议取代");
-			repository.save(old);
+			// TRACKING 中的旧单
+			if (old.getAction().equals(action)) {
+				log.info("纸面跟踪跳过: {} 已有同向 TRACKING #{}，避免同段行情重复计数",
+						alert.getSymbol(), old.getId());
+				return;
+			}
+			Double last = lastPrice(alert.getSymbol());
+			expire(old, "反向建议出现，按市价平仓反转",
+					last == null ? null : pricePct(old, last));
 		}
 		AiAdviceTrack t = new AiAdviceTrack();
 		t.setAlertId(alert.getId());
@@ -79,6 +95,19 @@ public class AiAdviceTracker {
 				entry, stopLoss, takeProfit);
 	}
 
+	/** 最新成交价（反向平仓结算用），失败返回 null（不阻塞新跟踪建立） */
+	private Double lastPrice(String symbol) {
+		try {
+			String json = bybitService.getPublicRaw("/v5/market/tickers",
+					Map.of("category", "linear", "symbol", symbol));
+			JSONArray list = new JSONObject(json).getJSONObject("result").getJSONArray("list");
+			return list.isEmpty() ? null : Double.parseDouble(list.getJSONObject(0).getString("lastPrice"));
+		} catch (Exception e) {
+			log.warn("获取 {} 最新价失败: {}", symbol, e.getMessage());
+			return null;
+		}
+	}
+
 	/** 结算心跳：每分钟检查活跃跟踪 */
 	@Scheduled(fixedDelay = 60_000, initialDelay = 45_000)
 	@Transactional
@@ -87,7 +116,7 @@ public class AiAdviceTracker {
 		if (active.isEmpty()) {
 			return;
 		}
-		// 按品种分组拉一次 K 线，同品种多条（理论只有一条）复用
+		// 按品种分组拉一次 K 线（单仓纪律下同品种至多一条活跃，分组仅防御性保留）
 		Map<String, List<double[]>> candlesBySymbol = new HashMap<>();
 		for (AiAdviceTrack t : active) {
 			try {
