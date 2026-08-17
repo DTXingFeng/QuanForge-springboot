@@ -234,12 +234,12 @@ public class AiToolRegistry {
 
 		// ---- 统计模型 ----
 		register("get_model_prediction",
-				"统计模型（LightGBM，77万 1m K线样本训练）预测未来 30 分钟方向概率。"
-				+ "返回 probUp（涨概率 0~1）与置信区间——模型输出按校准准确率分级使用："
-				+ "|p-0.5|>=0.15 为高置信（回测 58% 准确），0.05~0.15 中置信（54%），"
-				+ "<0.05 无参考价值应忽略。用于与你的定性判断交叉验证：与你的方向一致→confidence 上调；"
+				"统计模型（LightGBM 双模型按品种域路由）预测未来 30 分钟方向概率。"
+				+ "返回 probUp（涨概率 0~1）、zone 置信区间与该区回测准确率 expectedAcc——"
+				+ "高置信区回测约 58%（仅主流币域）、中区约 54%、低区应忽略。"
+				+ "用于与你的定性判断交叉验证：与你的方向一致→confidence 上调；"
 				+ "明显分歧→倾向 HOLD 并在 detail 说明分歧点。"
-				+ "注意：模型仅用 BTC/ETH/SOL 训练，其他品种为分布外推断，参考意义降低。",
+				+ "非主流/非山寨清单内的冷门品种为分布外推断（inDomain=false），参考意义降低。",
 				obj().put("symbol", obj().put("type", "string")),
 				list("symbol"),
 				args -> {
@@ -249,7 +249,8 @@ public class AiToolRegistry {
 						if (rows.length() < 130) {
 							return err(symbol + " 1m K 线不足，无法预测");
 						}
-						JSONObject body = new JSONObject().put("klines", rows);
+						JSONObject body = new JSONObject().put("klines", rows)
+								.put("symbol", symbol);
 						Request req = new Request.Builder()
 								.url(modelServerUrl + "/predict")
 								.post(RequestBody.create(body.toString(),

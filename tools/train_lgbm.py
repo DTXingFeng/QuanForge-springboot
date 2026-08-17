@@ -59,6 +59,7 @@ def main():
     ap.add_argument("--move-pct", type=float, default=0.15,
                     help="未来波幅门槛（%%），低于此的样本丢弃")
     ap.add_argument("--test-ratio", type=float, default=0.2)
+    ap.add_argument("--output", default=None, help="输出 joblib 文件名")
     args = ap.parse_args()
 
     conn = sqlite3.connect(args.db)
@@ -129,20 +130,30 @@ def main():
     print("\n=== 置信度分桶（校准）===")
     conf = np.abs(proba - 0.5) * 2
     correct = (pred == label_arr)
-    for lo, hi, tag in [(0.0, 0.1, "|p-0.5|<0.05"), (0.1, 0.3, "0.05~0.15"),
-                        (0.3, 1.01, ">=0.15")]:
+    calib = {"high_threshold": 0.3, "mid_threshold": 0.1,
+             "high_acc": 0.52, "mid_acc": 0.52, "low_acc": 0.51,
+             "high_n": 0, "mid_n": 0, "low_n": 0}
+    for lo, hi, tag, key in [(0.3, 1.01, ">=0.15(p)", "high"),
+                             (0.1, 0.3, "0.05~0.15", "mid"),
+                             (0.0, 0.1, "<0.05", "low")]:
         m = (conf >= lo) & (conf < hi)
         if m.sum() > 0:
-            print(f"  置信 {tag:<14} n={int(m.sum()):<7} acc={correct[m].mean():.4f}")
+            acc_z = correct[m].mean()
+            calib[f"{key}_acc"] = round(float(acc_z), 4)
+            calib[f"{key}_n"] = int(m.sum())
+            print(f"  置信 {tag:<14} n={int(m.sum()):<7} acc={acc_z:.4f}")
 
     imp = sorted(zip(FS, model.feature_importances_), key=lambda x: -x[1])
     print("\nTop 特征:", ", ".join(f"{c}({v:.0f})" for c, v in imp[:8]))
     # 持久化模型与特征列表，供 get_model_prediction 工具加载
     try:
         import joblib
+        out = getattr(args, "output", None) or "model_lgbm.joblib"
         joblib.dump({"model": model, "features": FS, "horizon": args.horizon,
-                     "move_pct": args.move_pct}, "model_lgbm.joblib")
-        print("\n模型已保存: model_lgbm.joblib")
+                     "move_pct": args.move_pct, "calibration": calib,
+                     "symbols": [s.strip() for s in args.symbols.split(",")]},
+                    out)
+        print(f"\n模型已保存: {out}")
     except Exception as e:
         print(f"模型保存失败: {e}")
 
