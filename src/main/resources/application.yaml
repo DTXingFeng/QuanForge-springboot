@@ -8,6 +8,12 @@ spring:
   # 本地私有配置（如真实加密密钥），文件在 .gitignore 中，不存在也不报错
   config:
     import: "optional:application-local.yaml"
+  # 调度线程池：默认 1 线程——任何一个 @Scheduled 任务挂死（如无超时的 HTTP 调用）
+  # 会饿死其余全部任务（盯盘/纸面结算/TG轮询）。扩到 3：单任务挂死只影响自身。
+  task:
+    scheduling:
+      pool:
+        size: 3
 
   # ===== SQLite 数据源配置 =====
   datasource:

@@ -61,15 +61,28 @@ public abstract class BybitBaseClient {
 	protected OkHttpClient obtainClient() {
 		Optional<ProxyConfig> proxyOpt = proxyConfigService.getEnabledConfig();
 		if (proxyOpt.isEmpty()) {
-			return clients.computeIfAbsent(DIRECT_KEY, k -> new OkHttpClient.Builder().build());
+			return clients.computeIfAbsent(DIRECT_KEY, k -> baseBuilder().build());
 		}
 		ProxyConfig config = proxyOpt.get();
 		String key = proxyKey(config);
 		return clients.computeIfAbsent(key, k -> {
-			OkHttpClient.Builder builder = new OkHttpClient.Builder();
+			OkHttpClient.Builder builder = baseBuilder();
 			applyProxy(builder, config);
 			return builder.build();
 		});
+	}
+
+	/**
+	 * 基础构建器：显式全套超时。OkHttp 默认 readTimeout(10s) 是 socket 级的，
+	 * HTTP/2 连接上有帧流动就不断重置——stream 层等响应头可无限挂死
+	 * （ProxiedHttpClients 同款问题，见其注释）。callTimeout 到点强制取消整个调用。
+	 */
+	private OkHttpClient.Builder baseBuilder() {
+		return new OkHttpClient.Builder()
+				.connectTimeout(java.time.Duration.ofSeconds(10))
+				.readTimeout(java.time.Duration.ofSeconds(20))
+				.writeTimeout(java.time.Duration.ofSeconds(15))
+				.callTimeout(java.time.Duration.ofSeconds(30));
 	}
 
 	/** 生成代理签名键：类型:主机:端口:用户名（密码不参与，避免明文留痕） */

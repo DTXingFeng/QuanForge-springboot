@@ -85,7 +85,12 @@ public class ProxiedHttpClients {
 		return new OkHttpClient.Builder()
 				.connectTimeout(Duration.ofSeconds(10))
 				.readTimeout(Duration.ofMillis(readTimeoutMillis))
-				.writeTimeout(Duration.ofSeconds(15));
+				.writeTimeout(Duration.ofSeconds(15))
+				// 调用级硬超时：readTimeout 是 socket 级的，HTTP/2 连接上有任何帧流动
+				// （PING/其他流）就会不断重置——stream 层等响应头可无限挂死
+				// （实例：scheduling-1 在 Http2Stream.takeHeaders 上 WAITING 30 分钟，
+				// 拖死全部单线程调度任务）。callTimeout 到点强制取消整个调用。
+				.callTimeout(Duration.ofMillis(readTimeoutMillis + 60_000));
 	}
 
 	/** 代理签名键：类型:主机:端口:用户名（密码不参与） */
