@@ -79,6 +79,10 @@ public class AiAdviceTrack {
 	@Column(length = 128)
 	private String note;
 
+	/** 体系版本戳：建议产生时的研判体系（复盘按此分组，避免跨版本污染） */
+	@Column(name = "sys_version", length = 32)
+	private String sysVersion;
+
 	/** 创建时间 */
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
@@ -178,6 +182,14 @@ public class AiAdviceTrack {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public String getSysVersion() {
+		return sysVersion;
+	}
+
+	public void setSysVersion(String sysVersion) {
+		this.sysVersion = sysVersion;
 	}
 
 	public LocalDateTime getCreatedAt() {

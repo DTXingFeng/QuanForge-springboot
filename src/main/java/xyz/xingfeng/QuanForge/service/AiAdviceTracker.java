@@ -73,6 +73,7 @@ public class AiAdviceTracker {
 		t.setStopLoss(stopLoss);
 		t.setTakeProfit(takeProfit);
 		t.setStatus(AiAdviceTrack.STATUS_PENDING);
+		t.setSysVersion(xyz.xingfeng.QuanForge.SystemVersion.CURRENT);
 		repository.save(t);
 		log.info("纸面跟踪已建立: {} {} entry={} sl={} tp={}", alert.getSymbol(), action,
 				entry, stopLoss, takeProfit);
@@ -217,6 +218,24 @@ public class AiAdviceTracker {
 		m.put("settled", settled);
 		m.put("winRate", Double.isNaN(winRate) ? null : round2(winRate));
 		m.put("avgResultPct", Double.isNaN(avgResult) ? null : round2(avgResult));
+		// 按体系版本分组（复盘用）：null 为打戳功能上线前的历史数据，标记为 legacy
+		Map<String, Map<String, Object>> byVersion = new java.util.LinkedHashMap<>();
+		all.stream()
+				.collect(java.util.stream.Collectors.groupingBy(
+						t -> t.getSysVersion() == null ? "legacy" : t.getSysVersion()))
+				.forEach((ver, list) -> {
+					long w = list.stream().filter(t -> AiAdviceTrack.STATUS_WIN.equals(t.getStatus())).count();
+					long l = list.stream().filter(t -> AiAdviceTrack.STATUS_LOSS.equals(t.getStatus())).count();
+					long s = w + l;
+					Map<String, Object> vm = new HashMap<>();
+					vm.put("total", list.size());
+					vm.put("settled", s);
+					vm.put("wins", w);
+					vm.put("losses", l);
+					vm.put("winRate", s == 0 ? null : round2(w * 100.0 / s));
+					byVersion.put(ver, vm);
+				});
+		m.put("byVersion", byVersion);
 		return m;
 	}
 
