@@ -47,6 +47,18 @@ public class TelegramBotService {
 	/** 轮询位移（已处理的最后 update_id + 1） */
 	private volatile long updateOffset = 0;
 
+	/** 命令菜单是否已注册（每进程一次；token 更换后重启生效） */
+	private volatile boolean commandsRegistered = false;
+
+	/** 运行时静音（/mute 开 /unmute 关）：静音期间一切推送不发，指令照常响应 */
+	private volatile boolean muted = false;
+
+	/** 非关键告警的同品种推送冷却（毫秒）：20 分钟内同品种只推一条 */
+	private final Map<String, Long> lastAlertPushAt = new java.util.concurrent.ConcurrentHashMap<>();
+
+	/** 结算推送阈值（|resultPct|）：小于此幅度的琐碎结算不推（/tracks 可查） */
+	private static final double SETTLE_PUSH_THRESHOLD = 0.3;
+
 	private final TelegramConfigRepository repository;
 	private final ProxiedHttpClients clients;
 	private final AiConfigService aiConfigService;
@@ -76,6 +88,9 @@ public class TelegramBotService {
 		TelegramConfig config = getConfig();
 		if (!Boolean.TRUE.equals(config.getEnabled()) || config.getBotToken().isBlank()) {
 			return;
+		}
+		if (!commandsRegistered) {
+			registerCommands(config.getBotToken());
 		}
 		try {
 			String body = call(config.getBotToken(), "getUpdates",
@@ -141,6 +156,14 @@ public class TelegramBotService {
 			case "/alerts" -> cmdAlerts();
 			case "/tracks" -> cmdTracks();
 			case "/positions" -> cmdPositions();
+			case "/mute" -> {
+				muted = true;
+				send("已静音 🔇 推送暂停（指令仍可用），/unmute 恢复。");
+			}
+			case "/unmute" -> {
+				muted = false;
+				send("已恢复推送 🔔");
+			}
 			default -> send("未知指令。/help 查看可用指令。");
 		}
 	}
@@ -154,7 +177,8 @@ public class TelegramBotService {
 				/alerts — 最近 5 条告警
 				/tracks — 纸面跟踪战绩
 				/positions — 当前持仓
-				（AI 告警与建议结算会自动推送）""";
+				/mute /unmute — 静音/恢复推送
+				（推送策略：有交易动作的建议 + 显著盈亏结算≥0.3%%，观望类不推）""";
 	}
 
 	private void cmdStatus() {
@@ -289,21 +313,46 @@ public class TelegramBotService {
 
 	// ==================== 推送（供其他服务调用） ====================
 
-	/** AI 告警推送 */
+	/**
+	 * AI 告警推送（降噪策略）：
+	 * <ul>
+	 *   <li>只推"有交易动作"的建议（detail 带参考建议行）或 CRITICAL 级告警；
+	 *       HOLD/观望类告警只进界面，不推</li>
+	 *   <li>非 CRITICAL 同品种 20 分钟冷却，防止连环刷屏</li>
+	 * </ul>
+	 */
 	public void notifyAlert(AiAlert alert) {
-		if (isReady()) {
-			send(formatAlert(alert));
+		if (!isReady() || muted) {
+			return;
 		}
+		boolean critical = AiAlert.LEVEL_CRITICAL.equals(alert.getLevel());
+		boolean actionable = alert.getDetail() != null && alert.getDetail().startsWith("参考建议");
+		if (!critical && !actionable) {
+			return;
+		}
+		if (!critical) {
+			Long last = lastAlertPushAt.get(alert.getSymbol());
+			long now = System.currentTimeMillis();
+			if (last != null && now - last < 20 * 60_000L) {
+				return;
+			}
+			lastAlertPushAt.put(alert.getSymbol(), now);
+		}
+		send(formatAlert(alert));
 	}
 
-	/** 纸面跟踪结算推送 */
+	/** 跟踪结算推送：显著盈亏（|pct|≥0.3%）才推；琐碎结算 /tracks 可查 */
 	public void notifySettle(AiAdviceTrack t) {
-		if (isReady()) {
-			send(String.format(Locale.ROOT, "%s %s %s @%.6g → %s（%+.2f%%）",
-					t.getSymbol(), t.getAction(), t.getCreatedAt().toLocalTime(), t.getEntry(),
-					statusLabel(t.getStatus()),
-					t.getResultPct() == null ? 0 : t.getResultPct()));
+		if (!isReady() || muted) {
+			return;
 		}
+		double pct = t.getResultPct() == null ? 0 : t.getResultPct();
+		if (Math.abs(pct) < SETTLE_PUSH_THRESHOLD) {
+			return;
+		}
+		send(String.format(Locale.ROOT, "%s %s %s @%.6g → %s（%+.2f%%）",
+				t.getSymbol(), t.getAction(), t.getCreatedAt().toLocalTime(), t.getEntry(),
+				statusLabel(t.getStatus()), pct));
 	}
 
 	private String formatAlert(AiAlert a) {
@@ -316,6 +365,27 @@ public class TelegramBotService {
 	}
 
 	// ==================== 基础设施 ====================
+
+	/** 注册命令菜单（聊天框 "/" 快捷列表），每进程一次 */
+	private void registerCommands(String token) {
+		try {
+			JSONArray cmds = new JSONArray()
+					.put(new JSONObject().put("command", "status").put("description", "服务状态：盯盘/战绩/钱包"))
+					.put(new JSONObject().put("command", "price").put("description", "实时行情，如 /price BTCUSDT"))
+					.put(new JSONObject().put("command", "analyze").put("description", "触发一次 AI 研判，如 /analyze ETHUSDT"))
+					.put(new JSONObject().put("command", "positions").put("description", "当前持仓"))
+					.put(new JSONObject().put("command", "tracks").put("description", "跟踪战绩"))
+					.put(new JSONObject().put("command", "alerts").put("description", "最近告警"))
+					.put(new JSONObject().put("command", "mute").put("description", "静音推送"))
+					.put(new JSONObject().put("command", "unmute").put("description", "恢复推送"))
+					.put(new JSONObject().put("command", "help").put("description", "指令帮助"));
+			call(token, "setMyCommands", new JSONObject().put("commands", cmds), 15_000);
+			commandsRegistered = true;
+			log.info("[TG] 命令菜单已注册");
+		} catch (Exception e) {
+			log.warn("[TG] 命令菜单注册失败: {}", e.getMessage());
+		}
+	}
 
 	private boolean isReady() {
 		TelegramConfig c = getConfig();
@@ -372,6 +442,7 @@ public class TelegramBotService {
 		TelegramConfig config = getConfig();
 		if (botToken != null && !botToken.isBlank()) {
 			config.setBotToken(botToken.trim());
+			commandsRegistered = false; // 新 token 需重新注册命令菜单
 		}
 		if (chatId != null) {
 			config.setChatId(chatId.trim());
