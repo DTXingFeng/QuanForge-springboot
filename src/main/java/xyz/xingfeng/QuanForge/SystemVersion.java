@@ -15,6 +15,8 @@ package xyz.xingfeng.QuanForge;
  *       盈亏从 closed-pnl 读取（含滑点），K 线回放仅作降级回退。研判逻辑同 v3.x</li>
  *   <li>v4.1: 持仓动态管理器——每 5 分钟复查持仓，允许提前离场/上移止损/止盈靠近
  *       （只收紧不放宽），"转弱收手、锁利提前落袋"进入代码层</li>
+ *   <li>v4.2: REBASE 换挡扛单（仅 majors）——震荡噪音亏损且高周期结构未破时，
+ *       止损换到高周期失效位升格波段，总风险硬顶 2%；majors TTL 120→240 分钟</li>
  * </ul>
  */
 public final class SystemVersion {
@@ -22,5 +24,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v4.1-managed";
+	public static final String CURRENT = "v4.2-rebase";
 }

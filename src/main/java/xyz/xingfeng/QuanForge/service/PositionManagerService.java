@@ -93,11 +93,91 @@ public class PositionManagerService {
 		switch (decision) {
 			case "CLOSE" -> applyClose(t, reason);
 			case "MOVE_SL", "MOVE_TP" -> applyMove(t, d, reason);
+			case "REBASE" -> applyRebase(t, d, reason);
 			default -> log.debug("持仓复查 #{} {}: HOLD", t.getId(), t.getSymbol());
 		}
 	}
 
 	// ==================== 动作执行 ====================
+
+	/** majors 集合：仅主流币允许 REBASE（数据依据：majors 亏损多为震荡噪音可扛，山寨扛单平均再跌 6%） */
+	private static final java.util.Set<String> REBASE_ALLOWED =
+			java.util.Set.of("BTCUSDT", "ETHUSDT", "SOLUSDT");
+
+	/** REBASE 后总风险硬顶（账户 %，含浮亏） */
+	private static final double REBASE_MAX_RISK_PCT = 2.0;
+
+	/**
+	 * 换挡扛单（仅 majors）：亏损确认为震荡噪音、高周期结构未破时，
+	 * 把止损从剥头皮结构位上移到高周期（小时/日线）结构失效位，
+	 * 研判从剥头皮升格为波段。围栏：
+	 * <ul>
+	 *   <li>仅 BTC/ETH/SOL；山寨禁止（扛单平均再跌 6%，19% 极端）</li>
+	 *   <li>结构保护：新止损必须在高周期区间失效位之外，且当前价未破该结构</li>
+	 *   <li>风险硬顶：按新止损计算的总亏损（浮亏+剩余风险）≤ 2% 账户</li>
+	 *   <li>每单最多换挡一次</li>
+	 * </ul>
+	 */
+	private void applyRebase(AiAdviceTrack t, JSONObject d, String reason) {
+		if (!REBASE_ALLOWED.contains(t.getSymbol())) {
+			log.info("拒绝 REBASE（山寨禁用）#{} {}", t.getId(), t.getSymbol());
+			return;
+		}
+		if (t.getRebasedAt() != null) {
+			log.info("拒绝 REBASE（已换挡过）#{}", t.getId());
+			return;
+		}
+		Double newSl = optFinite(d, "newSl");
+		Double rangeLow = optFinite(d, "rangeLow");
+		Double rangeHigh = optFinite(d, "rangeHigh");
+		if (newSl == null || rangeLow == null || rangeHigh == null) {
+			return;
+		}
+		boolean buy = "BUY".equals(t.getAction());
+		double last;
+		try {
+			last = lastPrice(t.getSymbol());
+		} catch (Exception e) {
+			log.warn("REBASE 取价失败 #{}: {}", t.getId(), e.getMessage());
+			return;
+		}
+		// 结构校验：当前价仍在高周期区间内（结构未破），新止损在区间失效位之外
+		boolean structureIntact = last > rangeLow && last < rangeHigh;
+		boolean slBeyondRange = buy ? newSl < rangeLow : newSl > rangeHigh;
+		if (!structureIntact || !slBeyondRange) {
+			log.info("拒绝 REBASE（结构校验不过）#{} last={} range=[{},{}] newSl={}",
+					t.getId(), last, rangeLow, rangeHigh, newSl);
+			return;
+		}
+		// 风险硬顶：浮亏 + 剩余风险 ≤ 2% 账户（账户风险 = 杠杆×保证金占比×距离）
+		double entry = t.getActualEntry() != null ? t.getActualEntry() : t.getEntry();
+		AiConfig cfg = configService.getConfig();
+		double lev = Math.min(cfg.getLeverage() == null ? 100 : cfg.getLeverage(), 100);
+		double marginPct = cfg.getAutoMarginPct() == null ? 5.0 : cfg.getAutoMarginPct();
+		double floatLossPct = buy ? (entry - last) / entry * 100 : (last - entry) / entry * 100;
+		if (floatLossPct < 0) {
+			floatLossPct = 0; // 浮盈时只看剩余风险
+		}
+		double remainPct = buy ? (last - newSl) / last * 100 : (newSl - last) / last * 100;
+		double totalRisk = (floatLossPct + remainPct) * lev * marginPct / 100.0;
+		if (totalRisk > REBASE_MAX_RISK_PCT) {
+			log.info("拒绝 REBASE（总风险 {}% > {}%）#{}",
+					String.format(Locale.ROOT, "%.2f", totalRisk), REBASE_MAX_RISK_PCT, t.getId());
+			return;
+		}
+		try {
+			executor.setTradingStop(t.getSymbol(), t.getAction(), t.getTakeProfit(), newSl);
+			t.setStopLoss(newSl);
+			t.setRebasedAt(java.time.LocalDateTime.now());
+			t.setNote("换挡扛单(majors): " + reason);
+			repository.save(t);
+			log.info("持仓管理 #{} {} REBASE: sl->{} 总风险{}%: {}",
+					t.getId(), t.getSymbol(), newSl,
+					String.format(Locale.ROOT, "%.2f", totalRisk), reason);
+		} catch (Exception e) {
+			log.warn("REBASE 设置失败 #{}: {}", t.getId(), e.getMessage());
+		}
+	}
 
 	/** 提前离场：市价平仓，实际盈亏交给结算心跳从 closed-pnl 读取 */
 	private void applyClose(AiAdviceTrack t, String reason) {
@@ -216,7 +296,7 @@ public class PositionManagerService {
 		}
 	}
 
-	private static final String SYSTEM_PROMPT = """
+		private static final String SYSTEM_PROMPT = """
 			你是持仓风控管理器，负责已开仓位的动态调整。决策原则（用户交易哲学）：
 			- 默认 HOLD：入场逻辑未破坏就让利润跑，不折腾。没有明确理由不动仓。
 			- CLOSE（提前离场）适用：
@@ -225,9 +305,20 @@ public class PositionManagerService {
 			  3) 统计模型明确转向反方向且与持仓方向冲突。
 			- MOVE_SL：浮盈明显时上移止损到成本位或结构位锁定利润（BUY 只能上移，SELL 只能下移）。
 			- MOVE_TP：动能衰竭且距止盈不远，止盈靠近提前落袋（BUY 只能下调，SELL 只能上调）。
-			- 硬性禁止：放宽止损（远离入场方向）、加仓、翻转方向（翻转由主研判负责，你只管退出与收紧）。
+			- REBASE（换挡扛单，仅 BTC/ETH/SOL 的浮亏单，山寨绝对禁止）：
+			  适用：浮亏由震荡噪音造成、小时/日线结构未破（价格仍在高周期区间内）、
+			  统计模型仍支持持仓方向，判断价格会回来。做法：止损从剥头皮结构位
+			  换到高周期结构失效位（区间边界之外），研判升格为波段持有。
+			  必须同时给出 rangeLow/rangeHigh（高周期区间边界）与 newSl（区间失效位外的止损价）。
+			  依据：近15分钟动能收敛/转平、价格远离区间边界、模型概率未反转。
+			  majors 历史数据：亏损多为震荡噪音（69% 在 4h 内回到止盈）；
+			  但若动能持续恶化且模型同时转反，选 CLOSE 而非 REBASE。
+			- 硬性禁止：对山寨（非 BTC/ETH/SOL）放宽止损或 REBASE、任何品种加仓、翻转方向
+			  （翻转由主研判负责，你只管退出、收紧与 majors 的换挡）。
 			- 止损已很近（距现价<0.15%%）且浮亏时倾向让它自然执行，不抢先。
-			- 只输出一个 JSON 对象：{"decision":"HOLD|CLOSE|MOVE_SL|MOVE_TP","newSl":数字或null,"newTp":数字或null,"reason":"30字内理由"}
+			- 只输出一个 JSON 对象：{"decision":"HOLD|CLOSE|MOVE_SL|MOVE_TP|REBASE",
+			  "newSl":数字或null,"newTp":数字或null,"rangeLow":数字或null,"rangeHigh":数字或null,
+			  "reason":"30字内理由"}
 			""";
 
 	// ==================== 数据 ====================

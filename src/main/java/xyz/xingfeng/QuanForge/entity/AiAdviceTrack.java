@@ -103,6 +103,10 @@ public class AiAdviceTrack {
 	@Column(name = "actual_exit")
 	private Double actualExit;
 
+	/** REBASE（换挡扛单）时间：非空表示已换挡过一次，禁止二次换挡 */
+	@Column(name = "rebased_at")
+	private LocalDateTime rebasedAt;
+
 	/** 创建时间 */
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
@@ -250,6 +254,14 @@ public class AiAdviceTrack {
 
 	public void setActualExit(Double actualExit) {
 		this.actualExit = actualExit;
+	}
+
+	public LocalDateTime getRebasedAt() {
+		return rebasedAt;
+	}
+
+	public void setRebasedAt(LocalDateTime rebasedAt) {
+		this.rebasedAt = rebasedAt;
 	}
 
 	public LocalDateTime getCreatedAt() {

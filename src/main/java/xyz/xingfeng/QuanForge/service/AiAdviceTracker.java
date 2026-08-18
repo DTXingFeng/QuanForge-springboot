@@ -276,13 +276,24 @@ public class AiAdviceTracker {
 			settleDemoClosed(t, t.getNote());
 			return;
 		}
-		if (minutesSince(orNow(t.getEnteredAt())) > AiAdviceTrack.TRACKING_TTL_MINUTES
+		if (minutesSince(orNow(t.getEnteredAt())) > trackingTtlMinutes(t)
 				&& t.getNote() == null) {
 			executor.marketClose(t.getSymbol(), pos.getString("side"),
 					Double.parseDouble(pos.getString("size")));
 			t.setNote("持仓超时，市价平仓");
 			repository.save(t);
 		}
+	}
+
+	/**
+	 * 持仓 TTL 分档：majors 240 分钟（配合 REBASE 换挡——历史数据 69% 的 majors 亏损单
+	 * 在 4h 内回到止盈，2h 会掐死恢复中的单）；山寨维持 120 分钟（扛单平均再跌 6%，
+	 * 越拖越危险）。已换挡的 majors 单也按 4h 封顶。
+	 */
+	private int trackingTtlMinutes(AiAdviceTrack t) {
+		boolean major = t.getSymbol() != null && (t.getSymbol().equals("BTCUSDT")
+				|| t.getSymbol().equals("ETHUSDT") || t.getSymbol().equals("SOLUSDT"));
+		return major ? 240 : AiAdviceTrack.TRACKING_TTL_MINUTES;
 	}
 
 	/** 限价委托成交 → TRACKING，记录真实入场价与数量，并设置 TP/SL */
@@ -383,7 +394,7 @@ public class AiAdviceTracker {
 				return;
 			}
 		}
-		if (minutesSince(since) > AiAdviceTrack.TRACKING_TTL_MINUTES) {
+		if (minutesSince(since) > trackingTtlMinutes(t)) {
 			double last = candles.isEmpty() ? t.getEntry() : candles.get(candles.size() - 1)[3];
 			expire(t, "持仓超时，按现价结算", pricePct(t, last));
 		}
