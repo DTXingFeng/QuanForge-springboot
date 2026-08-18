@@ -128,6 +128,9 @@ public class AiAdviceTracker {
 		t.setSymbol(alert.getSymbol());
 		t.setAction(action);
 		t.setEntry(entry);
+		// 止损距离硬顶：赢单最深回撤 -1.84%（实测），亏损尾巴却拖到 -3.85%——
+		// 2.2% 上限不伤任何历史赢单，砍掉超额亏损尾巴（MAE 研究结论，v4.3）
+		stopLoss = clampStopDistance(action, entry, stopLoss);
 		t.setStopLoss(stopLoss);
 		t.setTakeProfit(takeProfit);
 		t.setStatus(AiAdviceTrack.STATUS_PENDING);
@@ -150,6 +153,22 @@ public class AiAdviceTracker {
 		repository.save(t);
 		log.info("纸面跟踪已建立[{}]: {} {} entry={} sl={} tp={}", t.getExecMode(), alert.getSymbol(),
 				action, entry, stopLoss, takeProfit);
+	}
+
+	/**
+	 * 止损距离硬顶 2.2%：MAE 研究显示赢单最深回撤 -1.84%（不伤赢单），
+	 * 而亏损单尾巴到 -3.85%（纯浪费）。超出即钳回入场价 2.2% 处。
+	 */
+	private double clampStopDistance(String action, double entry, double stopLoss) {
+		double maxDist = entry * 0.022;
+		double dist = "BUY".equals(action) ? entry - stopLoss : stopLoss - entry;
+		if (dist > maxDist) {
+			double clamped = "BUY".equals(action) ? entry - maxDist : entry + maxDist;
+			log.info("止损距离 {}% 超上限，钳制为 2.2%: {} -> {}",
+					String.format(Locale.ROOT, "%.2f", dist / entry * 100), stopLoss, clamped);
+			return clamped;
+		}
+		return stopLoss;
 	}
 
 	/** 实单模式的反向平仓：市价平掉旧仓，从 closed-pnl 读实际盈亏结算 */
