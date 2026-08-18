@@ -211,14 +211,16 @@ public class DemoOrderExecutor {
 	}
 
 	/**
-	 * 某时刻之后的平仓盈亏聚合：sum(pnl)、总量、加权出场价。
+	 * 某时刻之后的平仓盈亏聚合：sum(closedPnl)、总量、加权出场价。
+	 * 注意字段名是 closedPnl（Bybit v5 约定），曾误用 "pnl" 导致盈亏恒 0。
 	 * 资金费率不计入 closed-pnl（单子生命周期短，多数不跨结算点，口径在复盘注明）。
 	 */
 	public ClosedResult closedPnlSince(String symbol, long sinceMs) {
 		Map<String, String> params = new LinkedHashMap<>();
 		params.put("category", "linear");
 		params.put("symbol", symbol);
-		params.put("limit", "20");
+		params.put("limit", "50");
+		params.put("startTime", String.valueOf(sinceMs - 60_000));
 		JSONObject resp = new JSONObject(bybit.getRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/position/closed-pnl", params));
 		requireOk(resp, "查平仓盈亏");
@@ -229,12 +231,12 @@ public class DemoOrderExecutor {
 		double pnl = 0, qtySum = 0, exitNotional = 0;
 		for (int i = 0; i < list.length(); i++) {
 			JSONObject e = list.getJSONObject(i);
-			if (e.optLong("createdTime", 0) < sinceMs) {
+			if (e.optLong("createdTime", 0) < sinceMs - 60_000) {
 				continue;
 			}
 			double q = Double.parseDouble(e.optString("closedSize", "0"));
 			double exit = Double.parseDouble(e.optString("avgExitPrice", "0"));
-			pnl += Double.parseDouble(e.optString("pnl", "0"));
+			pnl += Double.parseDouble(e.optString("closedPnl", "0"));
 			qtySum += q;
 			exitNotional += q * exit;
 		}
