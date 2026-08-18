@@ -13,6 +13,8 @@ package xyz.xingfeng.QuanForge;
  *       消除同段行情重复计数与多空双计</li>
  *   <li>v4: 执行升级为模拟盘实单——限价挂建议入场价、TP/SL 由交易所管理、
  *       盈亏从 closed-pnl 读取（含滑点），K 线回放仅作降级回退。研判逻辑同 v3.x</li>
+ *   <li>v4.1: 持仓动态管理器——每 5 分钟复查持仓，允许提前离场/上移止损/止盈靠近
+ *       （只收紧不放宽），"转弱收手、锁利提前落袋"进入代码层</li>
  * </ul>
  */
 public final class SystemVersion {
@@ -20,5 +22,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v4-demo-execution";
+	public static final String CURRENT = "v4.1-managed";
 }
