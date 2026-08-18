@@ -83,6 +83,26 @@ public class AiAdviceTrack {
 	@Column(name = "sys_version", length = 32)
 	private String sysVersion;
 
+	/** 执行模式：PAPER=K线回放推演 / DEMO=模拟盘实单（交易所撮合记账） */
+	@Column(name = "exec_mode", length = 16)
+	private String execMode;
+
+	/** 模拟盘入场委托 id */
+	@Column(name = "order_id", length = 64)
+	private String orderId;
+
+	/** 实际下单数量 */
+	@Column(name = "qty")
+	private Double qty;
+
+	/** 实际成交入场价（含滑点） */
+	@Column(name = "actual_entry")
+	private Double actualEntry;
+
+	/** 实际出场价（TP/SL/市价平仓成交价） */
+	@Column(name = "actual_exit")
+	private Double actualExit;
+
 	/** 创建时间 */
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
@@ -190,6 +210,46 @@ public class AiAdviceTrack {
 
 	public void setSysVersion(String sysVersion) {
 		this.sysVersion = sysVersion;
+	}
+
+	public String getExecMode() {
+		return execMode;
+	}
+
+	public void setExecMode(String execMode) {
+		this.execMode = execMode;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public Double getQty() {
+		return qty;
+	}
+
+	public void setQty(Double qty) {
+		this.qty = qty;
+	}
+
+	public Double getActualEntry() {
+		return actualEntry;
+	}
+
+	public void setActualEntry(Double actualEntry) {
+		this.actualEntry = actualEntry;
+	}
+
+	public Double getActualExit() {
+		return actualExit;
+	}
+
+	public void setActualExit(Double actualExit) {
+		this.actualExit = actualExit;
 	}
 
 	public LocalDateTime getCreatedAt() {

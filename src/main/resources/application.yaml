@@ -37,7 +37,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    show-sql: true
+    # show-sql 曾在生产开着：每分钟扫描+TG轮询把 SQL 打进文件日志，
+    # 两个月刷出 858MB。生产一律关掉，排查时再临时开。
+    show-sql: false
     open-in-view: false
 
 # ===== 加密配置 =====

@@ -14,5 +14,7 @@ public record AiConfigRequest(
 		Boolean newsKeywordOn,
 		Integer leverage,
 		Double minMovePct,
-		String strategyNote) {
+		String strategyNote,
+		Boolean autoOrderEnabled,
+		Double autoMarginPct) {
 }

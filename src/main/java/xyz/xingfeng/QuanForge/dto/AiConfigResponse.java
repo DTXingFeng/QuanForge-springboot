@@ -15,5 +15,9 @@ public record AiConfigResponse(
 		boolean newsKeywordOn,
 		int leverage,
 		double minMovePct,
-		String strategyNote) {
+		String strategyNote,
+		boolean autoOrderEnabled,
+		double autoMarginPct,
+		Double equityBaseline,
+		String equityBaselineAt) {
 }

@@ -69,6 +69,21 @@ public class AiConfig {
 	@Column(name = "strategy_note", nullable = false, length = 1000)
 	private String strategyNote = "";
 
+	/** 自动执行：BUY/SELL 建议在模拟盘真实下单，closed-pnl 真实记账 */
+	@Column(name = "auto_order_enabled", nullable = false)
+	private Boolean autoOrderEnabled = Boolean.FALSE;
+
+	/** 自动执行每单保证金占账户比例（%） */
+	@Column(name = "auto_margin_pct", nullable = false)
+	private Double autoMarginPct = 5.0;
+
+	/** 自动执行首次开启时的账户权益基线（"重置资金前"的分界线，USDT） */
+	@Column(name = "equity_baseline")
+	private Double equityBaseline;
+
+	@Column(name = "equity_baseline_at")
+	private LocalDateTime equityBaselineAt;
+
 	/** 创建时间 */
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
@@ -183,6 +198,38 @@ public class AiConfig {
 
 	public void setStrategyNote(String strategyNote) {
 		this.strategyNote = strategyNote;
+	}
+
+	public Boolean getAutoOrderEnabled() {
+		return autoOrderEnabled;
+	}
+
+	public void setAutoOrderEnabled(Boolean autoOrderEnabled) {
+		this.autoOrderEnabled = autoOrderEnabled;
+	}
+
+	public Double getAutoMarginPct() {
+		return autoMarginPct;
+	}
+
+	public void setAutoMarginPct(Double autoMarginPct) {
+		this.autoMarginPct = autoMarginPct;
+	}
+
+	public Double getEquityBaseline() {
+		return equityBaseline;
+	}
+
+	public void setEquityBaseline(Double equityBaseline) {
+		this.equityBaseline = equityBaseline;
+	}
+
+	public LocalDateTime getEquityBaselineAt() {
+		return equityBaselineAt;
+	}
+
+	public void setEquityBaselineAt(LocalDateTime equityBaselineAt) {
+		this.equityBaselineAt = equityBaselineAt;
 	}
 
 	/**

@@ -36,6 +36,8 @@ interface AiConfigState {
   leverage: number
   minMovePct: number
   strategyNote: string
+  autoOrderEnabled: boolean
+  autoMarginPct: number
 }
 
 const DEFAULT_AI: AiConfigState = {
@@ -50,6 +52,8 @@ const DEFAULT_AI: AiConfigState = {
   leverage: 100,
   minMovePct: 0.1,
   strategyNote: "",
+  autoOrderEnabled: false,
+  autoMarginPct: 5,
 }
 
 const AI_PRESETS = [
@@ -181,6 +185,8 @@ function SettingsPage() {
         leverage: cfg.leverage ?? 100,
         minMovePct: cfg.minMovePct ?? 0.1,
         strategyNote: cfg.strategyNote ?? "",
+        autoOrderEnabled: cfg.autoOrderEnabled ?? false,
+        autoMarginPct: cfg.autoMarginPct ?? 5,
       })
     } catch {
       // AI 配置加载失败保持默认
@@ -682,6 +688,43 @@ function SettingsPage() {
                   {" "}{(ai.leverage * ai.minMovePct).toFixed(1)}%——AI 以「损失可控」为先：
                   方向倾向成立即可出手，止损放结构失效位并标注单笔最大亏损，止盈至少覆盖手续费，
                   另给动态管理预案（跌破离场 / 守住持有）。
+                </p>
+              </div>
+              <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4 space-y-3">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={ai.autoOrderEnabled}
+                    onChange={(e) => setAi({ ...ai, autoOrderEnabled: e.target.checked })}
+                    className="h-4 w-4 rounded border-zinc-700 bg-zinc-900 accent-emerald-500"
+                  />
+                  <Zap className="h-4 w-4 text-emerald-400" />
+                  <p className="text-sm font-medium text-zinc-200">自动执行（模拟盘实单记账）</p>
+                </label>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="ai-margin" className="text-xs text-zinc-400">每单保证金占账户（%）</Label>
+                    <Input
+                      id="ai-margin"
+                      type="number"
+                      min={1}
+                      max={50}
+                      step={0.5}
+                      value={ai.autoMarginPct}
+                      onChange={(e) => setAi({ ...ai, autoMarginPct: Number(e.target.value) })}
+                      className="bg-zinc-950/60 border-zinc-800"
+                    />
+                  </div>
+                  <div className="space-y-1.5 self-end">
+                    <p className="text-[11px] leading-relaxed text-zinc-500">
+                      开启后 BUY/SELL 建议在 Bybit 模拟盘真实下单：限价挂建议入场价、
+                      TP/SL 由交易所管理、盈亏从 closed-pnl 读取（含滑点，绝对准确）。
+                      下单失败自动回退 K 线推演。
+                    </p>
+                  </div>
+                </div>
+                <p className="text-[11px] text-amber-400/80">
+                  开启期间请勿在模拟盘手动交易同品种（单仓模式会互相干扰止盈止损）。
                 </p>
               </div>
               {aiMessage && (

@@ -11,6 +11,8 @@ package xyz.xingfeng.QuanForge;
  *   <li>v3.1: 模型预测升级为 BUY/SELL 前必调项，detail 必须写明共振/分歧；CYS 移出观察列表</li>
  *   <li>v3.2: 纸面跟踪单仓纪律——同品种至多一条活跃跟踪（同向跳过、反向市价平仓后开新），
  *       消除同段行情重复计数与多空双计</li>
+ *   <li>v4: 执行升级为模拟盘实单——限价挂建议入场价、TP/SL 由交易所管理、
+ *       盈亏从 closed-pnl 读取（含滑点），K 线回放仅作降级回退。研判逻辑同 v3.x</li>
  * </ul>
  */
 public final class SystemVersion {
@@ -18,5 +20,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v3.2-llm-dualmodel";
+	public static final String CURRENT = "v4-demo-execution";
 }

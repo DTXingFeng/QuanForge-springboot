@@ -53,7 +53,8 @@ public class AiConfigService {
 	@Transactional
 	public AiConfig save(String baseUrl, String apiKey, String model, Boolean enabled,
 			String watchSymbols, Integer scanIntervalMinutes, Double changeThresholdPct,
-			Boolean newsKeywordOn, Integer leverage, Double minMovePct, String strategyNote) {
+			Boolean newsKeywordOn, Integer leverage, Double minMovePct, String strategyNote,
+			Boolean autoOrderEnabled, Double autoMarginPct) {
 		AiConfig config = getConfig();
 		if (baseUrl != null && !baseUrl.isBlank()) {
 			config.setBaseUrl(stripTrailingSlash(baseUrl.trim()));
@@ -89,7 +90,28 @@ public class AiConfigService {
 			config.setStrategyNote(strategyNote.trim().length() > 1000
 					? strategyNote.trim().substring(0, 1000) : strategyNote.trim());
 		}
+		if (autoOrderEnabled != null) {
+			config.setAutoOrderEnabled(autoOrderEnabled);
+		}
+		if (autoMarginPct != null && autoMarginPct > 0 && autoMarginPct <= 100) {
+			config.setAutoMarginPct(autoMarginPct);
+		}
 		return repository.save(config);
+	}
+
+	/**
+	 * 记录账户权益基线（"重置资金前"的分界线）：仅首次成功实单下单时写入一次，
+	 * 之后重置资金/手动出入金都可与此基线对照核对记账。
+	 */
+	@Transactional
+	public void recordEquityBaseline(double equityUsd) {
+		AiConfig config = getConfig();
+		if (config.getEquityBaseline() == null) {
+			config.setEquityBaseline(equityUsd);
+			config.setEquityBaselineAt(java.time.LocalDateTime.now());
+			repository.save(config);
+			// 基线变更走 save 路径，清 JPA 一级缓存外的引用无必要（单例实体）
+		}
 	}
 
 	/** 去掉 baseUrl 结尾的 /（拼 chat/completions 时统一处理） */

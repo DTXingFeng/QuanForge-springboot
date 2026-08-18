@@ -36,15 +36,25 @@ public class AiAdviceTracker {
 	private static final List<String> ACTIVE = List.of(
 			AiAdviceTrack.STATUS_PENDING, AiAdviceTrack.STATUS_TRACKING);
 
+	/** 执行模式：K 线回放推演 */
+	private static final String MODE_PAPER = "PAPER";
+
+	/** 执行模式：模拟盘实单（交易所撮合记账） */
+	private static final String MODE_DEMO = "DEMO";
+
 	private final AiAdviceTrackRepository repository;
 	private final BybitService bybitService;
 	private final TelegramBotService telegram;
+	private final DemoOrderExecutor executor;
+	private final AiConfigService configService;
 
 	public AiAdviceTracker(AiAdviceTrackRepository repository, BybitService bybitService,
-			TelegramBotService telegram) {
+			TelegramBotService telegram, DemoOrderExecutor executor, AiConfigService configService) {
 		this.repository = repository;
 		this.bybitService = bybitService;
 		this.telegram = telegram;
+		this.executor = executor;
+		this.configService = configService;
 	}
 
 	/**
@@ -63,8 +73,35 @@ public class AiAdviceTracker {
 	 */
 	@Transactional
 	public void track(AiAlert alert, String action, double entry, double stopLoss, double takeProfit) {
+		var cfg = configService.getConfig();
+		boolean demo = Boolean.TRUE.equals(cfg.getAutoOrderEnabled());
 		for (AiAdviceTrack old : repository.findBySymbolAndStatusIn(alert.getSymbol(), ACTIVE)) {
 			if (AiAdviceTrack.STATUS_PENDING.equals(old.getStatus())) {
+				// 实单模式：先撤掉还在挂着的限价委托
+				if (demo && MODE_DEMO.equals(old.getExecMode()) && old.getOrderId() != null) {
+					try {
+						executor.cancel(old.getSymbol(), old.getOrderId());
+						// 撤单 ≠ 无成交：轮询间隙里可能已部分/全部成交，核查遗留仓位并平掉
+						var d = executor.orderDetail(old.getSymbol(), old.getOrderId());
+						double cum = Double.parseDouble(d.optString("cumExecQty", "0"));
+						if (cum > 0) {
+							var pos = executor.position(old.getSymbol());
+							if (pos != null) {
+								executor.marketClose(old.getSymbol(), pos.getString("side"),
+										Double.parseDouble(pos.getString("size")));
+							}
+							var c = executor.closedPnlSince(old.getSymbol(), epochMs(
+									old.getCreatedAt()));
+							if (c != null) {
+								old.setActualExit(c.avgExit());
+							}
+							expire(old, "取代时发现已成交，平仓结算", null);
+							continue;
+						}
+					} catch (Exception e) {
+						log.warn("撤旧委托失败 {} #{}: {}", old.getSymbol(), old.getId(), e.getMessage());
+					}
+				}
 				old.setStatus(AiAdviceTrack.STATUS_EXPIRED);
 				old.setSettledAt(LocalDateTime.now());
 				old.setNote("等入场期间被同品种新建议取代");
@@ -77,9 +114,14 @@ public class AiAdviceTracker {
 						alert.getSymbol(), old.getId());
 				return;
 			}
-			Double last = lastPrice(alert.getSymbol());
-			expire(old, "反向建议出现，按市价平仓反转",
-					last == null ? null : pricePct(old, last));
+			// 反向建议：close-and-reverse
+			if (MODE_DEMO.equals(old.getExecMode())) {
+				closeDemoReverse(old);
+			} else {
+				Double last = lastPrice(alert.getSymbol());
+				expire(old, "反向建议出现，按市价平仓反转",
+						last == null ? null : pricePct(old, last));
+			}
 		}
 		AiAdviceTrack t = new AiAdviceTrack();
 		t.setAlertId(alert.getId());
@@ -90,9 +132,62 @@ public class AiAdviceTracker {
 		t.setTakeProfit(takeProfit);
 		t.setStatus(AiAdviceTrack.STATUS_PENDING);
 		t.setSysVersion(xyz.xingfeng.QuanForge.SystemVersion.CURRENT);
+		t.setExecMode(MODE_PAPER);
+		if (demo) {
+			try {
+				var p = executor.placeEntry(alert.getSymbol(), action, entry, stopLoss, takeProfit,
+						cfg.getAutoMarginPct() == null ? 5.0 : cfg.getAutoMarginPct(),
+						cfg.getLeverage() == null ? 100 : cfg.getLeverage());
+				t.setExecMode(MODE_DEMO);
+				t.setOrderId(p.orderId());
+				t.setQty(p.qty());
+				configService.recordEquityBaseline(p.equityUsd());
+			} catch (Exception e) {
+				log.warn("模拟盘下单失败，回退纸面跟踪 {} {}: {}", alert.getSymbol(), action, e.getMessage());
+				t.setNote("模拟盘下单失败(" + truncate(e.getMessage(), 60) + ")，回退纸面");
+			}
+		}
 		repository.save(t);
-		log.info("纸面跟踪已建立: {} {} entry={} sl={} tp={}", alert.getSymbol(), action,
-				entry, stopLoss, takeProfit);
+		log.info("纸面跟踪已建立[{}]: {} {} entry={} sl={} tp={}", t.getExecMode(), alert.getSymbol(),
+				action, entry, stopLoss, takeProfit);
+	}
+
+	/** 实单模式的反向平仓：市价平掉旧仓，从 closed-pnl 读实际盈亏结算 */
+	private void closeDemoReverse(AiAdviceTrack old) {
+		try {
+			var pos = executor.position(old.getSymbol());
+			if (pos != null) {
+				executor.marketClose(old.getSymbol(), pos.getString("side"),
+						Double.parseDouble(pos.getString("size")));
+			}
+			var c = executor.closedPnlSince(old.getSymbol(), epochMs(
+					old.getEnteredAt() == null ? old.getCreatedAt() : old.getEnteredAt()));
+			if (c != null) {
+				old.setActualExit(c.avgExit());
+				expire(old, "反向建议出现，市价平仓反转", demoPct(c.pnl(), old));
+			} else {
+				expire(old, "反向建议平仓，盈亏待下轮核对", null);
+			}
+		} catch (Exception e) {
+			log.warn("实单反向平仓失败 {} #{}: {}", old.getSymbol(), old.getId(), e.getMessage());
+			expire(old, "反向建议平仓失败: " + truncate(e.getMessage(), 60), null);
+		}
+	}
+
+	private String truncate(String s, int max) {
+		return s == null || s.length() <= max ? s : s.substring(0, max);
+	}
+
+	/** 实际盈亏 → 1x 价格变动口径 %（相对开仓名义价值） */
+	private Double demoPct(double pnl, AiAdviceTrack t) {
+		if (t.getQty() == null || t.getActualEntry() == null || t.getActualEntry() <= 0) {
+			return null;
+		}
+		return pnl / (t.getQty() * t.getActualEntry()) * 100;
+	}
+
+	private long epochMs(LocalDateTime time) {
+		return time.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
 	}
 
 	/** 最新成交价（反向平仓结算用），失败返回 null（不阻塞新跟踪建立） */
@@ -120,6 +215,10 @@ public class AiAdviceTracker {
 		Map<String, List<double[]>> candlesBySymbol = new HashMap<>();
 		for (AiAdviceTrack t : active) {
 			try {
+				if (MODE_DEMO.equals(t.getExecMode())) {
+					settleDemo(t);
+					continue;
+				}
 				List<double[]> candles = candlesBySymbol.get(t.getSymbol());
 				if (candles == null) {
 					candles = fetchCandles(t.getSymbol(), earliest(t));
@@ -127,9 +226,114 @@ public class AiAdviceTracker {
 				}
 				settleOne(t, candles);
 			} catch (Exception e) {
-				log.warn("纸面跟踪结算失败 {} #{}: {}", t.getSymbol(), t.getId(), e.getMessage());
+				log.warn("跟踪结算失败 {} #{}: {}", t.getSymbol(), t.getId(), e.getMessage());
 			}
 		}
+	}
+
+	// ==================== 实单结算（交易所状态机） ====================
+
+	/**
+	 * 模拟盘实单的生命周期，全部由交易所事实驱动：
+	 * PENDING（限价委托挂着）→ 成交 → TRACKING（TP/SL 由交易所盯）→ 仓位归零 →
+	 * 从 closed-pnl 读实际盈亏 → WIN/LOSS。超时由我们主动撤单/市价平仓。
+	 */
+	private void settleDemo(AiAdviceTrack t) {
+		if (AiAdviceTrack.STATUS_PENDING.equals(t.getStatus())) {
+			var d = executor.orderDetail(t.getSymbol(), t.getOrderId());
+			String orderStatus = d.optString("orderStatus", "");
+			double cumQty = Double.parseDouble(d.optString("cumExecQty", "0"));
+			switch (orderStatus) {
+				case "Filled" -> enterDemo(t, d.optDouble("avgPrice", t.getEntry()), cumQty);
+				case "Cancelled", "Rejected" -> {
+					if (cumQty > 0) {
+						// 部分成交后被撤：剩余仓位交给 TRACKING 状态管理
+						enterDemo(t, d.optDouble("avgPrice", t.getEntry()), cumQty);
+					} else {
+						expire(t, "委托失效: " + orderStatus);
+					}
+				}
+				default -> {
+					// New / PartiallyFilled：继续等；超时撤单
+					if (minutesSince(orNow(t.getCreatedAt())) > AiAdviceTrack.PENDING_TTL_MINUTES) {
+						executor.cancel(t.getSymbol(), t.getOrderId());
+						if (cumQty > 0) {
+							enterDemo(t, d.optDouble("avgPrice", t.getEntry()), cumQty);
+							t.setNote("等入场超时，按已成交部分跟踪");
+							repository.save(t);
+						} else {
+							expire(t, "等入场超时撤单");
+						}
+					}
+				}
+			}
+			return;
+		}
+
+		// TRACKING：仓位归零 = TP/SL/市价平仓已完成
+		var pos = executor.position(t.getSymbol());
+		if (pos == null) {
+			settleDemoClosed(t, t.getNote());
+			return;
+		}
+		if (minutesSince(orNow(t.getEnteredAt())) > AiAdviceTrack.TRACKING_TTL_MINUTES
+				&& t.getNote() == null) {
+			executor.marketClose(t.getSymbol(), pos.getString("side"),
+					Double.parseDouble(pos.getString("size")));
+			t.setNote("持仓超时，市价平仓");
+			repository.save(t);
+		}
+	}
+
+	/** 限价委托成交 → TRACKING，记录真实入场价与数量，并设置 TP/SL */
+	private void enterDemo(AiAdviceTrack t, double avgPrice, double qty) {
+		t.setStatus(AiAdviceTrack.STATUS_TRACKING);
+		t.setActualEntry(avgPrice > 0 ? avgPrice : t.getEntry());
+		if (qty > 0) {
+			t.setQty(qty);
+		}
+		t.setEnteredAt(LocalDateTime.now());
+		repository.save(t);
+		log.info("实单跟踪 #{} {} 已成交入场 {} qty={}", t.getId(), t.getSymbol(),
+				t.getActualEntry(), t.getQty());
+		// 成交后才设 TP/SL（挂单附带会被 Bybit 按现价校验拒绝，见 placeEntry 注释）
+		try {
+			executor.setTradingStop(t.getSymbol(), t.getAction(), t.getTakeProfit(), t.getStopLoss());
+		} catch (Exception e) {
+			log.warn("TP/SL 设置失败 #{}，保护性市价平仓: {}", t.getId(), e.getMessage());
+			try {
+				var pos = executor.position(t.getSymbol());
+				if (pos != null) {
+					executor.marketClose(t.getSymbol(), pos.getString("side"),
+							Double.parseDouble(pos.getString("size")));
+				}
+			} catch (Exception closeEx) {
+				log.error("保护性平仓也失败 #{}: {}", t.getId(), closeEx.getMessage());
+			}
+			t.setNote("TP/SL设置失败，保护性平仓");
+			repository.save(t);
+		}
+	}
+
+	/** 仓位已归零：从 closed-pnl 读实际盈亏结算（绝对准确的记账来源） */
+	private void settleDemoClosed(AiAdviceTrack t, String note) {
+		long since = epochMs(t.getEnteredAt() == null ? t.getCreatedAt() : t.getEnteredAt());
+		var c = executor.closedPnlSince(t.getSymbol(), since - 60_000);
+		if (c == null) {
+			// 平仓记录尚未生成（异步延迟），下轮心跳再核
+			log.info("实单跟踪 #{} 仓位已平但 closed-pnl 暂无记录，下轮核对", t.getId());
+			return;
+		}
+		t.setActualExit(c.avgExit());
+		String status = c.pnl() >= 0 ? AiAdviceTrack.STATUS_WIN : AiAdviceTrack.STATUS_LOSS;
+		Double pct = demoPct(c.pnl(), t);
+		if (pct != null) {
+			settleTrack(t, status, pct, note);
+		} else {
+			settleTrack(t, status, 0, note);
+		}
+		log.info("实单结算 #{} {}: pnl={} 出场价={}", t.getId(), t.getSymbol(),
+				String.format(Locale.ROOT, "%.4f", c.pnl()), c.avgExit());
 	}
 
 	// ==================== 单条结算 ====================
@@ -265,6 +469,31 @@ public class AiAdviceTracker {
 					byVersion.put(ver, vm);
 				});
 		m.put("byVersion", byVersion);
+		// 按执行模式分组：DEMO=模拟盘实单（交易所记账）/ PAPER=K线回放推演
+		Map<String, Map<String, Object>> byExec = new java.util.LinkedHashMap<>();
+		all.stream()
+				.collect(java.util.stream.Collectors.groupingBy(
+						t -> t.getExecMode() == null ? MODE_PAPER : t.getExecMode()))
+				.forEach((mode, list) -> {
+					long w = list.stream().filter(t -> AiAdviceTrack.STATUS_WIN.equals(t.getStatus())).count();
+					long l = list.stream().filter(t -> AiAdviceTrack.STATUS_LOSS.equals(t.getStatus())).count();
+					long s = w + l;
+					Map<String, Object> em = new HashMap<>();
+					em.put("total", list.size());
+					em.put("settled", s);
+					em.put("wins", w);
+					em.put("losses", l);
+					em.put("winRate", s == 0 ? null : round2(w * 100.0 / s));
+					Double avg = list.stream()
+							.filter(t -> t.getResultPct() != null && s > 0
+									&& (AiAdviceTrack.STATUS_WIN.equals(t.getStatus())
+											|| AiAdviceTrack.STATUS_LOSS.equals(t.getStatus())))
+							.mapToDouble(AiAdviceTrack::getResultPct)
+							.average().orElse(Double.NaN);
+					em.put("avgResultPct", Double.isNaN(avg) ? null : round2(avg));
+					byExec.put(mode, em);
+				});
+		m.put("byExecMode", byExec);
 		return m;
 	}
 

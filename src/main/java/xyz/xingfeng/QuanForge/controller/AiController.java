@@ -55,7 +55,8 @@ public class AiController {
 		AiConfig saved = configService.save(req.baseUrl(), req.apiKey(), req.model(),
 				req.enabled(), req.watchSymbols(), req.scanIntervalMinutes(),
 				req.changeThresholdPct(), req.newsKeywordOn(),
-				req.leverage(), req.minMovePct(), req.strategyNote());
+				req.leverage(), req.minMovePct(), req.strategyNote(),
+				req.autoOrderEnabled(), req.autoMarginPct());
 		return toResponse(saved);
 	}
 
@@ -111,6 +112,11 @@ public class AiController {
 				Boolean.TRUE.equals(config.getNewsKeywordOn()),
 				config.getLeverage() == null ? 100 : config.getLeverage(),
 				config.getMinMovePct() == null ? 0.1 : config.getMinMovePct(),
-				config.getStrategyNote() == null ? "" : config.getStrategyNote());
+				config.getStrategyNote() == null ? "" : config.getStrategyNote(),
+				Boolean.TRUE.equals(config.getAutoOrderEnabled()),
+				config.getAutoMarginPct() == null ? 5.0 : config.getAutoMarginPct(),
+				config.getEquityBaseline(),
+				config.getEquityBaselineAt() == null ? null
+						: config.getEquityBaselineAt().toString());
 	}
 }
