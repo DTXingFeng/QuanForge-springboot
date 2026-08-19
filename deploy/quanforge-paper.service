@@ -1,0 +1,18 @@
+[Unit]
+Description=QuanForge v4.8 trend-rule paper trader (模拟盘)
+After=network-online.target quanforge.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=xingfeng
+Environment=TP_R=3
+Environment=SIZING=eq
+ExecStart=/usr/bin/python3 /mnt/nvme/quanforge/tools/paper_trendrule.py
+Restart=always
+RestartSec=15
+StandardOutput=append:/mnt/nvme/quanforge/logs/paper.log
+StandardError=append:/mnt/nvme/quanforge/logs/paper.log
+
+[Install]
+WantedBy=multi-user.target
