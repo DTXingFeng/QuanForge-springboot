@@ -66,11 +66,12 @@ public class TelegramBotService {
 	private final AiAlertRepository alertRepository;
 	private final AiAdviceTrackRepository trackRepository;
 	private final BybitService bybitService;
+	private final TradeAutopsyService autopsyService;
 
 	public TelegramBotService(TelegramConfigRepository repository, ProxiedHttpClients clients,
 			AiConfigService aiConfigService, @Lazy AiAnalysisService analysisService,
 			AiAlertRepository alertRepository, AiAdviceTrackRepository trackRepository,
-			BybitService bybitService) {
+			BybitService bybitService, TradeAutopsyService autopsyService) {
 		this.repository = repository;
 		this.clients = clients;
 		this.aiConfigService = aiConfigService;
@@ -78,6 +79,7 @@ public class TelegramBotService {
 		this.alertRepository = alertRepository;
 		this.trackRepository = trackRepository;
 		this.bybitService = bybitService;
+		this.autopsyService = autopsyService;
 	}
 
 	// ==================== 轮询 ====================
@@ -164,6 +166,7 @@ public class TelegramBotService {
 				muted = false;
 				send("已恢复推送 🔔");
 			}
+			case "/autopsy" -> cmdAutopsy();
 			default -> send("未知指令。/help 查看可用指令。");
 		}
 	}
@@ -174,11 +177,29 @@ public class TelegramBotService {
 				/status — 服务状态（盯盘/战绩/钱包）
 				/price BTCUSDT — 实时行情
 				/analyze BTCUSDT — 触发一次 AI 研判（1-2 分钟后回推）
-				/alerts — 最近 5 条告警
-				/tracks — 纸面跟踪战绩
 				/positions — 当前持仓
+				/tracks — 跟踪战绩
+				/alerts — 最近告警
+				/autopsy — AI 验尸报告：最近交易的死因分析（30 秒）
 				/mute /unmute — 静音/恢复推送
-				（推送策略：有交易动作的建议 + 显著盈亏结算≥0.3%%，观望类不推）""";
+				（推送策略：有交易动作的建议 + 显著盈亏结算≥0.3%%）""";
+	}
+
+	/** /autopsy：验尸统计 + LLM 交易员语言解读 */
+	private void cmdAutopsy() {
+		send("验尸中…重放最近交易的 K 线（约 30 秒）");
+		CompletableFuture.runAsync(() -> {
+			try {
+				var a = autopsyService.autopsyRecent(30);
+				if (a.wins() + a.losses() == 0) {
+					send("还没有已结算的交易，无从验尸。");
+					return;
+				}
+				send(autopsyService.explain(a));
+			} catch (Exception e) {
+				send("验尸失败: " + e.getMessage());
+			}
+		});
 	}
 
 	private void cmdStatus() {
@@ -375,6 +396,7 @@ public class TelegramBotService {
 					.put(new JSONObject().put("command", "analyze").put("description", "触发一次 AI 研判，如 /analyze ETHUSDT"))
 					.put(new JSONObject().put("command", "positions").put("description", "当前持仓"))
 					.put(new JSONObject().put("command", "tracks").put("description", "跟踪战绩"))
+					.put(new JSONObject().put("command", "autopsy").put("description", "AI 验尸报告：交易死因分析"))
 					.put(new JSONObject().put("command", "alerts").put("description", "最近告警"))
 					.put(new JSONObject().put("command", "mute").put("description", "静音推送"))
 					.put(new JSONObject().put("command", "unmute").put("description", "恢复推送"))
