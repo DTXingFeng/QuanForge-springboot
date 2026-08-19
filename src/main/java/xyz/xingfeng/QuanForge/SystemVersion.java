@@ -25,6 +25,8 @@ package xyz.xingfeng.QuanForge;
  *       （验尸：山寨亏损大头为 right-side-trend 逆势单）；HEMI 移出，ZEC/SNDK 入列</li>
  *   <li>v4.6: 双重熔断（单边行情特殊处理）——2h 动量 ≥1.2% 禁逆势新单 +
  *       同向 2 连亏 90 分钟冷却（实测 8/19 夜反弹：逆势空单被一刀刀放血）</li>
+ *   <li>v4.7: 实时化——WS 急动触发研判（urgent 模式 3 轮工具快出结论）+
+ *       急动即时市价入场（entry 距现价 <0.15% 不等回调）+ 定时扫描降为 30 分钟兜底</li>
  * </ul>
  */
 public final class SystemVersion {
@@ -32,5 +34,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v4.6-circuitbreaker";
+	public static final String CURRENT = "v4.7-realtime";
 }

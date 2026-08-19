@@ -55,6 +55,25 @@ public class AiAgentService {
 	 * @return 模型最终输出的 JSON 对象（结构见 system prompt）
 	 */
 	public JSONObject judge(AiConfig config, String symbol, String trigger) throws Exception {
+		return judge(config, symbol, trigger, false);
+	}
+
+	/**
+	 * 运行 agentic 研判：模型自主调用工具收集信息后输出最终 JSON。
+	 *
+	 * @param urgent true = 实时急动触发：提示词强调时效（价格在跑，结论要快），
+	 *               工具轮数收紧到 3（少拉数据快出结论）
+	 */
+	public JSONObject judge(AiConfig config, String symbol, String trigger, boolean urgent)
+			throws Exception {
+		String urgencyHint = urgent ? """
+
+				⚠ 时效警告：本次由实时行情急动触发，价格正在快速变动。
+				- 你最多 3 轮工具调用（行情指标+模型预测即可，可省略消息面）
+				- 每多犹豫 30 秒，入场价就离你看到的价位更远
+				- 你的 entry 应基于最新价给出可立即成交的价位（不是等回调的理想价位），
+				  破位追势场景 entry 可略高于现价（BUY）/低于现价（SELL）
+				""" : "";
 		JSONArray messages = new JSONArray()
 				.put(new JSONObject().put("role", "system").put("content", systemPrompt(config)))
 				.put(new JSONObject().put("role", "user").put("content",
@@ -63,14 +82,15 @@ public class AiAgentService {
 								触发原因：%s
 								当前时间：%s
 								请自主调用工具收集你判断所需的数据（建议：先行情指标，后消息面与持仓），\
-								数据充分后直接输出最终 JSON 研判。""".formatted(symbol, trigger,
-								java.time.LocalDateTime.now().withNano(0))));
+								数据充分后直接输出最终 JSON 研判。%s""".formatted(symbol, trigger,
+								java.time.LocalDateTime.now().withNano(0), urgencyHint)));
 
 		JSONObject tools = new JSONObject()
 				.put("tools", toolRegistry.toolsJson())
 				.put("tool_choice", "auto");
 
-		for (int round = 1; round <= MAX_ROUNDS; round++) {
+		int maxRounds = urgent ? 3 : MAX_ROUNDS;
+		for (int round = 1; round <= maxRounds; round++) {
 			JSONObject message = chat(config, messages, tools);
 			JSONArray toolCalls = message.optJSONArray("tool_calls");
 			if (toolCalls == null || toolCalls.isEmpty()) {
@@ -101,7 +121,7 @@ public class AiAgentService {
 			}
 		}
 		// 轮数用尽：去掉工具强制收敛
-		log.info("[AI Agent] 工具轮数达上限（{}），强制输出结论", MAX_ROUNDS);
+		log.info("[AI Agent] 工具轮数达上限，强制输出结论");
 		messages.put(new JSONObject().put("role", "user")
 				.put("content", "请停止调用工具，基于已获取的数据直接输出最终 JSON 研判。"));
 		JSONObject message = chat(config, messages, new JSONObject());

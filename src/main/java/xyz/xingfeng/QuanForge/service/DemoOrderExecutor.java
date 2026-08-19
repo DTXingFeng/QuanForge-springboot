@@ -76,16 +76,24 @@ public class DemoOrderExecutor {
 		// 杠杆与仓位模式预设置（幂等；已持仓位时报"未变更"类错误，忽略）
 		setLeverage(symbol, lev);
 
-		// 注意：不随单附带 TP/SL——Bybit 对挂单的 TP/SL 按下单瞬间的现价校验，
-		// 回调入场型建议（entry 距现价较远）会被拒。改为成交后 trading-stop 设置。
+		// 急动即时入场：entry 距现价 <0.15% 时改市价单——趋势启动时等限价成交
+		// 平均滞后 0~3 分钟（实测），市价立刻上车
+		double last = lastPriceOf(symbol);
+		boolean immediate = Math.abs(entry - last) / last < 0.0015;
+		String orderType = "Limit";
+		if (immediate) {
+			orderType = "Market";
+		}
 		JSONObject body = new JSONObject();
 		body.put("category", "linear");
 		body.put("symbol", symbol);
 		body.put("side", "BUY".equals(action) ? "Buy" : "Sell");
-		body.put("orderType", "Limit");
+		body.put("orderType", orderType);
 		body.put("qty", plain(qty));
-		body.put("price", plain(roundToTick(entry, inst.tickSize())));
-		body.put("timeInForce", "GTC");
+		if (!immediate) {
+			body.put("price", plain(roundToTick(entry, inst.tickSize())));
+			body.put("timeInForce", "GTC");
+		}
 		body.put("orderLinkId", "qf-" + System.currentTimeMillis());
 
 		JSONObject resp = new JSONObject(bybit.post(BybitService.DEFAULT_CREDENTIAL_NAME,
@@ -95,9 +103,22 @@ public class DemoOrderExecutor {
 		if (orderId.isEmpty()) {
 			throw new IllegalStateException("下单成功但未返回 orderId");
 		}
-		log.info("模拟盘委托已挂: {} {} qty={} entry={} lev={}x margin={}%",
-				symbol, action, plain(qty), body.getString("price"), lev, marginPct);
+		log.info("模拟盘委托已挂: {} {} {} qty={} entry={} lev={}x margin={}%",
+				symbol, action, orderType, plain(qty),
+				immediate ? String.format("%.4f(last)", last) : body.getString("price"),
+				lev, marginPct);
 		return new Placement(orderId, qty.doubleValue(), equity);
+	}
+
+	/** 最新成交价（内部工具，失败抛异常） */
+	private double lastPriceOf(String symbol) {
+		JSONObject resp = new JSONObject(bybit.getPublicRaw("/v5/market/tickers",
+				java.util.Map.of("category", "linear", "symbol", symbol)));
+		JSONArray list = resp.getJSONObject("result").getJSONArray("list");
+		if (list.isEmpty()) {
+			throw new IllegalStateException(symbol + " 无行情");
+		}
+		return Double.parseDouble(list.getJSONObject(0).getString("lastPrice"));
 	}
 
 	/** 成交后设置持仓 TP/SL（tpslMode=Full，LastPrice 触发） */

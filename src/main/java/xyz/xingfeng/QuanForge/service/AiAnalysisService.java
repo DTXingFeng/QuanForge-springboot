@@ -174,9 +174,12 @@ public class AiAnalysisService {
 		// ---- 调模型：优先 agentic（AI 自主拉取数据），不支持时回退固定上下文 ----
 		String triggerText = manual ? "MANUAL"
 				: String.join("；", triggers);
+		// 实时急动触发（WS 桥的 1m/5m 急动文本）→ urgent 模式：少轮次快出结论
+		boolean urgent = triggerText.contains("1m ") || triggerText.contains("5m ")
+				|| triggerText.contains("急");
 		JSONObject result;
 		try {
-			result = agentService.judge(config, symbol, triggerText);
+			result = agentService.judge(config, symbol, triggerText, urgent);
 		} catch (AiAgentService.ToolsUnsupportedException e) {
 			log.info("{} 所用模型不支持 function calling，回退固定上下文模式", symbol);
 			double[] macd = IndicatorMath.macdLast(closes, 12, 26, 9);
