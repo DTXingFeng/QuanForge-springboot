@@ -41,6 +41,8 @@ BREAKER_2H = 1.2
 CLAMP_MAJORS = 2.2
 TTL_ALTS, TTL_MAJORS = 120, 240
 SLIP_MARKET, SLIP_LIMIT = 0.0005, 0.0003
+TP_R = float(os.environ.get("TP_R", "2"))  # trend-rule 臂止盈倍数 (2R/3R/...)
+SIZING = os.environ.get("SIZING", "fixed")  # fixed=每笔$1000 | eq=权益5%x100x(生产真实)
 # 执行延迟模式（--latency）：
 #   -1  = 自适应（推荐）：每次 LLM 调用实测耗时即该单成交等待——模型快则延迟小，
 #         慢则延迟大，延迟分布自动对齐生产（llm_ms 记录在账本）
@@ -203,7 +205,8 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
                      f"backtest-v4.7-{arm_label}", str(p.plan_ts), str(p.ts), str(ts),
                      p.llm_ms))
         if status in ("WIN", "LOSS"):
-            equity += NOTIONAL * pct / 100
+            base = NOTIONAL if SIZING == "fixed" else max(equity * 5.0, 0.0)
+            equity += base * pct / 100
             wins += status == "WIN"
             losses_n += status == "LOSS"
         out.commit()
@@ -359,7 +362,45 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
                 why = f"实时冲量 5m {pct5m:+.2f}%"
             elif i_ts.minute % 30 == 0 and (abs(pct15m) >= SCAN_PCT15M or r <= SCAN_RSI_X or r >= 100 - SCAN_RSI_X):
                 why = f"定时扫描 15m {pct15m:+.2f}% RSI {r:.0f}"
-            if why is None or llm_calls >= budget:
+            if why is None or (llm_calls >= budget and arm != "trend-rule"):
+                continue
+
+            # ---- trend-rule 臂: 零LLM纯机械顺势（免LLM成本, 免LLM延迟）----
+            # 触发不限方向（回踩触发也是好入场）; 方向=15m+1h EMA 一致时顺势;
+            # 入场=触发bar收盘价挂限价（pending路径=被动成交, SLIP_LIMIT即可复现真实挂单）;
+            # SL=1.2xATR(主币钳制) TP=TP_R xR; 熔断/冷却/TTL 全套照旧.
+            if arm == "trend-rule":
+                ema20_tr = c.iloc[max(0, i-200):i+1].ewm(span=20).mean().iloc[-1]
+                ema60_tr = c.iloc[max(0, i-200):i+1].ewm(span=60).mean().iloc[-1]
+                ema200_tr = c.iloc[max(0, i-400):i+1].ewm(span=200).mean().iloc[-1]
+                t15_tr = "UP" if ema20_tr > ema60_tr else "DOWN"
+                t1h_tr = "UP" if ema60_tr > ema200_tr else "DOWN"
+                if t15_tr == t1h_tr:
+                    tr_dir = "BUY" if t15_tr == "UP" else "SELL"
+                    blk = breaker_blocks(sym, tr_dir, df, i)
+                    if blk is not None:
+                        out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
+                                    "take_profit,status,result_pct,note,sys_version,created_at) "
+                                    "values(?,?,?,?,?,?,?,?,?,?)",
+                                    (sym, tr_dir, c.iloc[i], 0, 0, "BLOCKED", None,
+                                     f"breaker:{blk}", f"backtest-v4.7-{arm_label}", str(i_ts)))
+                        out.commit()
+                        last_trig[sym] = i_ts.value
+                        continue
+                    px_tr = c.iloc[i]
+                    sl_d_tr = float(atr(df, 14).iloc[i]) * 1.2
+                    sl_tr = px_tr - sl_d_tr if tr_dir == "BUY" else px_tr + sl_d_tr
+                    if sym in MAJORS and sl_d_tr / px_tr * 100 > CLAMP_MAJORS:
+                        sl_tr = px_tr - px_tr * CLAMP_MAJORS / 100 if tr_dir == "BUY" \
+                            else px_tr + px_tr * CLAMP_MAJORS / 100
+                    tp_tr = px_tr + TP_R * (px_tr - sl_tr) if tr_dir == "BUY" \
+                        else px_tr - TP_R * (sl_tr - px_tr)
+                    q = Pos(); q.sym, q.action, q.entry, q.sl, q.tp = sym, tr_dir, px_tr, sl_tr, tp_tr
+                    q.ts, q.plan_ts = i_ts, i_ts
+                    q.rebased, q.breakeven, q.is_market = False, False, False
+                    q.wait_s, q.llm_ms = 0, 0
+                    pending[sym] = q          # 限价被动成交: 触发价回踩触碰才进
+                    last_trig[sym] = i_ts.value
                 continue
 
             # ---- 上下文（历史时点） ----
@@ -496,9 +537,11 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
                 pos[sym] = q
             else:
                 pending[sym] = q
-            if llm_calls % 25 == 0:
+            if llm_calls % 25 == 0 and (llm_calls > 0 or arm != "trend-rule"):
                 print(f"[prog] {i_ts} calls={llm_calls}/{budget} eq={equity:.1f} "
                       f"W/L={wins}/{losses_n}", flush=True)
+            elif arm == "trend-rule" and i % 2000 == 0:
+                print(f"[prog] {i_ts} eq={equity:.1f} W/L={wins}/{losses_n}", flush=True)
     out.commit()
     print(f"[done] calls={llm_calls} W/L={wins}/{losses_n} equity={equity:.2f} "
           f"(start {EQUITY0})", flush=True)
@@ -509,7 +552,8 @@ if __name__ == "__main__":
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--symbols", default="BTCUSDT,ETHUSDT,SOLUSDT,ACEUSDT,ZECUSDT,SNDKUSDT")
     ap.add_argument("--arm", default="full",
-                    choices=["full", "nobreaker", "notrend", "norebase", "cascade-l0", "live"])
+                    choices=["full", "nobreaker", "notrend", "norebase", "cascade-l0", "live",
+                             "trend-rule"])
     ap.add_argument("--budget", type=int, default=1200)
     ap.add_argument("--out", default=OUT_DB)
     ap.add_argument("--latency", type=int, default=0,
