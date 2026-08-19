@@ -177,6 +177,10 @@ def run(symbols, days, arm, budget, out_db, latency_s=0):
         entry real, stop_loss real, take_profit real, status text,
         result_pct real, note text, sys_version text,
         created_at text, entered_at text, settled_at text, llm_ms integer)""")
+    # 兼容旧库（无 llm_ms 列）——动态补列
+    cols = [r[1] for r in out.execute("pragma table_info(ai_advice_track)")]
+    if "llm_ms" not in cols:
+        out.execute("alter table ai_advice_track add column llm_ms integer")
 
     pos = {}          # symbol -> Pos (单仓)
     pending = {}      # symbol -> Pos (限价等成交)
@@ -192,7 +196,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0):
         nonlocal equity, wins, losses_n
         out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,take_profit,"
                     "status,result_pct,note,sys_version,created_at,entered_at,settled_at,llm_ms) "
-                    "values(?,?,?,?,?,?,?,?,?,?,?,?)",
+                    "values(?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (p.sym, p.action, p.entry, p.sl, p.tp, status, round(pct, 3), note,
                      f"backtest-v4.7-{arm_label}", str(p.plan_ts), str(p.ts), str(ts),
                      p.llm_ms))
@@ -349,6 +353,56 @@ def run(symbols, days, arm, budget, out_db, latency_s=0):
             mp = model_predict(sym, df300)
             if mp is None:
                 continue
+
+            # ---- L0 级联快通道（--arm cascade-l0）----
+            # 模型 zone=high 时跳过 LLM 直接规则化下单（零延迟）：
+            # 方向=模型方向；入场=现价（市价即时）；止损=1.2×ATR；止盈=2R。
+            # 规则层（熔断/趋势纪律/钳制）照常执行。其余场景走 LLM 慢通道。
+            if arm == "cascade-l0" and mp["zone"] == "high" and mp["inDomain"]:
+                l0_dir = "BUY" if mp["direction"] == "UP" else "SELL"
+                l0_blk = breaker_blocks(sym, l0_dir, df, i)
+                ema20_l0 = c.iloc[max(0,i-200):i+1].ewm(span=20).mean().iloc[-1]
+                ema60_l0 = c.iloc[max(0,i-200):i+1].ewm(span=60).mean().iloc[-1]
+                trend15_l0 = "UP" if ema20_l0 > ema60_l0 else "DOWN"
+                trend_ok = True
+                if sym not in MAJORS and (
+                        (l0_dir == "BUY" and trend15_l0 == "DOWN")
+                        or (l0_dir == "SELL" and trend15_l0 == "UP")):
+                    trend_ok = False
+                if l0_blk is not None or not trend_ok:
+                    out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
+                                "take_profit,status,result_pct,note,sys_version,created_at) "
+                                "values(?,?,?,?,?,?,?,?,?,?)",
+                                (sym, l0_dir, c.iloc[i], 0, 0, "BLOCKED", None,
+                                 f"L0被拦:{l0_blk or '趋势纪律'}",
+                                 f"backtest-v4.7-{arm_label}", str(i_ts)))
+                    out.commit()
+                    last_trig[sym] = i_ts.value
+                    continue
+                px = c.iloc[i]
+                atr_l0 = float(atr(df, 14).iloc[i])
+                sl_d = atr_l0 * 1.2
+                l0_sl = px - sl_d if l0_dir == "BUY" else px + sl_d
+                l0_tp = px + 2 * sl_d if l0_dir == "BUY" else px - 2 * sl_d
+                if sym in MAJORS and abs(px - l0_sl) / px * 100 > CLAMP_MAJORS:
+                    l0_sl = px - px * CLAMP_MAJORS / 100 if l0_dir == "BUY" \
+                        else px + px * CLAMP_MAJORS / 100
+                q0 = Pos(); q0.sym, q0.action, q0.entry = sym, l0_dir, px
+                q0.sl, q0.tp, q0.ts, q0.plan_ts = l0_sl, l0_tp, i_ts, i_ts
+                q0.rebased, q0.breakeven, q0.is_market = False, False, True
+                q0.wait_s, q0.llm_ms = 0, 1  # LightGBM 推理 ~1ms
+                q0.entry = px * (1 + (SLIP_MARKET if l0_dir == "BUY" else -SLIP_MARKET))
+                pos[sym] = q0
+                out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
+                            "take_profit,status,result_pct,note,sys_version,created_at,llm_ms) "
+                            "values(?,?,?,?,?,?,?,?,?,?,?)",
+                            (sym, l0_dir, q0.entry, l0_sl, l0_tp, "L0-FILL", None,
+                             f"L0快通道 probUp={mp['probUp']}",
+                             f"backtest-v4.7-{arm_label}", str(i_ts), 1))
+                out.commit()
+                last_trig[sym] = i_ts.value
+                continue
+
             ema20 = c.iloc[max(0,i-200):i+1].ewm(span=20).mean().iloc[-1]
             ema60 = c.iloc[max(0,i-200):i+1].ewm(span=60).mean().iloc[-1]
             ema200 = c.iloc[max(0,i-400):i+1].ewm(span=200).mean().iloc[-1]
@@ -440,7 +494,8 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--symbols", default="BTCUSDT,ETHUSDT,SOLUSDT,ACEUSDT,ZECUSDT,SNDKUSDT")
-    ap.add_argument("--arm", default="full", choices=["full", "nobreaker", "notrend", "norebase"])
+    ap.add_argument("--arm", default="full",
+                    choices=["full", "nobreaker", "notrend", "norebase", "cascade-l0"])
     ap.add_argument("--budget", type=int, default=1200)
     ap.add_argument("--out", default=OUT_DB)
     ap.add_argument("--latency", type=int, default=0,
