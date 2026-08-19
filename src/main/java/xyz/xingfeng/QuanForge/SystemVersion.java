@@ -23,6 +23,8 @@ package xyz.xingfeng.QuanForge;
  *       REBASE 提示词强化（明确触发画像：浮亏+动能收敛+区间内部）</li>
  *   <li>v4.5: 山寨趋势纪律——山寨只顺 15m/1h 主趋势交易，震荡不出手，禁逆势
  *       （验尸：山寨亏损大头为 right-side-trend 逆势单）；HEMI 移出，ZEC/SNDK 入列</li>
+ *   <li>v4.6: 双重熔断（单边行情特殊处理）——2h 动量 ≥1.2% 禁逆势新单 +
+ *       同向 2 连亏 90 分钟冷却（实测 8/19 夜反弹：逆势空单被一刀刀放血）</li>
  * </ul>
  */
 public final class SystemVersion {
@@ -30,5 +32,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v4.5-alttrend";
+	public static final String CURRENT = "v4.6-circuitbreaker";
 }

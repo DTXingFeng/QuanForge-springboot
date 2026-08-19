@@ -123,6 +123,14 @@ public class AiAdviceTracker {
 						last == null ? null : pricePct(old, last));
 			}
 		}
+		// v4.6 熔断检查：单边行情逆势拦截 + 同向连败冷却（不动老单，只拦新单）
+		String blocked = circuitBreakerCheck(alert.getSymbol(), action);
+		if (blocked != null) {
+			log.info("熔断拦截: {} {} — {}", alert.getSymbol(), action, blocked);
+			telegram.send(String.format(Locale.ROOT, "⛔ 熔断拦截 %s %s\n%s\n（建议不执行，等熔断解除）",
+					alert.getSymbol(), action, blocked));
+			return;
+		}
 		AiAdviceTrack t = new AiAdviceTrack();
 		t.setAlertId(alert.getId());
 		t.setSymbol(alert.getSymbol());
@@ -176,6 +184,52 @@ public class AiAdviceTracker {
 			return clamped;
 		}
 		return stopLoss;
+	}
+
+	/**
+	 * v4.6 双重熔断（单边行情特殊处理，返回 null=放行）：
+	 * <ul>
+	 *   <li>单边逆势熔断：2h 动量 |move| ≥ 1.2% 时禁止逆势新单——单边行情里逆势剥头皮
+	 *       会被一刀刀放血（实测 8/19 夜反弹：5 笔逆势空合计 -1.5%；止损保命但挡不住重复进场）</li>
+	 *   <li>连败熔断：同品种同方向最近 2 笔结算全亏 → 该方向冷却 90 分钟不出手</li>
+	 * </ul>
+	 * 只拦新单，绝不动在场老单（老单的退出由止损/管理器负责）。
+	 */
+	private String circuitBreakerCheck(String symbol, String action) {
+		try {
+			// ① 单边逆势：取已收盘的 2 根 1h K 线算动量
+			String json = bybitService.getPublicRaw("/v5/market/kline",
+					Map.of("category", "linear", "symbol", symbol, "interval", "60", "limit", "3"));
+			JSONArray list = new JSONObject(json).getJSONObject("result").getJSONArray("list");
+			if (list.length() >= 3) {
+				// Bybit 倒序 [0]=当前未收盘 [1]=上一根 [2]=上上根
+				double now = Double.parseDouble(list.getJSONObject(0).getString(4));
+				double twoHAgo = Double.parseDouble(list.getJSONObject(2).getString(4));
+				double move2h = (now / twoHAgo - 1) * 100;
+				boolean counter = move2h >= 1.2 && "SELL".equals(action)
+						|| move2h <= -1.2 && "BUY".equals(action);
+				if (counter) {
+					return String.format(Locale.ROOT, "单边行情: 2h %+.2f%%，禁止逆势%s",
+							move2h, action);
+				}
+			}
+		} catch (Exception e) {
+			log.warn("单边熔断检查失败 {} : {}", symbol, e.getMessage());
+		}
+		// ② 同向连败冷却：该品种该方向最近 2 笔结算（90 分钟内）全亏
+		LocalDateTime since = LocalDateTime.now().minusMinutes(90);
+		List<AiAdviceTrack> recent = repository.findAll().stream()
+				.filter(x -> symbol.equals(x.getSymbol()) && action.equals(x.getAction())
+						&& (AiAdviceTrack.STATUS_WIN.equals(x.getStatus())
+								|| AiAdviceTrack.STATUS_LOSS.equals(x.getStatus()))
+						&& x.getSettledAt() != null && x.getSettledAt().isAfter(since))
+				.sorted(java.util.Comparator.comparing(AiAdviceTrack::getId).reversed())
+				.limit(2).toList();
+		if (recent.size() == 2 && recent.stream()
+				.allMatch(x -> AiAdviceTrack.STATUS_LOSS.equals(x.getStatus()))) {
+			return "同向连败: " + action + " 近90分钟2连亏，冷却中";
+		}
+		return null;
 	}
 
 	/** 实单模式的反向平仓：市价平掉旧仓，从 closed-pnl 读实际盈亏结算 */
