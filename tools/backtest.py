@@ -143,9 +143,10 @@ SYSTEM_PROMPT = """你是专业的加密货币合约交易风控分析师（超�
 "title":"≤20字","summary":"≤60字","detail":"≤120字：趋势/结构/模型结论","confidence":0-100}"""
 
 # ---------------- 数据加载 ----------------
-def load_klines(symbols, days, seg_offset=0):
+def load_klines(symbols, days, seg_offset=0, end_epoch=0):
     con = sqlite3.connect(PROD_DB)
-    end_ms = int((time.time() - seg_offset * 86400) * 1000)
+    base = end_epoch if end_epoch else time.time()
+    end_ms = int((base - seg_offset * 86400) * 1000)
     start_ms = end_ms - days * 86400 * 1000
     frames = {}
     for s in symbols:
@@ -166,13 +167,16 @@ class Pos:
     __slots__ = ("sym", "action", "entry", "sl", "tp", "ts", "plan_ts",
                  "rebased", "breakeven", "is_market", "wait_s", "llm_ms")
 
-def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
-    frames = load_klines(symbols, days, seg_offset)
+def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch=0):
+    frames = load_klines(symbols, days, seg_offset, end_epoch)
     symbols = list(frames)
     print(f"[backtest] {len(symbols)} symbols, {days}d, arm={arm}, data ok")
     master_idx = sorted(set().union(*[set(f.index) for f in frames.values()]))
     print(f"[backtest] master timeline {len(master_idx)} minutes "
           f"({master_idx[0]} ~ {master_idx[-1]})")
+
+    # 预计算全序列指标（每符号一次 O(n)），替代循环内逐 bar 全序列重算（原 O(n²)）
+    PRE = {sym: {"rsi": rsi(f["close"]), "atr": atr(f, 14)} for sym, f in frames.items()}
 
     out = sqlite3.connect(out_db)
     arm_label = f"{arm}" + (f"-lat{latency_s}" if latency_s else "")
@@ -354,7 +358,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
             pct1m = (c.iloc[i] / c.iloc[i-1] - 1) * 100
             pct5m = (c.iloc[i] / c.iloc[i-5] - 1) * 100
             pct15m = (c.iloc[i] / c.iloc[i-15] - 1) * 100
-            r = float(rsi(c).iloc[i])
+            r = float(PRE[sym]["rsi"].iloc[i])
             why = None
             if abs(pct1m) >= SHOCK_1M:
                 why = f"实时急动 1m {pct1m:+.2f}%"
@@ -388,7 +392,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
                         last_trig[sym] = i_ts.value
                         continue
                     px_tr = c.iloc[i]
-                    sl_d_tr = float(atr(df, 14).iloc[i]) * 1.2
+                    sl_d_tr = float(PRE[sym]["atr"].iloc[i]) * 1.2
                     sl_tr = px_tr - sl_d_tr if tr_dir == "BUY" else px_tr + sl_d_tr
                     if sym in MAJORS and sl_d_tr / px_tr * 100 > CLAMP_MAJORS:
                         sl_tr = px_tr - px_tr * CLAMP_MAJORS / 100 if tr_dir == "BUY" \
@@ -435,7 +439,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
                     last_trig[sym] = i_ts.value
                     continue
                 px = c.iloc[i]
-                atr_l0 = float(atr(df, 14).iloc[i])
+                atr_l0 = float(PRE[sym]["atr"].iloc[i])
                 sl_d = atr_l0 * 1.2
                 l0_sl = px - sl_d if l0_dir == "BUY" else px + sl_d
                 l0_tp = px + 2 * sl_d if l0_dir == "BUY" else px - 2 * sl_d
@@ -463,7 +467,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
             ema200 = c.iloc[max(0,i-400):i+1].ewm(span=200).mean().iloc[-1]
             trend15 = "UP" if ema20 > ema60 else "DOWN"
             trend1h = "UP" if ema60 > ema200 else "DOWN"
-            atrv = float(atr(df, 14).iloc[i] / c.iloc[i] * 100)
+            atrv = float(PRE[sym]["atr"].iloc[i] / c.iloc[i] * 100)
             user_ctx = f"""品种：{sym}
 触发原因：{why}
 当前时间：{i_ts}
@@ -560,5 +564,7 @@ if __name__ == "__main__":
                     help="-1=自适应（LLM实测耗时即延迟）/ N>0=固定N秒 / 0=零延迟")
     ap.add_argument("--seg-offset", type=int, default=0,
                     help="跳过最近 N 天，从更早的历史开始（并行分段用）")
+    ap.add_argument("--end", type=int, default=0,
+                    help="固定窗口终点 epoch 秒（默认=启动时刻；分段并行/复现必填）")
     a = ap.parse_args()
-    run(a.symbols.split(","), a.days, a.arm, a.budget, a.out, a.latency, a.seg_offset)
+    run(a.symbols.split(","), a.days, a.arm, a.budget, a.out, a.latency, a.seg_offset, a.end)
