@@ -288,8 +288,9 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
                 if (i_ts.value - dq.plan_ts.value) / 1e9 >= dq.wait_s:
                     entry_now = bar["open"]
                     buy_d = dq.action == "BUY"
-                    invalid = entry_now <= dq.sl if buy_d else entry_now >= dq.tp
                     beyond_sl = entry_now <= dq.sl if buy_d else entry_now >= dq.sl
+                    # 行情已走完: BUY价已到TP上方 / SELL价已到TP下方 (方向勿写反!)
+                    invalid = entry_now >= dq.tp if buy_d else entry_now <= dq.tp
                     if beyond_sl:
                         out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
                                     "take_profit,status,result_pct,note,sys_version,created_at) "
@@ -298,17 +299,28 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
                                      f"延迟{int(dq.wait_s)}s价格已穿止损，弃单",
                                      f"backtest-v4.7-{arm_label}", str(dq.plan_ts)))
                         out.commit()
+                    elif arm == "live":
+                        # v4.7 生产真实行为: 判完价格偏离入场价>0.15% -> 不追, 挂限价等回踩
+                        if abs(entry_now - dq.entry) / dq.entry * 100 > 0.15:
+                            dq.ts = i_ts
+                            pending[sym] = dq
+                        else:
+                            dq.entry = entry_now * (1 + (SLIP_MARKET if buy_d else -SLIP_MARKET))
+                            dq.ts = i_ts
+                            dq.is_market = True
+                            pos[sym] = dq
                     elif invalid:
                         out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
                                     "take_profit,status,result_pct,note,sys_version,created_at) "
                                     "values(?,?,?,?,?,?,?,?,?,?)",
                                     (sym, dq.action, dq.entry, dq.sl, dq.tp, "EXPIRED", None,
-                                     "延迟后价格已越过入场逻辑位，弃单",
+                                     "延迟后行情已到TP侧走完，弃单",
                                      f"backtest-v4.7-{arm_label}", str(dq.plan_ts)))
                         out.commit()
                     else:
                         dq.entry = entry_now * (1 + (SLIP_MARKET if buy_d else -SLIP_MARKET))
                         dq.ts = i_ts
+                        dq.is_market = True
                         pos[sym] = dq
                     delay_queue.pop(sym)
                 continue
@@ -497,7 +509,7 @@ if __name__ == "__main__":
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--symbols", default="BTCUSDT,ETHUSDT,SOLUSDT,ACEUSDT,ZECUSDT,SNDKUSDT")
     ap.add_argument("--arm", default="full",
-                    choices=["full", "nobreaker", "notrend", "norebase", "cascade-l0"])
+                    choices=["full", "nobreaker", "notrend", "norebase", "cascade-l0", "live"])
     ap.add_argument("--budget", type=int, default=1200)
     ap.add_argument("--out", default=OUT_DB)
     ap.add_argument("--latency", type=int, default=0,
