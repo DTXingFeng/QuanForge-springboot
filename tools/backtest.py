@@ -141,14 +141,16 @@ SYSTEM_PROMPT = """你是专业的加密货币合约交易风控分析师（超�
 "title":"≤20字","summary":"≤60字","detail":"≤120字：趋势/结构/模型结论","confidence":0-100}"""
 
 # ---------------- 数据加载 ----------------
-def load_klines(symbols, days):
+def load_klines(symbols, days, seg_offset=0):
     con = sqlite3.connect(PROD_DB)
-    cutoff_ms = int((time.time() - days * 86400) * 1000)
+    end_ms = int((time.time() - seg_offset * 86400) * 1000)
+    start_ms = end_ms - days * 86400 * 1000
     frames = {}
     for s in symbols:
         df = pd.read_sql_query(
             f"select open_time, open, high, low, close, volume from kline_1m "
-            f"where symbol='{s}' and open_time >= {cutoff_ms} order by open_time", con)
+            f"where symbol='{s}' and open_time >= {start_ms} and open_time < {end_ms} "
+            f"order by open_time", con)
         if len(df) < 2000:
             print(f"[skip] {s} 数据不足({len(df)})")
             continue
@@ -162,8 +164,8 @@ class Pos:
     __slots__ = ("sym", "action", "entry", "sl", "tp", "ts", "plan_ts",
                  "rebased", "breakeven", "is_market", "wait_s", "llm_ms")
 
-def run(symbols, days, arm, budget, out_db, latency_s=0):
-    frames = load_klines(symbols, days)
+def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0):
+    frames = load_klines(symbols, days, seg_offset)
     symbols = list(frames)
     print(f"[backtest] {len(symbols)} symbols, {days}d, arm={arm}, data ok")
     master_idx = sorted(set().union(*[set(f.index) for f in frames.values()]))
@@ -500,5 +502,7 @@ if __name__ == "__main__":
     ap.add_argument("--out", default=OUT_DB)
     ap.add_argument("--latency", type=int, default=0,
                     help="-1=自适应（LLM实测耗时即延迟）/ N>0=固定N秒 / 0=零延迟")
+    ap.add_argument("--seg-offset", type=int, default=0,
+                    help="跳过最近 N 天，从更早的历史开始（并行分段用）")
     a = ap.parse_args()
-    run(a.symbols.split(","), a.days, a.arm, a.budget, a.out, a.latency)
+    run(a.symbols.split(","), a.days, a.arm, a.budget, a.out, a.latency, a.seg_offset)
