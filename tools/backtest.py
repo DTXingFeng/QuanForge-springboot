@@ -41,9 +41,11 @@ BREAKER_2H = 1.2
 CLAMP_MAJORS = 2.2
 TTL_ALTS, TTL_MAJORS = 120, 240
 SLIP_MARKET, SLIP_LIMIT = 0.0005, 0.0003
-# 执行延迟模拟（秒）：研判完成后等待 N 秒才允许成交。
-# 60 = 生产中位（LLM 40~90s）；成交价用延迟后的市价，不是建议价——
-# 急动行情里建议价早已跑掉，这正是延迟税的真实形态。
+# 执行延迟模式（--latency）：
+#   -1  = 自适应（推荐）：每次 LLM 调用实测耗时即该单成交等待——模型快则延迟小，
+#         慢则延迟大，延迟分布自动对齐生产（llm_ms 记录在账本）
+#   N>0 = 固定 N 秒
+#   0   = 零延迟理想模式
 EXEC_LATENCY_S = 0
 
 opener = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
@@ -158,7 +160,7 @@ def load_klines(symbols, days):
 # ---------------- 主循环 ----------------
 class Pos:
     __slots__ = ("sym", "action", "entry", "sl", "tp", "ts", "plan_ts",
-                 "rebased", "breakeven", "is_market", "wait_s")
+                 "rebased", "breakeven", "is_market", "wait_s", "llm_ms")
 
 def run(symbols, days, arm, budget, out_db, latency_s=0):
     frames = load_klines(symbols, days)
@@ -184,14 +186,16 @@ def run(symbols, days, arm, budget, out_db, latency_s=0):
     llm_calls = 0
     equity = EQUITY0
     wins = losses_n = 0
+    last_llm_ms = [0]  # 最近一次 LLM 调用耗时（自适应延迟臂用）
 
     def settle(p, status, pct, ts, note=""):
         nonlocal equity, wins, losses_n
         out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,take_profit,"
-                    "status,result_pct,note,sys_version,created_at,entered_at,settled_at) "
+                    "status,result_pct,note,sys_version,created_at,entered_at,settled_at,llm_ms) "
                     "values(?,?,?,?,?,?,?,?,?,?,?,?)",
                     (p.sym, p.action, p.entry, p.sl, p.tp, status, round(pct, 3), note,
-                     f"backtest-v4.7-{arm_label}", str(p.plan_ts), str(p.ts), str(ts)))
+                     f"backtest-v4.7-{arm_label}", str(p.plan_ts), str(p.ts), str(ts),
+                     p.llm_ms))
         if status in ("WIN", "LOSS"):
             equity += NOTIONAL * pct / 100
             wins += status == "WIN"
@@ -409,9 +413,14 @@ def run(symbols, days, arm, budget, out_db, latency_s=0):
             q = Pos(); q.sym, q.action, q.entry, q.sl, q.tp = sym, action, entry, sl, tp
             q.ts, q.plan_ts = i_ts, i_ts
             q.rebased, q.breakeven, q.is_market = False, False, False
-            q.wait_s = 0
-            if latency_s > 0:
-                # 延迟模式：全部按"研判完成 → 等 N 秒 → 市价成交"模拟
+            q.wait_s, q.llm_ms = 0, ms
+            if latency_s == -1:
+                # 自适应延迟：本次 LLM 实测耗时 = 成交等待（含网络/代理抖动，
+                # 分布自动对齐生产；llm_ms 一并存入账本供复盘）
+                q.wait_s = max(1, ms / 1000.0)
+                delay_queue[sym] = q
+            elif latency_s > 0:
+                # 固定延迟模式：全部按"研判完成 → 等 N 秒 → 市价成交"模拟
                 q.wait_s = latency_s
                 delay_queue[sym] = q
             elif abs(entry - c.iloc[i]) / c.iloc[i] < 0.0015:
@@ -435,6 +444,6 @@ if __name__ == "__main__":
     ap.add_argument("--budget", type=int, default=1200)
     ap.add_argument("--out", default=OUT_DB)
     ap.add_argument("--latency", type=int, default=0,
-                    help="执行延迟秒数：模拟 LLM 思考+下单链路耗时（0=零延迟理想模式）")
+                    help="-1=自适应（LLM实测耗时即延迟）/ N>0=固定N秒 / 0=零延迟")
     a = ap.parse_args()
     run(a.symbols.split(","), a.days, a.arm, a.budget, a.out, a.latency)
