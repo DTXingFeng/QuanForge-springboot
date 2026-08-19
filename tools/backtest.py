@@ -41,6 +41,10 @@ BREAKER_2H = 1.2
 CLAMP_MAJORS = 2.2
 TTL_ALTS, TTL_MAJORS = 120, 240
 SLIP_MARKET, SLIP_LIMIT = 0.0005, 0.0003
+# 执行延迟模拟（秒）：研判完成后等待 N 秒才允许成交。
+# 60 = 生产中位（LLM 40~90s）；成交价用延迟后的市价，不是建议价——
+# 急动行情里建议价早已跑掉，这正是延迟税的真实形态。
+EXEC_LATENCY_S = 0
 
 opener = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
 
@@ -154,9 +158,9 @@ def load_klines(symbols, days):
 # ---------------- 主循环 ----------------
 class Pos:
     __slots__ = ("sym", "action", "entry", "sl", "tp", "ts", "plan_ts",
-                 "rebased", "breakeven", "is_market")
+                 "rebased", "breakeven", "is_market", "wait_s")
 
-def run(symbols, days, arm, budget, out_db):
+def run(symbols, days, arm, budget, out_db, latency_s=0):
     frames = load_klines(symbols, days)
     symbols = list(frames)
     print(f"[backtest] {len(symbols)} symbols, {days}d, arm={arm}, data ok")
@@ -165,6 +169,7 @@ def run(symbols, days, arm, budget, out_db):
           f"({master_idx[0]} ~ {master_idx[-1]})")
 
     out = sqlite3.connect(out_db)
+    arm_label = f"{arm}" + (f"-lat{latency_s}" if latency_s else "")
     out.execute("""create table if not exists ai_advice_track(
         id integer primary key autoincrement, symbol text, action text,
         entry real, stop_loss real, take_profit real, status text,
@@ -173,6 +178,7 @@ def run(symbols, days, arm, budget, out_db):
 
     pos = {}          # symbol -> Pos (单仓)
     pending = {}      # symbol -> Pos (限价等成交)
+    delay_queue = {}  # symbol -> Pos (延迟成交计划)
     last_trig = {}    # symbol -> ts
     losses_90 = {}    # symbol|dir -> [ts,...]
     llm_calls = 0
@@ -185,7 +191,7 @@ def run(symbols, days, arm, budget, out_db):
                     "status,result_pct,note,sys_version,created_at,entered_at,settled_at) "
                     "values(?,?,?,?,?,?,?,?,?,?,?,?)",
                     (p.sym, p.action, p.entry, p.sl, p.tp, status, round(pct, 3), note,
-                     f"backtest-v4.7-{arm}", str(p.plan_ts), str(p.ts), str(ts)))
+                     f"backtest-v4.7-{arm_label}", str(p.plan_ts), str(p.ts), str(ts)))
         if status in ("WIN", "LOSS"):
             equity += NOTIONAL * pct / 100
             wins += status == "WIN"
@@ -264,6 +270,39 @@ def run(symbols, days, arm, budget, out_db):
                         pos.pop(sym)
                 continue
 
+            # ---- 延迟成交计划队列 ----
+            # EXEC_LATENCY_S>0 时：LLM 判完的单进 delay_queue，等延迟窗口过后
+            # 的第一个 bar 以该 bar 开盘价（市价近似）成交；价格已越过止损则放弃。
+            dq = delay_queue.get(sym)
+            if dq is not None:
+                if (i_ts.value - dq.plan_ts.value) / 1e9 >= dq.wait_s:
+                    entry_now = bar["open"]
+                    buy_d = dq.action == "BUY"
+                    invalid = entry_now <= dq.sl if buy_d else entry_now >= dq.tp
+                    beyond_sl = entry_now <= dq.sl if buy_d else entry_now >= dq.sl
+                    if beyond_sl:
+                        out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
+                                    "take_profit,status,result_pct,note,sys_version,created_at) "
+                                    "values(?,?,?,?,?,?,?,?,?,?)",
+                                    (sym, dq.action, dq.entry, dq.sl, dq.tp, "EXPIRED", None,
+                                     f"延迟{int(dq.wait_s)}s价格已穿止损，弃单",
+                                     f"backtest-v4.7-{arm_label}", str(dq.plan_ts)))
+                        out.commit()
+                    elif invalid:
+                        out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
+                                    "take_profit,status,result_pct,note,sys_version,created_at) "
+                                    "values(?,?,?,?,?,?,?,?,?,?)",
+                                    (sym, dq.action, dq.entry, dq.sl, dq.tp, "EXPIRED", None,
+                                     "延迟后价格已越过入场逻辑位，弃单",
+                                     f"backtest-v4.7-{arm_label}", str(dq.plan_ts)))
+                        out.commit()
+                    else:
+                        dq.entry = entry_now * (1 + (SLIP_MARKET if buy_d else -SLIP_MARKET))
+                        dq.ts = i_ts
+                        pos[sym] = dq
+                    delay_queue.pop(sym)
+                continue
+
             # ---- 限价单成交检查 ----
             q = pending.get(sym)
             if q is not None:
@@ -280,7 +319,7 @@ def run(symbols, days, arm, budget, out_db):
                                 "take_profit,status,result_pct,note,sys_version,created_at) "
                                 "values(?,?,?,?,?,?,?,?,?,?)",
                                 (sym, q.action, q.entry, q.sl, q.tp, "EXPIRED", None,
-                                 "等入场超时", f"backtest-v4.7-{arm}", str(q.ts)))
+                                 "等入场超时", f"backtest-v4.7-{arm_label}", str(q.ts)))
                     out.commit(); pending.pop(sym)
                 continue
 
@@ -349,7 +388,7 @@ def run(symbols, days, arm, budget, out_db):
                             "take_profit,status,result_pct,note,sys_version,created_at) "
                             "values(?,?,?,?,?,?,?,?,?,?)",
                             (sym, action, entry, sl, tp, "BLOCKED", None, blk,
-                             f"backtest-v4.7-{arm}", str(i_ts)))
+                             f"backtest-v4.7-{arm_label}", str(i_ts)))
                 out.commit()
                 continue
             if arm != "notrend" and sym not in MAJORS:
@@ -358,7 +397,7 @@ def run(symbols, days, arm, budget, out_db):
                                 "take_profit,status,result_pct,note,sys_version,created_at) "
                                 "values(?,?,?,?,?,?,?,?,?,?)",
                                 (sym, action, entry, sl, tp, "BLOCKED", None,
-                                 "趋势纪律拦截", f"backtest-v4.7-{arm}", str(i_ts)))
+                                 "趋势纪律拦截", f"backtest-v4.7-{arm_label}", str(i_ts)))
                     out.commit()
                     continue
             if sym in MAJORS:
@@ -366,11 +405,16 @@ def run(symbols, days, arm, budget, out_db):
                 if dist > CLAMP_MAJORS:
                     sl = entry - entry * CLAMP_MAJORS / 100 if action == "BUY" \
                         else entry + entry * CLAMP_MAJORS / 100
-            # 入场：市价（贴近现价）或限价
+            # 入场分派
             q = Pos(); q.sym, q.action, q.entry, q.sl, q.tp = sym, action, entry, sl, tp
             q.ts, q.plan_ts = i_ts, i_ts
             q.rebased, q.breakeven, q.is_market = False, False, False
-            if abs(entry - c.iloc[i]) / c.iloc[i] < 0.0015:
+            q.wait_s = 0
+            if latency_s > 0:
+                # 延迟模式：全部按"研判完成 → 等 N 秒 → 市价成交"模拟
+                q.wait_s = latency_s
+                delay_queue[sym] = q
+            elif abs(entry - c.iloc[i]) / c.iloc[i] < 0.0015:
                 q.entry = entry * (1 + (SLIP_MARKET if action == "BUY" else -SLIP_MARKET))
                 pos[sym] = q
             else:
@@ -390,5 +434,7 @@ if __name__ == "__main__":
     ap.add_argument("--arm", default="full", choices=["full", "nobreaker", "notrend", "norebase"])
     ap.add_argument("--budget", type=int, default=1200)
     ap.add_argument("--out", default=OUT_DB)
+    ap.add_argument("--latency", type=int, default=0,
+                    help="执行延迟秒数：模拟 LLM 思考+下单链路耗时（0=零延迟理想模式）")
     a = ap.parse_args()
-    run(a.symbols.split(","), a.days, a.arm, a.budget, a.out)
+    run(a.symbols.split(","), a.days, a.arm, a.budget, a.out, a.latency)
