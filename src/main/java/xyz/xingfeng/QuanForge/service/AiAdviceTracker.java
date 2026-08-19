@@ -128,9 +128,10 @@ public class AiAdviceTracker {
 		t.setSymbol(alert.getSymbol());
 		t.setAction(action);
 		t.setEntry(entry);
-		// 止损距离硬顶：赢单最深回撤 -1.84%（实测），亏损尾巴却拖到 -3.85%——
-		// 2.2% 上限不伤任何历史赢单，砍掉超额亏损尾巴（MAE 研究结论，v4.3）
-		stopLoss = clampStopDistance(action, entry, stopLoss);
+		// 止损距离硬顶 2.2% 仅 majors：majors 赢单最深回撤 -0.36%，宽止损纯浪费。
+		// 山寨不钳制——v4.3 全局钳制的实测教训：ACE 亏损全堆在钳位附近、胜率 41%→31%
+		// （幸存者偏差：MAE 只统计了旧止损下活下来的赢单，收窄把本可扛震荡的赢单提前打掉）
+		stopLoss = clampStopDistance(alert.getSymbol(), action, entry, stopLoss);
 		t.setStopLoss(stopLoss);
 		t.setTakeProfit(takeProfit);
 		t.setStatus(AiAdviceTrack.STATUS_PENDING);
@@ -156,15 +157,21 @@ public class AiAdviceTracker {
 	}
 
 	/**
-	 * 止损距离硬顶 2.2%：MAE 研究显示赢单最深回撤 -1.84%（不伤赢单），
-	 * 而亏损单尾巴到 -3.85%（纯浪费）。超出即钳回入场价 2.2% 处。
+	 * 止损距离硬顶 2.2%（仅 BTC/ETH/SOL）：majors 赢单最深回撤 -0.36%，
+	 * 宽止损是纯浪费，钳到 2.2% 无副作用。山寨（ACE/HEMI 等）原样放行，
+	 * 止损交给 LLM 按结构位判断——全局钳制（v4.3）已被实测否决。
 	 */
-	private double clampStopDistance(String action, double entry, double stopLoss) {
+	private double clampStopDistance(String symbol, String action, double entry, double stopLoss) {
+		boolean major = symbol.equals("BTCUSDT") || symbol.equals("ETHUSDT")
+				|| symbol.equals("SOLUSDT");
+		if (!major) {
+			return stopLoss;
+		}
 		double maxDist = entry * 0.022;
 		double dist = "BUY".equals(action) ? entry - stopLoss : stopLoss - entry;
 		if (dist > maxDist) {
 			double clamped = "BUY".equals(action) ? entry - maxDist : entry + maxDist;
-			log.info("止损距离 {}% 超上限，钳制为 2.2%: {} -> {}",
+			log.info("{} 止损距离 {}% 超上限，钳制为 2.2%: {} -> {}", symbol,
 					String.format(Locale.ROOT, "%.2f", dist / entry * 100), stopLoss, clamped);
 			return clamped;
 		}

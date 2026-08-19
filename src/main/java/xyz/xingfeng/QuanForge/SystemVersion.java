@@ -17,8 +17,10 @@ package xyz.xingfeng.QuanForge;
  *       （只收紧不放宽），"转弱收手、锁利提前落袋"进入代码层</li>
  *   <li>v4.2: REBASE 换挡扛单（仅 majors）——震荡噪音亏损且高周期结构未破时，
  *       止损换到高周期失效位升格波段，总风险硬顶 2%；majors TTL 120→240 分钟</li>
- *   <li>v4.3: 止损距离硬顶 2.2%——MAE 研究：赢单最深回撤 -1.84%，亏损尾巴 -3.85%，
- *       钳制不伤赢单、砍掉超额亏损（建单时统一钳制，账本与交易所同值）</li>
+ *   <li>v4.3: 止损距离硬顶 2.2% 全局钳制——实测否决：ACE 胜率 41%→31%
+ *       （MAE 研究的幸存者偏差：只统计了旧止损下活下来的赢单）</li>
+ *   <li>v4.4: 2.2% 钳制收窄为仅 majors（majors 赢单最深回撤 -0.36%，无副作用）；
+ *       REBASE 提示词强化（明确触发画像：浮亏+动能收敛+区间内部）</li>
  * </ul>
  */
 public final class SystemVersion {
@@ -26,5 +28,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v4.3-slclamp";
+	public static final String CURRENT = "v4.4-majorsclamp";
 }
