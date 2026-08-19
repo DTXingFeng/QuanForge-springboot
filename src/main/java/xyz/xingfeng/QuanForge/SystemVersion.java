@@ -21,6 +21,8 @@ package xyz.xingfeng.QuanForge;
  *       （MAE 研究的幸存者偏差：只统计了旧止损下活下来的赢单）</li>
  *   <li>v4.4: 2.2% 钳制收窄为仅 majors（majors 赢单最深回撤 -0.36%，无副作用）；
  *       REBASE 提示词强化（明确触发画像：浮亏+动能收敛+区间内部）</li>
+ *   <li>v4.5: 山寨趋势纪律——山寨只顺 15m/1h 主趋势交易，震荡不出手，禁逆势
+ *       （验尸：山寨亏损大头为 right-side-trend 逆势单）；HEMI 移出，ZEC/SNDK 入列</li>
  * </ul>
  */
 public final class SystemVersion {
@@ -28,5 +30,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v4.4-majorsclamp";
+	public static final String CURRENT = "v4.5-alttrend";
 }

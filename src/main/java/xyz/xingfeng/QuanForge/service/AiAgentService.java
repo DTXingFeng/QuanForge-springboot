@@ -190,6 +190,11 @@ public class AiAgentService {
 			 模型方向与你一致→detail 写明"模型共振"及概率，confidence 上调 5~10；\
 			 明显分歧→倾向 HOLD 并在 detail 说明分歧原因；低置信区(zone=low)的模型输出忽略。\
 			 BUY/SELL 的 detail 里不含模型结论（共振/分歧）视为违规。
+			 - 山寨币趋势纪律（BTC/ETH/SOL 之外的所有品种）：\
+			 只顺 15m/1h 主趋势方向交易——趋势明确时只做顺势单，禁止逆势抄底/摸顶\
+			 （历史验尸：山寨亏损的大头是逆势单，且亏损持续放大无法兜底）；\
+			 15m/1h 趋势方向不明（震荡）时该品种输出 HOLD，不出手。\
+			 majors 不受此限（双向皆可，震荡噪音由 REBASE 与止损管理兜底）。
 			 - 不构成投资建议，禁止"保证""必然"等绝对表述。
 			 - 最终只输出一个 JSON 对象（无其他文字/代码块标记），格式：
 			 {"alertLevel":"INFO|WARN|CRITICAL|NONE","action":"BUY|SELL|HOLD","entry":数字或null,\
