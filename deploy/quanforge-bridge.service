@@ -1,0 +1,16 @@
+[Unit]
+Description=QuanForge realtime market bridge (WebSocket shock trigger)
+After=network-online.target quanforge.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=xingfeng
+ExecStart=/usr/bin/python3 /mnt/nvme/quanforge/tools/realtime_bridge.py
+Restart=always
+RestartSec=15
+StandardOutput=append:/mnt/nvme/quanforge/logs/bridge.log
+StandardError=append:/mnt/nvme/quanforge/logs/bridge.log
+
+[Install]
+WantedBy=multi-user.target
