@@ -1,0 +1,12 @@
+[Unit]
+Description=QuanForge forward-validation daily monitor
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /mnt/nvme/quanforge/tools/forward_monitor.py
+StandardOutput=append:/mnt/nvme/quanforge/logs/forward_monitor.log
+StandardError=append:/mnt/nvme/quanforge/logs/forward_monitor.log
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,10 @@
+[Unit]
+Description=Trigger QuanForge forward-validation monitor twice daily
+
+[Timer]
+OnCalendar=*-*-* 09:00,21:00 Asia/Shanghai
+Persistent=true
+Unit=quanforge-forward-monitor.service
+
+[Install]
+WantedBy=timers.target
