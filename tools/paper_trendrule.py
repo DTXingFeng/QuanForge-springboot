@@ -313,13 +313,22 @@ def ws_run(con):
                 f"pos={list(pos)} pending={list(pending)} bar_age_min={stale}")
             last_beat = time.time()
         msg = json.loads(raw or "{}")
-        if not msg.get("topic", "").startswith("kline"):
+        if msg.get("op") == "ping":          # Bybit 服务端 ping, 需回 pong
+            ws.send(json.dumps({"op": "pong"}))
+            continue
+        if msg.get("op") == "subscribe" and msg.get("success") is False:
+            log(f"[ws sub err] code={msg.get('ret_code')} msg={msg.get('ret_msg')}")
+            continue
+        topic = msg.get("topic", "")
+        if not topic.startswith("kline"):
+            continue
+        parts = topic.split(".")
+        # symbol 只在 topic 里(kline.1.ACEUSDT), data item 无 symbol 字段
+        sym = parts[2] if len(parts) == 3 else None
+        if sym not in bars:
             continue
         for item in msg.get("data", []):
             if not item.get("confirm", False):
-                continue
-            sym = item.get("symbol")
-            if sym not in bars:
                 continue
             b = (int(item["start"]), float(item["open"]), float(item["high"]),
                  float(item["low"]), float(item["close"]), float(item["volume"]))

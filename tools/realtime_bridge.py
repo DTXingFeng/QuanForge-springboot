@@ -61,8 +61,11 @@ last_trigger = {}
 analyzing = set()
 
 def on_kline(msg):
+    # symbol 只在 topic 里(kline.1.ACEUSDT), data item 无 symbol 字段
+    topic = msg.get("topic", "")
+    parts = topic.split(".")
+    sym = parts[2] if len(parts) == 3 and parts[0] == "kline" else ""
     for item in msg.get("data", []):
-        sym = item.get("symbol", "")
         close = float(item.get("close", 0) or 0)
         ts = int(item.get("timestamp", 0) or item.get("start", 0) or time.time() * 1000)
         confirm = item.get("confirm", False)
@@ -158,6 +161,12 @@ def run_ws(syms):
             ws.send(json.dumps({"op": "ping"}))
             last_ping = time.time()
         msg = json.loads(raw if raw else "{}")
+        if msg.get("op") == "ping":          # Bybit 服务端 ping, 需回 pong
+            ws.send(json.dumps({"op": "pong"}))
+            continue
+        if msg.get("op") == "subscribe" and msg.get("success") is False:
+            print(f"[ws sub err] {msg.get('ret_msg')} code={msg.get('ret_code')}", flush=True)
+            continue
         topic = msg.get("topic", "")
         if topic.startswith("kline"):
             on_kline(msg)
