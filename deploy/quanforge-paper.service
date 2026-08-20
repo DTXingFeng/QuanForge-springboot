@@ -8,6 +8,7 @@ Type=simple
 User=xingfeng
 Environment=TP_R=3
 Environment=SIZING=eq
+Environment=PAPER_SYMBOLS=ACEUSDT,ZECUSDT,SNDKUSDT
 ExecStart=/usr/bin/python3 /mnt/nvme/quanforge/tools/paper_trendrule.py
 Restart=always
 RestartSec=15
