@@ -151,6 +151,7 @@ def run_ws(syms):
     ws = websocket.WebSocket()
     ws.connect(url, http_proxy_host="127.0.0.1", http_proxy_port=7890, timeout=15)
     ws.settimeout(120)   # 静默容忍2分钟; 15s会在安静时段误杀连接
+    last_kline_wall = time.time()   # 看门狗: kline流墙钟(ping不算数)
     args = [{"kline.1": s} for s in syms]
     ws.send(json.dumps({"op": "subscribe", "args": [f"kline.1.{s}" for s in syms]}))
     print(f"[ws] subscribed {len(syms)} symbols", flush=True)
@@ -160,6 +161,8 @@ def run_ws(syms):
         if time.time() - last_ping > 20 * 1000 / 1000:
             ws.send(json.dumps({"op": "ping"}))
             last_ping = time.time()
+        if time.time() - last_kline_wall > 300:
+            raise Exception(f"watchdog: kline stall {time.time() - last_kline_wall:.0f}s")
         msg = json.loads(raw if raw else "{}")
         if msg.get("op") == "ping":          # Bybit 服务端 ping, 需回 pong
             ws.send(json.dumps({"op": "pong"}))
@@ -169,6 +172,7 @@ def run_ws(syms):
             continue
         topic = msg.get("topic", "")
         if topic.startswith("kline"):
+            last_kline_wall = time.time()
             on_kline(msg)
 
 def run_rest(syms):

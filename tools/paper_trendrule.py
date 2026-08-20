@@ -43,7 +43,7 @@ SLIP_LIMIT = 0.0003
 PENDING_TTL_MIN = 120
 WARMUP_BARS = 900                            # EMA200 热身
 DB = os.environ.get("PAPER_DB", "/mnt/nvme/quanforge/data/paper_trendrule.db")
-SYS_VERSION = f"v4.8.3-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
+SYS_VERSION = f"v4.8.4-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
 PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 
 opener_px = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
@@ -75,6 +75,7 @@ last_trig = {}    # symbol -> ts_ms
 losses_90 = {}    # "sym|dir" -> [ts_ms,...]
 equity = EQUITY0
 fixed_equity = EQUITY0
+last_bar_wall = [time.time()]   # v4.8.4: 最后一次confirmed bar的墙钟(看门狗用)
 
 def init_db():
     con = sqlite3.connect(DB)
@@ -122,8 +123,14 @@ def settle(con, sym, p, status, pct, ts_ms, note=""):
         base = max(equity * 5.0, 0.0)
     equity += base * pct / 100
     fixed_equity += NOTIONAL * pct / 100
-    record(con, sym, p["action"], p["entry"], p["sl"], p["tp"], status, pct, note,
-           p["plan_ms"], p["fill_ms"], ts_ms)
+    if p.get("rowid"):
+        # v4.8.4: 成交时已插 OPEN 行, 结算改为更新该行
+        con.execute("update ai_advice_track set status=?, result_pct=?, settled_at=? "
+                    "where id=?", (status, round(pct, 3), fmt(ts_ms), p["rowid"]))
+        con.commit()
+    else:
+        record(con, sym, p["action"], p["entry"], p["sl"], p["tp"], status, pct, note,
+               p["plan_ms"], p["fill_ms"], ts_ms)
     snap_equity(con, ts_ms)
     if status == "LOSS":
         losses_90.setdefault(sym + "|" + p["action"], []).append(ts_ms)
@@ -178,6 +185,15 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
         if touched:
             q["entry"] = q["entry"] * (1 + (SLIP_LIMIT if buy else -SLIP_LIMIT))
             q["fill_ms"] = ts_ms
+            # v4.8.4: 成交即落库(OPEN), 重启可恢复持仓
+            cur = con.execute(
+                "insert into ai_advice_track(symbol,action,entry,stop_loss,"
+                "take_profit,status,result_pct,note,sys_version,"
+                "created_at,entered_at,settled_at,llm_ms) values(?,?,?,?,?,?,?,?,?,?,?,?,0)",
+                (sym, q["action"], q["entry"], q["sl"], q["tp"], "OPEN", None, "",
+                 SYS_VERSION, fmt(q["plan_ms"]), fmt(ts_ms), None))
+            con.commit()
+            q["rowid"] = cur.lastrowid
             pos[sym] = q
             pending.pop(sym)
             log(f"[fill] {fmt(ts_ms)} {sym} {q['action']} @{q['entry']:.6g} "
@@ -277,14 +293,44 @@ def warmup(con):
             try:
                 rows = rest_klines(sym, limit=1000)
                 dq = bars[sym]
+                before = dq[-1][0] if dq else 0
+                added = 0
                 for b in sorted(rows):
                     if not dq or b[0] > dq[-1][0]:
                         dq.append(b)
+                        added += 1
+                if before and added >= 3:
+                    # v4.8.4: 断流回补可见化(期间触发的交易会漏, 前向对照需知情)
+                    log(f"[gap] {sym} backfilled {added} bars "
+                        f"({(dq[-1][0] - before) / 60000:.0f}min)")
                 log(f"[warmup] {sym} {len(dq)} bars")
                 break
             except Exception as e:
                 log(f"[warmup err] {sym} {e} retry")
                 time.sleep(5)
+
+def restore_state(con):
+    """v4.8.4: 重启恢复 — 权益取最后快照, 持仓取 OPEN 行(挂单不恢复, TTL短)。"""
+    global equity, fixed_equity
+    import calendar
+    row = con.execute("select equity, fixed_equity from equity_snap "
+                      "order by rowid desc limit 1").fetchone()
+    if row:
+        equity, fixed_equity = float(row[0]), float(row[1])
+        log(f"[restore] equity={equity:.1f} fixed={fixed_equity:.1f}")
+    for rid, sym, action, entry, sl, tp, entered in con.execute(
+            "select id, symbol, action, entry, stop_loss, take_profit, entered_at "
+            "from ai_advice_track where status='OPEN'"):
+        try:
+            fill_ms = calendar.timegm(time.strptime(entered, "%Y-%m-%d %H:%M:%S")) * 1000
+        except Exception:
+            fill_ms = int(time.time() * 1000)
+        pos[sym] = {"action": action, "entry": entry, "sl": sl, "tp": tp,
+                    "plan_ms": fill_ms, "fill_ms": fill_ms,
+                    "risk0": abs(tp - entry) / entry * 100 / TP_R,
+                    "breakeven": abs(entry - sl) / entry * 100 < 0.05,
+                    "rowid": rid}
+        log(f"[restore] open {sym} {action} @{entry:.6g} sl={sl:.6g} tp={tp:.6g}")
 
 def ws_run(con):
     import websocket
@@ -292,6 +338,7 @@ def ws_run(con):
     ws = websocket.WebSocket()
     ws.connect(url, http_proxy_host="127.0.0.1", http_proxy_port=7890, timeout=15)
     ws.settimeout(120)   # 静默容忍 2 分钟(20s ping 保活); 15s 会误杀安静时段
+    last_bar_wall[0] = time.time()   # 新连接重置看门狗
     ws.send(json.dumps({"op": "subscribe",
                         "args": [f"kline.1.{s}" for s in SYMBOLS]}))
     log(f"[ws] subscribed {len(SYMBOLS)} symbols")
@@ -302,6 +349,10 @@ def ws_run(con):
         if time.time() - last_ping > 20:
             ws.send(json.dumps({"op": "ping"}))
             last_ping = time.time()
+        # v4.8.4 看门狗: 连接活着但confirmed bar停更>5min(ping在流, kline不在)
+        # -> 主动断开重连, 不再等120s收包超时或永远不断
+        if time.time() - last_bar_wall[0] > 300:
+            raise Exception(f"watchdog: kline stall {time.time() - last_bar_wall[0]:.0f}s")
         if time.time() - last_beat > 1800:
             with lock:
                 snap_equity(con, int(time.time() * 1000))
@@ -330,6 +381,7 @@ def ws_run(con):
         for item in msg.get("data", []):
             if not item.get("confirm", False):
                 continue
+            last_bar_wall[0] = time.time()
             b = (int(item["start"]), float(item["open"]), float(item["high"]),
                  float(item["low"]), float(item["close"]), float(item["volume"]))
             with lock:
@@ -339,6 +391,7 @@ def main():
     con = init_db()
     log(f"[paper] {SYS_VERSION} symbols={SYMBOLS} db={DB}")
     with lock:
+        restore_state(con)
         warmup(con)
     while True:
         try:
