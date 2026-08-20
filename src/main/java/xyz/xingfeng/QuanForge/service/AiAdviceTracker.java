@@ -131,6 +131,12 @@ public class AiAdviceTracker {
 					alert.getSymbol(), action, blocked));
 			return;
 		}
+		// v4.8 波动率门槛：低波动时段不开新仓（样本外验证，只拦新单，log-only 不刷 TG）
+		String volBlocked = volGateCheck(alert.getSymbol());
+		if (volBlocked != null) {
+			log.info("波动率门槛拦截: {} {} — {}", alert.getSymbol(), action, volBlocked);
+			return;
+		}
 		AiAdviceTrack t = new AiAdviceTrack();
 		t.setAlertId(alert.getId());
 		t.setSymbol(alert.getSymbol());
@@ -187,6 +193,49 @@ public class AiAdviceTracker {
 	}
 
 	/**
+	 * v4.8 波动率门槛（返回 null=放行）：ATR14% < 0.32% 时不开新仓。
+	 * <p>依据：6 个月矩阵样本外验证（tools/vol_gate.py + gate_walkforward.py）——
+	 * 低波动时段止损/止盈都走不完 R 倍数位移，全策略家族（机械顺势/LLM）净失血；
+	 * 加同门槛后 LLM live 臂 -37.3%→-27.4%，机械臂 3R/4R/5R 全部翻正，
+	 * 且 0.25~0.40 区间皆有效（非刀锋参数）。walk-forward 验证时序稳健。
+	 * <p>数据取不到时放行（fail-open），只拦新单绝不动老单；不打 TG（低波动期
+	 * 触发频繁，刷屏无行动价值），日志留痕即可。
+	 */
+	private String volGateCheck(String symbol) {
+		try {
+			String json = bybitService.getPublicRaw("/v5/market/kline",
+					Map.of("category", "linear", "symbol", symbol, "interval", "1", "limit", "100"));
+			JSONArray list = new JSONObject(json).getJSONObject("result").getJSONArray("list");
+			if (list.length() < 20) {
+				return null; // 数据不足，放行
+			}
+			// Bybit 倒序 [0]=最新。翻成正序数组 [high, low, close] 算 TR；元素是 JSONArray
+			int n = list.length();
+			double[] high = new double[n], low = new double[n], close = new double[n];
+			for (int i = 0; i < n; i++) {
+				JSONArray o = list.getJSONArray(n - 1 - i);
+				high[i] = Double.parseDouble(o.getString(2));
+				low[i] = Double.parseDouble(o.getString(3));
+				close[i] = Double.parseDouble(o.getString(4));
+			}
+			// Wilder ATR14（与回测 pandas ewm(alpha=1/14) 同公式）
+			double atr = high[0] - low[0];
+			for (int i = 1; i < n; i++) {
+				double tr = Math.max(high[i] - low[i],
+						Math.max(Math.abs(high[i] - close[i - 1]), Math.abs(low[i] - close[i - 1])));
+				atr += (tr - atr) / 14.0;
+			}
+			double atrPct = atr / close[n - 1] * 100;
+			if (atrPct < 0.32) {
+				return String.format(Locale.ROOT, "低波动 ATR14 %.2f%% < 0.32%%", atrPct);
+			}
+		} catch (Exception e) {
+			log.warn("波动率门槛检查失败 {}: {}", symbol, e.getMessage());
+		}
+		return null;
+	}
+
+	/**
 	 * v4.6 双重熔断（单边行情特殊处理，返回 null=放行）：
 	 * <ul>
 	 *   <li>单边逆势熔断：2h 动量 |move| ≥ 1.2% 时禁止逆势新单——单边行情里逆势剥头皮
@@ -202,9 +251,9 @@ public class AiAdviceTracker {
 					Map.of("category", "linear", "symbol", symbol, "interval", "60", "limit", "3"));
 			JSONArray list = new JSONObject(json).getJSONObject("result").getJSONArray("list");
 			if (list.length() >= 3) {
-				// Bybit 倒序 [0]=当前未收盘 [1]=上一根 [2]=上上根
-				double now = Double.parseDouble(list.getJSONObject(0).getString(4));
-				double twoHAgo = Double.parseDouble(list.getJSONObject(2).getString(4));
+				// Bybit 倒序 [0]=当前未收盘 [1]=上一根 [2]=上上根；元素是 JSONArray
+				double now = Double.parseDouble(list.getJSONArray(0).getString(4));
+				double twoHAgo = Double.parseDouble(list.getJSONArray(2).getString(4));
 				double move2h = (now / twoHAgo - 1) * 100;
 				boolean counter = move2h >= 1.2 && "SELL".equals(action)
 						|| move2h <= -1.2 && "BUY".equals(action);

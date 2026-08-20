@@ -142,7 +142,13 @@ public class TradeAutopsyService {
 			long settledMs = t.getSettledAt() == null ? sinceMs
 					: t.getSettledAt().atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
 			List<double[]> ks = cache.computeIfAbsent(t.getSymbol() + ":" + (sinceMs / 3600_000),
-					k -> fetchKlines(t.getSymbol(), sinceMs, settledMs + 4 * 3600_000));
+					k -> {
+						try {
+							return fetchKlines(t.getSymbol(), sinceMs, settledMs + 4 * 3600_000);
+						} catch (Exception ex) {
+							throw new RuntimeException(ex);
+						}
+					});
 			double slDist = Math.abs(entry - sl) / entry * 100;
 			double tpDist = Math.abs(tp - entry) / entry * 100;
 			boolean win = AiAdviceTrack.STATUS_WIN.equals(t.getStatus());
@@ -197,7 +203,8 @@ public class TradeAutopsyService {
 						Double.parseDouble(k.getString(2)), Double.parseDouble(k.getString(3)) });
 			}
 			rows.sort(java.util.Comparator.comparingDouble(r -> r[0]));
-			out.addAll(rows.stream().filter(r -> r[0] >= cur).toList());
+			final long from = cur;
+			out.addAll(rows.stream().filter(r -> r[0] >= from).toList());
 			cur = (long) rows.get(rows.size() - 1)[0] + 60_000;
 		}
 		return out;
