@@ -437,10 +437,30 @@ public class AiAdviceTracker {
 		log.info("实单跟踪 #{} {} 已成交入场 {} qty={}", t.getId(), t.getSymbol(),
 				t.getActualEntry(), t.getQty());
 		// 成交后才设 TP/SL（挂单附带会被 Bybit 按现价校验拒绝，见 placeEntry 注释）
-		try {
-			executor.setTradingStop(t.getSymbol(), t.getAction(), t.getTakeProfit(), t.getStopLoss());
-		} catch (Exception e) {
-			log.warn("TP/SL 设置失败 #{}，保护性市价平仓: {}", t.getId(), e.getMessage());
+		// v4.8.1: 失败先退避重试（2s/4s ×2）——瞬时限频/网络抖动不应导致保护性平仓
+		// （实测 3+ 次因瞬时失败被平仓，白亏 ~0.5%）
+		boolean set = false;
+		Exception last = null;
+		for (int attempt = 1; attempt <= 3 && !set; attempt++) {
+			try {
+				executor.setTradingStop(t.getSymbol(), t.getAction(), t.getTakeProfit(), t.getStopLoss());
+				set = true;
+			} catch (Exception e) {
+				last = e;
+				log.warn("TP/SL 设置失败 #{} 第{}次: {}", t.getId(), attempt, e.getMessage());
+				if (attempt < 3) {
+					try {
+						Thread.sleep(attempt * 2000L);
+					} catch (InterruptedException ie) {
+						Thread.currentThread().interrupt();
+						break;
+					}
+				}
+			}
+		}
+		if (!set) {
+			log.warn("TP/SL 重试全败 #{}，保护性市价平仓: {}", t.getId(),
+					last == null ? "?" : last.getMessage());
 			try {
 				var pos = executor.position(t.getSymbol());
 				if (pos != null) {
@@ -450,7 +470,7 @@ public class AiAdviceTracker {
 			} catch (Exception closeEx) {
 				log.error("保护性平仓也失败 #{}: {}", t.getId(), closeEx.getMessage());
 			}
-			t.setNote("TP/SL设置失败，保护性平仓");
+			t.setNote("TP/SL设置失败(重试3次后)，保护性平仓");
 			repository.save(t);
 		}
 	}
