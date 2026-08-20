@@ -10,10 +10,10 @@ PAPERS = [
     ("3R主候选", "/mnt/nvme/quanforge/data/paper_trendrule.db", "paper.log"),
     ("5R挑战者", "/mnt/nvme/quanforge/data/paper_trendrule_tp5.db", "paper5.log"),
 ]
-# 回测预测基准(6个月矩阵+ATR门槛0.32, tools/bench_calc.py 计算验证)
+# 回测预测基准(6个月矩阵, alts-only + ATR门槛0.32, 2026-08-20切换观察列表后口径)
 # 3R保本线25% / 5R保本线16.7%
-BENCH = {"3R主候选": dict(wr=25.3, pnl_per_trade=0.0295, trades_day=11.7),
-         "5R挑战者": dict(wr=19.1, pnl_per_trade=0.0885, trades_day=10.1)}
+BENCH = {"3R主候选": dict(wr=25.2, pnl_per_trade=0.0307, trades_day=11.0),
+         "5R挑战者": dict(wr=19.2, pnl_per_trade=0.0990, trades_day=9.5)}
 
 now_str = sh("date '+%F %T'")
 print(f"== 前向验证报表 {now_str} ==")
