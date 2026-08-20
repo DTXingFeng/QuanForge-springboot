@@ -46,6 +46,10 @@ PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 opener_px = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
 opener_direct = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
+def log(msg):
+    """带本地时间戳的日志(诊断数据断流/事件时序必备)"""
+    print(f"{time.strftime('%m-%d %H:%M:%S')} {msg}", flush=True)
+
 # ---------------- 指标(与 backtest.py 同公式) ----------------
 def rsi(s, period=14):
     d = s.diff()
@@ -111,8 +115,8 @@ def settle(con, sym, p, status, pct, ts_ms, note=""):
     snap_equity(con, ts_ms)
     if status == "LOSS":
         losses_90.setdefault(sym + "|" + p["action"], []).append(ts_ms)
-    print(f"[settle] {fmt(ts_ms)} {sym} {p['action']} -> {status} {pct:+.3f}% "
-          f"eq={equity:.1f} note={note}", flush=True)
+    log(f"[settle] {fmt(ts_ms)} {sym} {p['action']} -> {status} {pct:+.3f}% "
+        f"eq={equity:.1f} note={note}")
 
 # ---------------- 单bar推进(与 backtest 主循环同构) ----------------
 def on_bar(con, sym, ts_ms, o, h, l, c, v):
@@ -158,8 +162,8 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
             q["fill_ms"] = ts_ms
             pos[sym] = q
             pending.pop(sym)
-            print(f"[fill] {fmt(ts_ms)} {sym} {q['action']} @{q['entry']:.6g} "
-                  f"sl={q['sl']:.6g} tp={q['tp']:.6g}", flush=True)
+            log(f"[fill] {fmt(ts_ms)} {sym} {q['action']} @{q['entry']:.6g} "
+                f"sl={q['sl']:.6g} tp={q['tp']:.6g}")
         elif (ts_ms - q["plan_ms"]) / 60000 > PENDING_TTL_MIN:
             record(con, sym, q["action"], q["entry"], q["sl"], q["tp"], "EXPIRED",
                    None, "等入场超时", q["plan_ms"], None, ts_ms)
@@ -231,8 +235,8 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
     tp = c + TP_R * (c - sl) if action == "BUY" else c - TP_R * (sl - c)
     pending[sym] = {"action": action, "entry": c, "sl": sl, "tp": tp,
                     "plan_ms": ts_ms, "fill_ms": None}
-    print(f"[plan] {fmt(ts_ms)} {sym} {action} LIMIT@{c:.6g} sl={sl:.6g} "
-          f"tp={tp:.6g} ({why})", flush=True)
+    log(f"[plan] {fmt(ts_ms)} {sym} {action} LIMIT@{c:.6g} sl={sl:.6g} "
+        f"tp={tp:.6g} ({why})")
 
 # ---------------- 数据层 ----------------
 def rest_klines(sym, limit=1000, end_ms=None):
@@ -257,10 +261,10 @@ def warmup(con):
                 for b in sorted(rows):
                     if not dq or b[0] > dq[-1][0]:
                         dq.append(b)
-                print(f"[warmup] {sym} {len(dq)} bars", flush=True)
+                log(f"[warmup] {sym} {len(dq)} bars")
                 break
             except Exception as e:
-                print(f"[warmup err] {sym} {e} retry", flush=True)
+                log(f"[warmup err] {sym} {e} retry")
                 time.sleep(5)
 
 def ws_run(con):
@@ -271,7 +275,7 @@ def ws_run(con):
     ws.settimeout(120)   # 静默容忍 2 分钟(20s ping 保活); 15s 会误杀安静时段
     ws.send(json.dumps({"op": "subscribe",
                         "args": [f"kline.1.{s}" for s in SYMBOLS]}))
-    print(f"[ws] subscribed {len(SYMBOLS)} symbols", flush=True)
+    log(f"[ws] subscribed {len(SYMBOLS)} symbols")
     last_ping = time.time()
     last_beat = time.time()
     while True:
@@ -282,8 +286,12 @@ def ws_run(con):
         if time.time() - last_beat > 1800:
             with lock:
                 snap_equity(con, int(time.time() * 1000))
-            print(f"[beat] equity={equity:.1f} fixed={fixed_equity:.1f} "
-                  f"pos={list(pos)} pending={list(pending)}", flush=True)
+                # bar 新鲜度: 距最后一根confirmed bar的分钟数(数据断流分钟级可见)
+                now_ms = int(time.time() * 1000)
+                stale = {s: round((now_ms - dq[-1][0]) / 60000, 1)
+                         for s, dq in bars.items() if len(dq)}
+            log(f"[beat] equity={equity:.1f} fixed={fixed_equity:.1f} "
+                f"pos={list(pos)} pending={list(pending)} bar_age_min={stale}")
             last_beat = time.time()
         msg = json.loads(raw or "{}")
         if not msg.get("topic", "").startswith("kline"):
@@ -301,14 +309,14 @@ def ws_run(con):
 
 def main():
     con = init_db()
-    print(f"[paper] {SYS_VERSION} symbols={SYMBOLS} db={DB}", flush=True)
+    log(f"[paper] {SYS_VERSION} symbols={SYMBOLS} db={DB}")
     with lock:
         warmup(con)
     while True:
         try:
             ws_run(con)
         except Exception as e:
-            print(f"[ws err] {e} -> reconnect+warmup in 10s", flush=True)
+            log(f"[ws err] {e} -> reconnect+warmup in 10s")
             time.sleep(10)
             with lock:
                 warmup(con)

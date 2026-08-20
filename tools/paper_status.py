@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+"""前向验证常备报表: 模拟盘(3R/5R) vs 回测预测基准
+用法: python3 paper_status.py   (Pi上随时跑, 零依赖之外的python标准库+sqlite3)"""
+import sqlite3, subprocess, time, datetime, os
+
+def sh(cmd):
+    return subprocess.run(cmd, shell=True, capture_output=True, text=True).stdout.strip()
+
+PAPERS = [
+    ("3R主候选", "/mnt/nvme/quanforge/data/paper_trendrule.db", "paper.log"),
+    ("5R挑战者", "/mnt/nvme/quanforge/data/paper_trendrule_tp5.db", "paper5.log"),
+]
+# 回测预测基准(6个月矩阵+ATR门槛0.32, tools/bench_calc.py 计算验证)
+# 3R保本线25% / 5R保本线16.7%
+BENCH = {"3R主候选": dict(wr=25.3, pnl_per_trade=0.0295, trades_day=11.7),
+         "5R挑战者": dict(wr=19.1, pnl_per_trade=0.0885, trades_day=10.1)}
+
+now_str = sh("date '+%F %T'")
+print(f"== 前向验证报表 {now_str} ==")
+print("服务:", sh("systemctl is-active quanforge-paper quanforge-paper5 | tr '\\n' ' '"),
+      "| v4.7:", sh("systemctl is-active quanforge"))
+for label, db, lg in PAPERS:
+    print(f"\n----- {label} ({os.path.basename(db)}) -----")
+    if not os.path.exists(db):
+        print("  账本不存在"); continue
+    con = sqlite3.connect(db)
+    try:
+        cnt = dict(con.execute("select status,count(*) from ai_advice_track "
+                               "group by status").fetchall())
+    except Exception as e:
+        print("  账本读取失败:", e); continue
+    if not cnt:
+        print("  空(尚无事件)")
+    else:
+        print("  事件:", cnt)
+        rs = con.execute("select result_pct from ai_advice_track "
+                         "where status in ('WIN','LOSS')").fetchall()
+        if rs:
+            pcts = [r[0] for r in rs]
+            w = [p for p in pcts if p > 0]
+            days = max((datetime.datetime.now() - datetime.datetime(2026, 8, 20)).days, 1)
+            b = BENCH[label]
+            print(f"  已结算 n={len(pcts)} WR={len(w)/len(pcts)*100:.1f}% "
+                  f"(回测预测 {b['wr']}%)")
+            print(f"  均笔={sum(pcts)/len(pcts):+.3f}% (预测 {b['pnl_per_trade']:+.3f}%) "
+                  f"累计={sum(pcts):+.1f}% 频率={len(pcts)/days:.1f}笔/天 (预测 ~{b['trades_day']})")
+        eq = con.execute("select equity,fixed_equity from equity_snap "
+                         "order by ts desc limit 1").fetchone()
+        if eq:
+            print(f"  权益: eq-sizing={eq[0]:.1f} fixed={eq[1]:.1f} (起点200)")
+    # 拦截分布(volgate是否在工作)
+    blocks = con.execute("select count(*) from ai_advice_track "
+                         "where status='BLOCKED' and note like 'volgate%'").fetchone()
+    print(f"  volgate拦截: {blocks[0] if blocks else 0}")
+    # 最近5条日志
+    tail = sh(f"tail -3 /mnt/nvme/quanforge/logs/{lg}")
+    print("  日志尾:", " || ".join(tail.splitlines()[-2:]))
