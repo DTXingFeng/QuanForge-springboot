@@ -32,13 +32,15 @@ TTL_ALTS, TTL_MAJORS = 120, 240
 SL_MULT = 1.2
 TP_R = float(os.environ.get("TP_R", "3"))
 SIZING = os.environ.get("SIZING", "eq")     # eq | fixed
+VOL_GATE = float(os.environ.get("VOL_GATE", "0.32"))  # ATR%开仓门槛(<0禁用);
+# 依据: 6个月矩阵样本外验证, 门槛让 3R/4R/5R 全部翻正(tools/vol_gate.py)
 EQUITY0 = 200.0
 NOTIONAL = 1000.0
 SLIP_LIMIT = 0.0003
 PENDING_TTL_MIN = 120
 WARMUP_BARS = 900                            # EMA200 热身
 DB = os.environ.get("PAPER_DB", "/mnt/nvme/quanforge/data/paper_trendrule.db")
-SYS_VERSION = f"v4.8-trendrule-paper-tp{TP_R:g}R-{SIZING}"
+SYS_VERSION = f"v4.8.1-trendrule-paper-tp{TP_R:g}R-{SIZING}-gate{VOL_GATE:g}"
 PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 
 opener_px = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
@@ -216,6 +218,12 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
     a = float(atr(df_last).iloc[n])
     sl_d = a * SL_MULT
     if sl_d <= 0:
+        return
+    # 波动率门槛: ATR% 不足则不开仓(低波动时段 5R 走不完, 回测样本外已验证)
+    atr_pct = a / c * 100
+    if VOL_GATE > 0 and atr_pct < VOL_GATE:
+        record(con, sym, action, c, 0, 0, "BLOCKED", None,
+               f"volgate:ATR {atr_pct:.2f}%<{VOL_GATE:g}", ts_ms)
         return
     sl = c - sl_d if action == "BUY" else c + sl_d
     if sym in MAJORS and sl_d / c * 100 > CLAMP_MAJORS:
