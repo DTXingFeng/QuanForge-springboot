@@ -31,7 +31,10 @@ CLAMP_MAJORS = 2.2
 TTL_ALTS, TTL_MAJORS = 120, 240
 SL_MULT = 1.2
 TP_R = float(os.environ.get("TP_R", "3"))
-SIZING = os.environ.get("SIZING", "eq")     # eq | fixed
+SIZING = os.environ.get("SIZING", "risk")   # risk=风险平价(推荐) | eq=5%权益x100 | fixed=$1000
+RISK_PCT = float(os.environ.get("RISK_PCT", "1.0"))  # risk模式: 每笔风险占权益%
+# 依据(tools/sizing_study.py): 固定5x有效杠杆回测最大回撤98.5%(近爆仓),
+# 风险平价RISK=1% -> +113%/回撤54.6%, 同时改善收益与生存性; 名义上限5x权益
 VOL_GATE = float(os.environ.get("VOL_GATE", "0.32"))  # ATR%开仓门槛(<0禁用);
 # 依据: 6个月矩阵样本外验证, 门槛让 3R/4R/5R 全部翻正(tools/vol_gate.py)
 EQUITY0 = 200.0
@@ -40,7 +43,7 @@ SLIP_LIMIT = 0.0003
 PENDING_TTL_MIN = 120
 WARMUP_BARS = 900                            # EMA200 热身
 DB = os.environ.get("PAPER_DB", "/mnt/nvme/quanforge/data/paper_trendrule.db")
-SYS_VERSION = f"v4.8.1-trendrule-paper-tp{TP_R:g}R-{SIZING}-gate{VOL_GATE:g}"
+SYS_VERSION = f"v4.8.2-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
 PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 
 opener_px = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
@@ -107,7 +110,15 @@ def snap_equity(con, ts_ms):
 
 def settle(con, sym, p, status, pct, ts_ms, note=""):
     global equity, fixed_equity
-    base = NOTIONAL if SIZING == "fixed" else max(equity * 5.0, 0.0)
+    if SIZING == "fixed":
+        base = NOTIONAL
+    elif SIZING == "risk":
+        # 风险平价: 名义 = 权益×RISK% / SL距离%; 上限5x权益(门槛ATR>=0.32时天然<=2.6x)
+        sl_pct = abs(p["entry"] - p["sl"]) / p["entry"] * 100
+        base = min(equity * RISK_PCT / sl_pct, equity * 5.0) if sl_pct > 0.01 \
+            else equity * 5.0
+    else:  # eq
+        base = max(equity * 5.0, 0.0)
     equity += base * pct / 100
     fixed_equity += NOTIONAL * pct / 100
     record(con, sym, p["action"], p["entry"], p["sl"], p["tp"], status, pct, note,

@@ -7,7 +7,8 @@ Wants=network-online.target
 Type=simple
 User=xingfeng
 Environment=TP_R=5
-Environment=SIZING=eq
+Environment=SIZING=risk
+Environment=RISK_PCT=1.0
 Environment=PAPER_SYMBOLS=ACEUSDT,ZECUSDT,SNDKUSDT
 Environment=PAPER_DB=/mnt/nvme/quanforge/data/paper_trendrule_tp5.db
 ExecStart=/usr/bin/python3 /mnt/nvme/quanforge/tools/paper_trendrule.py
