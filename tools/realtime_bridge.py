@@ -147,8 +147,9 @@ def run_ws(syms):
     url = "wss://stream.bybit.com/v5/public/linear"
     ws = websocket.WebSocket()
     ws.connect(url, http_proxy_host="127.0.0.1", http_proxy_port=7890, timeout=15)
-    args = [{"kline.1m": s} for s in syms]
-    ws.send(json.dumps({"op": "subscribe", "args": [f"kline.1m.{s}" for s in syms]}))
+    ws.settimeout(120)   # 静默容忍2分钟; 15s会在安静时段误杀连接
+    args = [{"kline.1": s} for s in syms]
+    ws.send(json.dumps({"op": "subscribe", "args": [f"kline.1.{s}" for s in syms]}))
     print(f"[ws] subscribed {len(syms)} symbols", flush=True)
     last_ping = time.time()
     while True:

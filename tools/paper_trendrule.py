@@ -262,7 +262,7 @@ def ws_run(con):
     ws.connect(url, http_proxy_host="127.0.0.1", http_proxy_port=7890, timeout=15)
     ws.settimeout(120)   # 静默容忍 2 分钟(20s ping 保活); 15s 会误杀安静时段
     ws.send(json.dumps({"op": "subscribe",
-                        "args": [f"kline.1m.{s}" for s in SYMBOLS]}))
+                        "args": [f"kline.1.{s}" for s in SYMBOLS]}))
     print(f"[ws] subscribed {len(SYMBOLS)} symbols", flush=True)
     last_ping = time.time()
     last_beat = time.time()
