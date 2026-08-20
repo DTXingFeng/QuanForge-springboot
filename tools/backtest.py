@@ -42,7 +42,9 @@ CLAMP_MAJORS = 2.2
 TTL_ALTS, TTL_MAJORS = 120, 240
 SLIP_MARKET, SLIP_LIMIT = 0.0005, 0.0003
 TP_R = float(os.environ.get("TP_R", "2"))  # trend-rule 臂止盈倍数 (2R/3R/...)
-SIZING = os.environ.get("SIZING", "fixed")  # fixed=每笔$1000 | eq=权益5%x100x(生产真实)
+SIZING = os.environ.get("SIZING", "fixed")  # fixed=每笔$1000 | eq=权益5%x100x(生产) | risk=风险平价
+VOL_GATE = float(os.environ.get("VOL_GATE", "0"))  # trend-rule臂 ATR%开仓门槛(0=禁用)
+RISK_PCT = float(os.environ.get("RISK_PCT", "1.0"))  # risk模式每笔风险%
 # 执行延迟模式（--latency）：
 #   -1  = 自适应（推荐）：每次 LLM 调用实测耗时即该单成交等待——模型快则延迟小，
 #         慢则延迟大，延迟分布自动对齐生产（llm_ms 记录在账本）
@@ -165,7 +167,7 @@ def load_klines(symbols, days, seg_offset=0, end_epoch=0):
 # ---------------- 主循环 ----------------
 class Pos:
     __slots__ = ("sym", "action", "entry", "sl", "tp", "ts", "plan_ts",
-                 "rebased", "breakeven", "is_market", "wait_s", "llm_ms")
+                 "rebased", "breakeven", "is_market", "wait_s", "llm_ms", "risk0")
 
 def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch=0):
     frames = load_klines(symbols, days, seg_offset, end_epoch)
@@ -189,6 +191,9 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch
     cols = [r[1] for r in out.execute("pragma table_info(ai_advice_track)")]
     if "llm_ms" not in cols:
         out.execute("alter table ai_advice_track add column llm_ms integer")
+    # 清空旧数据：同文件重跑必须干净（混库曾导致权益重放爆炸6e10）
+    out.execute("delete from ai_advice_track")
+    out.commit()
 
     pos = {}          # symbol -> Pos (单仓)
     pending = {}      # symbol -> Pos (限价等成交)
@@ -209,7 +214,18 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch
                      f"backtest-v4.7-{arm_label}", str(p.plan_ts), str(p.ts), str(ts),
                      p.llm_ms))
         if status in ("WIN", "LOSS"):
-            base = NOTIONAL if SIZING == "fixed" else max(equity * 5.0, 0.0)
+            if equity <= 0:
+                base = 0.0            # 权益归零后停止交易(防负权益下仓位翻转伪影)
+            elif SIZING == "fixed":
+                base = NOTIONAL
+            elif SIZING == "risk":
+                # 风险平价: 用初始止损距离(保本/REBASE后sl==entry会使距离=0, 不可用)
+                r0 = getattr(p, "risk0", 0) or 0
+                sl_pct = r0 if r0 > 0.01 else abs(p.entry - p.sl) / p.entry * 100
+                base = min(equity * RISK_PCT / sl_pct, equity * 5.0) if sl_pct > 0.01 \
+                    else equity * 5.0
+            else:
+                base = max(equity * 5.0, 0.0)
             equity += base * pct / 100
             wins += status == "WIN"
             losses_n += status == "LOSS"
@@ -393,6 +409,20 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch
                         continue
                     px_tr = c.iloc[i]
                     sl_d_tr = float(PRE[sym]["atr"].iloc[i]) * 1.2
+                    atr_pct_tr = sl_d_tr / 1.2 / px_tr * 100
+                    if sl_d_tr / px_tr * 100 < 0.05:
+                        continue            # 退化止损(死bar ATR≈0): 无意义保护, 跳过
+                    if VOL_GATE > 0 and atr_pct_tr < VOL_GATE:
+                        # 波动率门槛(与 paper_trendrule.py 同构): 低波动不开仓
+                        out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
+                                    "take_profit,status,result_pct,note,sys_version,created_at) "
+                                    "values(?,?,?,?,?,?,?,?,?,?)",
+                                    (sym, tr_dir, px_tr, 0, 0, "BLOCKED", None,
+                                     f"volgate:ATR {atr_pct_tr:.2f}%<{VOL_GATE:g}",
+                                     f"backtest-v4.8-{arm_label}", str(i_ts)))
+                        out.commit()
+                        last_trig[sym] = i_ts.value
+                        continue
                     sl_tr = px_tr - sl_d_tr if tr_dir == "BUY" else px_tr + sl_d_tr
                     if sym in MAJORS and sl_d_tr / px_tr * 100 > CLAMP_MAJORS:
                         sl_tr = px_tr - px_tr * CLAMP_MAJORS / 100 if tr_dir == "BUY" \
@@ -400,6 +430,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch
                     tp_tr = px_tr + TP_R * (px_tr - sl_tr) if tr_dir == "BUY" \
                         else px_tr - TP_R * (sl_tr - px_tr)
                     q = Pos(); q.sym, q.action, q.entry, q.sl, q.tp = sym, tr_dir, px_tr, sl_tr, tp_tr
+                    q.risk0 = abs(px_tr - sl_tr) / px_tr * 100
                     q.ts, q.plan_ts = i_ts, i_ts
                     q.rebased, q.breakeven, q.is_market = False, False, False
                     q.wait_s, q.llm_ms = 0, 0
@@ -450,6 +481,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch
                 q0.sl, q0.tp, q0.ts, q0.plan_ts = l0_sl, l0_tp, i_ts, i_ts
                 q0.rebased, q0.breakeven, q0.is_market = False, False, True
                 q0.wait_s, q0.llm_ms = 0, 1  # LightGBM 推理 ~1ms
+                q0.risk0 = abs(px - l0_sl) / px * 100
                 q0.entry = px * (1 + (SLIP_MARKET if l0_dir == "BUY" else -SLIP_MARKET))
                 pos[sym] = q0
                 out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
@@ -527,6 +559,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch
             q.ts, q.plan_ts = i_ts, i_ts
             q.rebased, q.breakeven, q.is_market = False, False, False
             q.wait_s, q.llm_ms = 0, ms
+            q.risk0 = abs(entry - sl) / entry * 100
             if latency_s == -1:
                 # 自适应延迟：本次 LLM 实测耗时 = 成交等待（含网络/代理抖动，
                 # 分布自动对齐生产；llm_ms 一并存入账本供复盘）

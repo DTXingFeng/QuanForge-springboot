@@ -43,7 +43,7 @@ SLIP_LIMIT = 0.0003
 PENDING_TTL_MIN = 120
 WARMUP_BARS = 900                            # EMA200 热身
 DB = os.environ.get("PAPER_DB", "/mnt/nvme/quanforge/data/paper_trendrule.db")
-SYS_VERSION = f"v4.8.2-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
+SYS_VERSION = f"v4.8.3-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
 PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 
 opener_px = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
@@ -113,8 +113,9 @@ def settle(con, sym, p, status, pct, ts_ms, note=""):
     if SIZING == "fixed":
         base = NOTIONAL
     elif SIZING == "risk":
-        # 风险平价: 名义 = 权益×RISK% / SL距离%; 上限5x权益(门槛ATR>=0.32时天然<=2.6x)
-        sl_pct = abs(p["entry"] - p["sl"]) / p["entry"] * 100
+        # 风险平价: 用初始止损距离(保本后sl==entry会使距离=0, 不可用)
+        r0 = p.get("risk0", 0) or 0
+        sl_pct = r0 if r0 > 0.01 else abs(p["entry"] - p["sl"]) / p["entry"] * 100
         base = min(equity * RISK_PCT / sl_pct, equity * 5.0) if sl_pct > 0.01 \
             else equity * 5.0
     else:  # eq
@@ -157,6 +158,12 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
             settle(con, sym, p, "WIN",
                    (p["tp"] - p["entry"]) / p["entry"] * (100 if buy else -100),
                    ts_ms); pos.pop(sym); return
+        # 保本移动(与回测引擎同构): 浮盈过半 -> SL 移到入场价
+        if not p.get("breakeven"):
+            prog = ((c - p["entry"]) if buy else (p["entry"] - c)) / (p["tp"] - p["entry"])
+            if prog >= 0.5:
+                p["sl"] = p["entry"]
+                p["breakeven"] = True
         if (ts_ms - p["fill_ms"]) / 60000 > (TTL_MAJORS if sym in MAJORS else TTL_ALTS):
             pct = (c - p["entry"]) / p["entry"] * (100 if buy else -100)
             settle(con, sym, p, "WIN" if pct >= 0 else "LOSS", pct, ts_ms, "TTL平仓")
@@ -245,7 +252,8 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
         sl = c - c * CLAMP_MAJORS / 100 if action == "BUY" else c + c * CLAMP_MAJORS / 100
     tp = c + TP_R * (c - sl) if action == "BUY" else c - TP_R * (sl - c)
     pending[sym] = {"action": action, "entry": c, "sl": sl, "tp": tp,
-                    "plan_ms": ts_ms, "fill_ms": None}
+                    "plan_ms": ts_ms, "fill_ms": None,
+                    "risk0": abs(c - sl) / c * 100, "breakeven": False}
     log(f"[plan] {fmt(ts_ms)} {sym} {action} LIMIT@{c:.6g} sl={sl:.6g} "
         f"tp={tp:.6g} ({why})")
 
