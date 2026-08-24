@@ -51,23 +51,31 @@ public class OrphanPositionGuard {
 				continue;
 			}
 			double avg = Double.parseDouble(p.optString("avgPrice", "0"));
+			double mark = Double.parseDouble(p.optString("markPrice", "0"));
 			String side = p.optString("side", "?");
 			String qty = p.optString("size", "?");
 			double upl = Double.parseDouble(p.optString("unrealisedPnl", "0"));
+			// 保本止损必须对现价合法: 买单 SL < last, 卖单 SL > last。
+			// 实测 2026-08-24 SOL: 均价 94.17 但现价已跌到 94.12, 设 94.17 被 Bybit 拒
+			// (retCode=10001)。取 均价与标记价 的保守侧再留 0.3% 缓冲。
+			boolean buy = "Buy".equals(side);
+			double ref = buy ? Math.min(avg, mark > 0 ? mark : avg)
+					: Math.max(avg, mark > 0 ? mark : avg);
+			double sl = buy ? ref * 0.997 : ref * 1.003;
 			try {
-				executor.setProtectiveStop(symbol, avg);
+				executor.setProtectiveStop(symbol, sl);
 				log.warn("孤儿仓位已保护: {} {} qty={} entry={} upl={} -> SL={}",
-						symbol, side, qty, avg, upl, avg);
+						symbol, side, qty, avg, upl, String.format(Locale.ROOT, "%.6g", sl));
 				telegram.send(String.format(Locale.ROOT,
-						"🛡️ 孤儿仓位兜底: %s %s qty=%s entry=%.4f 浮盈=%.2f\n"
-								+ "TP/SL 双空（跟踪链路曾断裂），已设保本止损 SL=%.4f\n"
+						"🛡️ 孤儿仓位兜底: %s %s qty=%s entry=%.6g 浮盈=%.2f\n"
+								+ "TP/SL 双空（跟踪链路曾断裂），已设保护性止损 SL=%.6g\n"
 								+ "请人工确认该仓位归属",
-						symbol, side, qty, avg, upl, avg));
+						symbol, side, qty, avg, upl, sl));
 			} catch (Exception e) {
 				log.error("孤儿仓位保护失败 {}: {}", symbol, e.getMessage());
 				telegram.send(String.format(Locale.ROOT,
-						"🚨 孤儿仓位保护失败: %s %s qty=%s TP/SL双空，设保本止损报错: %s\n"
-								+ "请立即人工处理!",
+						"🚨 孤儿仓位保护失败: %s %s qty=%s TP/SL双空，设保护性止损报错: %s\n"
+								+ "下轮巡检自动重试; 若持续失败请立即人工处理!",
 						symbol, side, qty, e.getMessage()));
 			}
 		}
