@@ -165,7 +165,43 @@ public class AiAdviceTracker {
 				t.setNote("模拟盘下单失败(" + truncate(e.getMessage(), 60) + ")，回退纸面");
 			}
 		}
-		repository.save(t);
+		// v4.8.5: 委托挂出后写库可能撞 SQLITE_BUSY_SNAPSHOT（WAL 快照升级冲突，
+		// busy_timeout 无效，必须重试）。实盘教训 2026-08-21 ETH：save 失败 → 无跟踪行
+		// → 限价单成交后无人设 TP/SL，100x 杠杆裸奔 3 天。写库全败则撤回委托，不留孤儿。
+		boolean saved = false;
+		for (int attempt = 1; attempt <= 3 && !saved; attempt++) {
+			try {
+				repository.save(t);
+				saved = true;
+			} catch (Exception e) {
+				log.warn("跟踪行写入失败 {} {} 第{}次: {}", alert.getSymbol(), action, attempt,
+						e.getMessage());
+				if (attempt < 3) {
+					try {
+						Thread.sleep(400L);
+					} catch (InterruptedException ie) {
+						Thread.currentThread().interrupt();
+						break;
+					}
+				}
+			}
+		}
+		if (!saved) {
+			log.error("跟踪行写入彻底失败: {} {} — 委托可能已在所", alert.getSymbol(), action);
+			if (MODE_DEMO.equals(t.getExecMode()) && t.getOrderId() != null) {
+				try {
+					executor.cancel(t.getSymbol(), t.getOrderId());
+					log.warn("已撤回无跟踪委托 {} {}", t.getSymbol(), t.getOrderId());
+				} catch (Exception ce) {
+					log.error("撤回委托失败 {} {}: {} — 需人工检查持仓!",
+							t.getSymbol(), t.getOrderId(), ce.getMessage());
+				}
+			}
+			telegram.send(String.format(Locale.ROOT,
+					"⚠️ 跟踪行写入失败 %s %s，已尝试撤回委托（若撤单失败请人工检查持仓）",
+					alert.getSymbol(), action));
+			return;
+		}
 		log.info("纸面跟踪已建立[{}]: {} {} entry={} sl={} tp={}", t.getExecMode(), alert.getSymbol(),
 				action, entry, stopLoss, takeProfit);
 	}

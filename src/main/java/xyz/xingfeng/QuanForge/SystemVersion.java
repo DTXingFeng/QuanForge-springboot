@@ -27,8 +27,11 @@ package xyz.xingfeng.QuanForge;
  *       同向 2 连亏 90 分钟冷却（实测 8/19 夜反弹：逆势空单被一刀刀放血）</li>
  *   <li>v4.7: 实时化——WS 急动触发研判（urgent 模式 3 轮工具快出结论）+
  *       急动即时市价入场（entry 距现价 <0.15% 不等回调）+ 定时扫描降为 30 分钟兜底</li>
- *   <li>v4.8: 波动率门槛——ATR14% < 0.32% 禁开新单（6 个月矩阵样本外验证：
+ *   <li>v4.8: 波动率门槛——ATR14% &lt; 0.32% 禁开新仓（6 个月矩阵样本外验证：
  *       低波动时段全策略家族净失血，同门槛让机械臂翻正、LLM live 臂 -37.3%→-27.4%）</li>
+ *   <li>v4.8.5: 孤儿仓位防线——跟踪行写入失败重试×3+撤单补偿（2026-08-21 ETH 实盘教训：
+ *       委托成交后 save 撞 SQLITE_BUSY → 无跟踪行 → 无人设 TP/SL 裸奔 3 天）；
+ *       OrphanPositionGuard 每 5 分钟扫持仓，TP/SL 双空自动上保本止损+TG告警</li>
  * </ul>
  */
 public final class SystemVersion {
@@ -36,5 +39,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v4.8-volgate";
+	public static final String CURRENT = "v4.8.5-orphan-guard";
 }

@@ -231,6 +231,34 @@ public class DemoOrderExecutor {
 		return Double.parseDouble(p.optString("size", "0")) <= 0 ? null : p;
 	}
 
+	/** 全部 USDT 线性持仓（孤儿巡检用） */
+	public JSONArray positionsUsdt() {
+		Map<String, String> params = new LinkedHashMap<>();
+		params.put("category", "linear");
+		params.put("settleCoin", "USDT");
+		JSONObject resp = new JSONObject(bybit.getRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
+				"/v5/position/list", params));
+		requireOk(resp, "查全部持仓");
+		JSONArray list = resp.getJSONObject("result").optJSONArray("list");
+		return list == null ? new JSONArray() : list;
+	}
+
+	/** 只设保护性止损，不动 TP（trading-stop 省略字段=保持不变） */
+	public void setProtectiveStop(String symbol, double sl) {
+		Instrument inst = instrument(symbol);
+		JSONObject body = new JSONObject();
+		body.put("category", "linear");
+		body.put("symbol", symbol);
+		body.put("stopLoss", plain(roundToTick(sl, inst.tickSize())));
+		body.put("tpslMode", "Full");
+		body.put("slTriggerBy", "LastPrice");
+		body.put("positionIdx", 0);
+		JSONObject resp = new JSONObject(bybit.post(BybitService.DEFAULT_CREDENTIAL_NAME,
+				"/v5/position/trading-stop", body.toString()));
+		requireOk(resp, "设保护性止损");
+		log.info("保护性止损已设: {} sl={}", symbol, body.getString("stopLoss"));
+	}
+
 	/**
 	 * 某时刻之后的平仓盈亏聚合：sum(closedPnl)、总量、加权出场价。
 	 * 注意字段名是 closedPnl（Bybit v5 约定），曾误用 "pnl" 导致盈亏恒 0。
