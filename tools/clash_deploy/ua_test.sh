@@ -1,6 +1,6 @@
 #!/bin/bash
 # 不同UA拉订阅对比入口域名 + 交易臂恢复检查
-NEW_URL="https://suu.sujieok.cn/SUB_PATH?token=REDACTED"
+NEW_URL="${SUBSCRIBE_URL:?环境变量缺失: export SUBSCRIBE_URL=<订阅地址>}"
 mkdir -p /tmp/ua
 for ua in "clash.meta" "clash-verge/v2.0.0" "ClashforWindows/0.20.39" "v2rayN/6.0" "sing-box" "Shadowrocket/2100"; do
   fn="/tmp/ua/$(echo $ua | tr '/.' '__').yaml"

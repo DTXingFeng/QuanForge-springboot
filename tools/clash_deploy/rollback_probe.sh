@@ -2,7 +2,7 @@
 # 回滚到旧订阅恢复代理 -> 借旧代理境外DoH解析新机场入口域名
 set -e
 D=/mnt/nvme/clash
-OLD_URL="https://sub3.smallstrawberry.com/api/v1/client/subscribe?token=REDACTED"
+OLD_URL="${SUBSCRIBE_URL:?环境变量缺失: export SUBSCRIBE_URL=<订阅地址>}"
 
 echo "== 1) 恢复旧订阅配置 =="
 cp $D/config.yaml.backup-beforesujie.20260823131056 $D/config.yaml

@@ -1,7 +1,7 @@
 #!/bin/bash
 # 一次性: 预览校验新订阅 -> 备份 -> 安装 -> 重启 -> 验证
 set -e
-NEW_URL="https://suu.sujieok.cn/SUB_PATH?token=REDACTED"
+NEW_URL="${SUBSCRIBE_URL:?环境变量缺失: export SUBSCRIBE_URL=<订阅地址>}"
 D=/mnt/nvme/clash
 TS=$(date +%Y%m%d%H%M%S)
 

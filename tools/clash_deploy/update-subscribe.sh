@@ -1,7 +1,7 @@
 #!/bin/bash
 # Clash订阅更新脚本 v2 (2026-08-23): 下载成功后才patch端口/controller; sudo -n; 代理失败转直连
 CLASH_DIR="/mnt/nvme/clash"
-SUBSCRIBE_URL="https://suu.sujieok.cn/SUB_PATH?token=REDACTED"
+SUBSCRIBE_URL="${SUBSCRIBE_URL:?环境变量缺失: export SUBSCRIBE_URL=<订阅地址>}"
 CONFIG_FILE="$CLASH_DIR/config.yaml"
 BACKUP_FILE="$CLASH_DIR/config.yaml.backup"
 PROXY_URL="http://127.0.0.1:7890"

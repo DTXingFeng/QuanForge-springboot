@@ -1,7 +1,7 @@
 #!/bin/bash
 # Clash启动脚本 v2 (2026-08-23): 下载到tmp校验成功才替换(失败沿用现有配置, 不会回退到坏文件)
 CLASH_DIR="/mnt/nvme/clash"
-SUBSCRIBE_URL="https://suu.sujieok.cn/SUB_PATH?token=REDACTED"
+SUBSCRIBE_URL="${SUBSCRIBE_URL:?环境变量缺失: export SUBSCRIBE_URL=<订阅地址>}"
 CONFIG_FILE="$CLASH_DIR/config.yaml"
 LOCAL_PROXY="http://127.0.0.1:7890"
 

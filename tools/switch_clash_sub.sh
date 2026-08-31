@@ -1,7 +1,7 @@
 #!/bin/bash
 # 一次性: 订阅切换到 smallstrawberry + 两个脚本注入 controller 补丁
 set -e
-NEW_URL="https://sub3.smallstrawberry.com/api/v1/client/subscribe?token=REDACTED"
+NEW_URL="${SUBSCRIBE_URL:?环境变量缺失: export SUBSCRIBE_URL=<订阅地址>}"
 D=/mnt/nvme/clash
 
 # 1) update-subscribe.sh 换URL(整行替换, 避免特殊字符匹配问题)
