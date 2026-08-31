@@ -1,9 +1,10 @@
 import sqlite3, math
 from collections import defaultdict
 
-BT = {"3R": (0.031, 25.2), "5R": (0.099, 19.2)}   # 回测: 均笔%, WR%
+BT = {"3R": (0.031, 25.2), "5R": (0.099, 19.2), "5C": (0.099, 19.2)}   # 回测: 均笔%, WR%
 DBS = [("3R", "/mnt/nvme/quanforge/data/paper_trendrule.db"),
-       ("5R", "/mnt/nvme/quanforge/data/paper_trendrule_tp5.db")]
+       ("5R", "/mnt/nvme/quanforge/data/paper_trendrule_tp5.db"),
+       ("5C", "/mnt/nvme/quanforge/data/paper_trendrule_tp5c.db")]
 
 for label, db in DBS:
     con = sqlite3.connect(db)

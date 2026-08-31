@@ -37,13 +37,18 @@ RISK_PCT = float(os.environ.get("RISK_PCT", "1.0"))  # risk模式: 每笔风险�
 # 风险平价RISK=1% -> +113%/回撤54.6%, 同时改善收益与生存性; 名义上限5x权益
 VOL_GATE = float(os.environ.get("VOL_GATE", "0.32"))  # ATR%开仓门槛(<0禁用);
 # 依据: 6个月矩阵样本外验证, 门槛让 3R/4R/5R 全部翻正(tools/vol_gate.py)
+RISK0_CAP = float(os.environ.get("RISK0_CAP", "0"))  # 初始止损距离帽%(<0禁用);
+# v4.9砍尾依据(tools/v49_cap_verify.py): 5R特有毒尾——宽risk0=追半山腰配5xATR远目标,
+# 前向n=24均-0.542%/笔(置换p=0.009), 回测从未保本宽尾n=305均-0.679%;
+# 3R对照反号(+0.229%), 故仅5R臂启用. 泄露盈亏平衡: 保止单宽占比>27.1%才亏(参照15.6%)
 EQUITY0 = 200.0
 NOTIONAL = 1000.0
 SLIP_LIMIT = 0.0003
 PENDING_TTL_MIN = 120
 WARMUP_BARS = 900                            # EMA200 热身
 DB = os.environ.get("PAPER_DB", "/mnt/nvme/quanforge/data/paper_trendrule.db")
-SYS_VERSION = f"v4.8.4-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
+SYS_VERSION = (f"v4.8.4-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
+               + (f"-risk0cap{RISK0_CAP:g}" if RISK0_CAP > 0 else ""))
 PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 
 opener_px = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
@@ -267,9 +272,15 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
     if sym in MAJORS and sl_d / c * 100 > CLAMP_MAJORS:
         sl = c - c * CLAMP_MAJORS / 100 if action == "BUY" else c + c * CLAMP_MAJORS / 100
     tp = c + TP_R * (c - sl) if action == "BUY" else c - TP_R * (sl - c)
+    # v4.9 砍尾: 初始止损距离超帽拒单(默认关; 仅5R臂启用)
+    risk0 = abs(c - sl) / c * 100
+    if RISK0_CAP > 0 and risk0 > RISK0_CAP:
+        record(con, sym, action, c, sl, tp, "BLOCKED", None,
+               f"risk0cap:{risk0:.2f}%>{RISK0_CAP:g}", ts_ms)
+        return
     pending[sym] = {"action": action, "entry": c, "sl": sl, "tp": tp,
                     "plan_ms": ts_ms, "fill_ms": None,
-                    "risk0": abs(c - sl) / c * 100, "breakeven": False}
+                    "risk0": risk0, "breakeven": False}
     log(f"[plan] {fmt(ts_ms)} {sym} {action} LIMIT@{c:.6g} sl={sl:.6g} "
         f"tp={tp:.6g} ({why})")
 
