@@ -1,0 +1,18 @@
+[Unit]
+Description=QuanForge v5-mech trend paper trader (1h EMA flip, no LLM)
+After=network-online.target quanforge.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=xingfeng
+Environment=V5_SYMBOLS=ACEUSDT,ZECUSDT,SNDKUSDT
+Environment=V5_DB=/mnt/nvme/quanforge/data/paper_v5mech.db
+ExecStart=/usr/bin/python3 -u /mnt/nvme/quanforge/tools/paper_v5mech.py
+Restart=always
+RestartSec=30
+StandardOutput=append:/mnt/nvme/quanforge/logs/v5mech.log
+StandardError=append:/mnt/nvme/quanforge/logs/v5mech.log
+
+[Install]
+WantedBy=multi-user.target
