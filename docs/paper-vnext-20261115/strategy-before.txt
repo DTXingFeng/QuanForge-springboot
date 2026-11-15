@@ -1,0 +1,21 @@
+test_paper_vnext (unittest.loader._FailedTest.test_paper_vnext) ... ERROR
+
+======================================================================
+ERROR: test_paper_vnext (unittest.loader._FailedTest.test_paper_vnext)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_paper_vnext
+Traceback (most recent call last):
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 407, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 350, in _get_module_from_name
+    __import__(name)
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_vnext.py", line 5, in <module>
+    from paper_vnext_strategy import decide,INTERVAL,HOUR
+ModuleNotFoundError: No module named 'paper_vnext_strategy'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

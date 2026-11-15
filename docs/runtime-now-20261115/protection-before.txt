@@ -1,0 +1,65 @@
+test_profit_protection_is_set_after_observed_profit_and_exits_on_later_quote (test_quote_paper_trial.QuotePaperTrialTests.test_profit_protection_is_set_after_observed_profit_and_exits_on_later_quote) ... ERROR
+test_sell_limit_does_not_fill_below_limit_and_restart_cannot_duplicate (test_quote_paper_trial.QuotePaperTrialTests.test_sell_limit_does_not_fill_below_limit_and_restart_cannot_duplicate) ... ok
+
+======================================================================
+ERROR: test_profit_protection_is_set_after_observed_profit_and_exits_on_later_quote (test_quote_paper_trial.QuotePaperTrialTests.test_profit_protection_is_set_after_observed_profit_and_exits_on_later_quote)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_quote_paper_trial.py", line 35, in test_profit_protection_is_set_after_observed_profit_and_exits_on_later_quote
+    q(100040,'101.7','101.71');q(100050,'101','101.01')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\project\QuanForge-springboot\tools\tests\test_quote_paper_trial.py", line 32, in q
+    t.quote(dict(symbol='TESTUSDT',at=at,bid=bid,ask=ask,mark=bid,bid_size='100',ask_size='100',next_funding=10000000),at+10)
+  File "E:\project\QuanForge-springboot\tools\quote_paper_trial.py", line 132, in quote
+    candidate=max(candidate,trailing) if sign==1 else min(candidate,trailing)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'decimal.Decimal' and 'NoneType'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 619, in _rmtree_unsafe
+    os.unlink(fullname)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: 'C:\\Users\\xingfeng\\AppData\\Local\\Temp\\tmp50nab0m8\\trial.sqlite'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 878, in onerror
+    _os.unlink(path)
+PermissionError: [WinError 32] ��һ����������ʹ�ô��ļ��������޷����ʡ�: 'C:\\Users\\xingfeng\\AppData\\Local\\Temp\\tmp50nab0m8\\trial.sqlite'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_quote_paper_trial.py", line 26, in test_profit_protection_is_set_after_observed_profit_and_exits_on_later_quote
+    with tempfile.TemporaryDirectory() as d:
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 904, in __exit__
+    self.cleanup()
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 908, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 890, in _rmtree
+    _shutil.rmtree(name, onerror=onerror)
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 758, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 621, in _rmtree_unsafe
+    onerror(os.unlink, fullname, sys.exc_info())
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 881, in onerror
+    cls._rmtree(path, ignore_errors=ignore_errors)
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\tempfile.py", line 890, in _rmtree
+    _shutil.rmtree(name, onerror=onerror)
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 758, in rmtree
+    return _rmtree_unsafe(path, onerror)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 602, in _rmtree_unsafe
+    onerror(os.scandir, path, sys.exc_info())
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\shutil.py", line 599, in _rmtree_unsafe
+    with os.scandir(path) as scandir_it:
+         ^^^^^^^^^^^^^^^^
+NotADirectoryError: [WinError 267] Ŀ¼������Ч��: 'C:\\Users\\xingfeng\\AppData\\Local\\Temp\\tmp50nab0m8\\trial.sqlite'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.029s
+
+FAILED (errors=1)

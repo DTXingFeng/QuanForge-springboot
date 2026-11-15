@@ -39,5 +39,5 @@ public final class SystemVersion {
 	private SystemVersion() {
 	}
 
-	public static final String CURRENT = "v4.8.5-orphan-guard";
+	public static final String CURRENT = "v5.1-paperlab-20261115";
 }

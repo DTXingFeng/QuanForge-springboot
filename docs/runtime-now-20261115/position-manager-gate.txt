@@ -1,0 +1,33 @@
+  public void review();
+    Code:
+       0: aload_0
+       1: getfield      #25                 // Field configService:Lxyz/xingfeng/QuanForge/service/AiConfigService;
+       4: invokevirtual #33                 // Method xyz/xingfeng/QuanForge/service/AiConfigService.getConfig:()Lxyz/xingfeng/QuanForge/entity/AiConfig;
+       7: astore_1
+       8: getstatic     #39                 // Field java/lang/Boolean.TRUE:Ljava/lang/Boolean;
+      11: aload_1
+      12: invokevirtual #45                 // Method xyz/xingfeng/QuanForge/entity/AiConfig.getAutoOrderEnabled:()Ljava/lang/Boolean;
+      15: invokevirtual #51                 // Method java/lang/Boolean.equals:(Ljava/lang/Object;)Z
+      18: ifeq          31
+      21: aload_0
+      22: getfield      #25                 // Field configService:Lxyz/xingfeng/QuanForge/service/AiConfigService;
+      25: invokevirtual #55                 // Method xyz/xingfeng/QuanForge/service/AiConfigService.isConfigured:()Z
+      28: ifne          32
+      31: return
+      32: aload_0
+      33: getfield      #7                  // Field repository:Lxyz/xingfeng/QuanForge/repository/AiAdviceTrackRepository;
+      36: ldc           #61                 // String TRACKING
+      38: invokestatic  #63                 // InterfaceMethod java/util/List.of:(Ljava/lang/Object;)Ljava/util/List;
+      41: invokeinterface #69,  2           // InterfaceMethod xyz/xingfeng/QuanForge/repository/AiAdviceTrackRepository.findByStatusIn:(Ljava/util/Collection;)Ljava/util/List;
+      46: invokeinterface #75,  1           // InterfaceMethod java/util/List.stream:()Ljava/util/stream/Stream;
+
+  private static boolean lambda$review$0(xyz.xingfeng.QuanForge.entity.AiAdviceTrack);
+    Code:
+       0: ldc_w         #672                // String DEMO
+       3: aload_0
+       4: invokevirtual #674                // Method xyz/xingfeng/QuanForge/entity/AiAdviceTrack.getExecMode:()Ljava/lang/String;
+       7: invokevirtual #191                // Method java/lang/String.equals:(Ljava/lang/Object;)Z
+      10: ireturn
+
+  static {};
+    Code:

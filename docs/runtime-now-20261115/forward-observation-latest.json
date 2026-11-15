@@ -1,0 +1,59 @@
+{
+  "observed_utc_ms": 1794675820227,
+  "state": {
+    "arms": {
+      "profit_protect": {
+        "cash": "20",
+        "equity_liquidation": "20",
+        "fees": "0",
+        "invalid": false,
+        "mark_at": 1794675821345,
+        "max_drawdown": "0",
+        "peak": "20",
+        "position": null,
+        "trades": []
+      },
+      "source_exit": {
+        "cash": "20",
+        "equity_liquidation": "20",
+        "fees": "0",
+        "invalid": false,
+        "mark_at": 1794675821345,
+        "max_drawdown": "0",
+        "peak": "20",
+        "position": null,
+        "trades": []
+      }
+    },
+    "ended": false,
+    "entry_disabled": false,
+    "fingerprint": "5aca443ded8d9bf06148a6c082021a703b9dcebd63948bb7aef1746459e4408e",
+    "last_quotes": {
+      "XRPUSDT": 1794675820733
+    },
+    "last_seen": 1794675821345,
+    "pending": null,
+    "seed": {
+      "clock": {
+        "calibrated_at": 1794675454810,
+        "offset": 1460,
+        "uncertainty": 295
+      },
+      "duration_minutes": 60,
+      "end_at": 1794679056835,
+      "entry_cutoff": 1794678456835,
+      "max_polls": 720,
+      "poll_seconds": 5,
+      "source": "read-only current QF-S PAPER feed",
+      "start": 1794675456835,
+      "watermark": 836,
+      "worker_source_sha256": "8b5dcb6e1690ba27c4f082009dcf2935cd45aa0181685198dca0276ecc3000b2"
+    },
+    "watermark": 836
+  },
+  "counts": {
+    "POLL_ERROR": 3,
+    "QUOTE": 50,
+    "REGISTRATION": 1
+  }
+}

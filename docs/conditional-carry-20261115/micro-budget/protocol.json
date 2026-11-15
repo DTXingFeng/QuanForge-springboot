@@ -1,0 +1,60 @@
+{
+  "registered_utc": "2026-11-14T16:23:22.166367+00:00",
+  "source_hashes": {
+    "micro_budget_research.py": "f0cefcede9afe4c0a91c292eb572a792eb590ba0e953631f31fcea5a8e8f7748",
+    "conditional_carry.py": "647627e00c24f67bca073d6a03c3f5263a003efc7ec0354c0d44b30e49217d70",
+    "research_conditional_carry.py": "35cb2c13d1d46c9d0f75c862d6957e2347ec5a21acd5fd65b37b460063ac2f31",
+    "crypto_edge_research.py": "28c605d0f1134d86cc40a7ba9d127e89c2e1e3ae5c38aa786a4e77733c74a12f"
+  },
+  "start": 1786838400000,
+  "end_exclusive": 1794614400000,
+  "label": "20_USDT_USER_BUDGET_SUPPLEMENT_NOT_A_PARAMETER_SEARCH",
+  "capital": "20",
+  "historical_symbols": [
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "feasibility_symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "XRPUSDT"
+  ],
+  "policies": [
+    "cash",
+    "static",
+    "conditional"
+  ],
+  "cost_cases": [
+    "base",
+    "double"
+  ],
+  "cases": 12,
+  "fees": {
+    "spot": ".001",
+    "perp": ".00055",
+    "slip": ".0005"
+  },
+  "inherited_policy": "conditional_carry.py same frozen 21-rate cost hurdle, exits and delays; no retuning",
+  "historical_leverage": "cash-backed equal coin-unit pair; reserve full initial short notional",
+  "leverage_screen": [
+    1,
+    2,
+    5,
+    10,
+    20,
+    50,
+    100,
+    200
+  ],
+  "max_public_attempts": 96,
+  "max_attempts_per_request": 2,
+  "risk_screen": {
+    "max_modeled_loss": ".2",
+    "stop": "max(2 * mean last 14 hourly true ranges / price, 0.003)",
+    "liquidation_check": "approximate initial margin less maintenance and close fee must cover 1.5x stop; not exact liquidation formula"
+  },
+  "expiry_screen": "current BTC/ETH USDT dated futures, all retained; conservative settlement fee reserve max(public quote fee,0.0005)",
+  "hypothesis": "funding regimes can persist enough to repay costs; historical result may falsify this",
+  "research_limit": "90-day sample, no annualisation claim or future profitability certification"
+}

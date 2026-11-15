@@ -1,0 +1,13 @@
+{
+  "source_capture_sha256": "982eb2bea65878fd8612c274b020fdbab71da3406671c079189d024893afb28a",
+  "deployed_jar_sha256": "980b07de865cbb6714f64dc9cb90847c2cc8670b6dcd146ee9f4258a4dbf697d",
+  "source_files": {
+    "tools/capture_current_paper.py": "c90791d60d1b65ed2994c1a44ea5cb11718d7ae2a8ca2ecefb1f672958333550",
+    "tools/audit_current_paper.py": "709927794b36c1e450d31089bf1a0f9a65bc294fa0c72afc3c4116b1d6b2cbe8",
+    "tools/quote_paper_trial.py": "02124073231a97494f140906e3ceee8e396bc29fba63c91d1045ad1dd9eaea04",
+    "tools/run_quote_paper_trial.py": "8b5dcb6e1690ba27c4f082009dcf2935cd45aa0181685198dca0276ecc3000b2"
+  },
+  "current_model": "independent quote PAPER, not a deployed QF-S fix",
+  "trade_history_overwritten": false,
+  "exchange_order_calls": 0
+}

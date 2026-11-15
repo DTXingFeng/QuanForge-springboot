@@ -1,0 +1,14 @@
+.F......
+======================================================================
+FAIL: test_manual_close_retries_after_insufficient_exit_depth (test_paper_vnext_carry.CarryTests.test_manual_close_retries_after_insufficient_exit_depth)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_vnext_carry.py", line 49, in test_manual_close_retries_after_insufficient_exit_depth
+    self.assertIsNone(b.state['position']);self.assertEqual(len(b.state['trades']),1)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'id': 100020, 'kind': 'HEDGE', 'symbol': 'XRPUSDT', 'side': 'HEDGE', 'qty': '0.099', 'spot_entry': '100.05', 'perp_entry': '99.95', 'entered_at': 100020, 'next_funding': 1000000, 'entry_fees': '0.0153472275', 'funding_income': '0', 'initial_notional': '19.8'} is not None
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.074s
+
+FAILED (failures=1)

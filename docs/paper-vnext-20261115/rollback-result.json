@@ -1,0 +1,49 @@
+{
+  "rolled_back": true,
+  "at": 1794680737173,
+  "original_jar_sha256": "980b07de865cbb6714f64dc9cb90847c2cc8670b6dcd146ee9f4258a4dbf697d",
+  "original_start_restored": true,
+  "original_ui_matches_jar": true,
+  "mode": "DEMO",
+  "auto_order_enabled": false,
+  "legacy_services": {
+    "quanforge.service": {
+      "is-active": "active",
+      "is-enabled": "enabled"
+    },
+    "quanforge-bridge.service": {
+      "is-active": "active",
+      "is-enabled": "enabled"
+    },
+    "quanforge-model.service": {
+      "is-active": "active",
+      "is-enabled": "enabled"
+    },
+    "quanforge-v5mech.service": {
+      "is-active": "inactive",
+      "is-enabled": "enabled"
+    },
+    "v5_guard.timer": {
+      "is-active": "active",
+      "is-enabled": "enabled"
+    },
+    "quanforge-forward-monitor.timer": {
+      "is-active": "active",
+      "is-enabled": "enabled"
+    }
+  },
+  "new_worker": {
+    "is-active": "inactive",
+    "is-enabled": "disabled"
+  },
+  "proxy": {
+    "enabled": true,
+    "type": "HTTP",
+    "host": "127.0.0.1",
+    "port": 7890
+  },
+  "old_history_not_overwritten": true,
+  "new_experiment_preserved": "/mnt/nvme/quanforge/data/paper-vnext",
+  "rollback_archive": "/mnt/nvme/quanforge/backups/paper-vnext-20261114-181748/rollback",
+  "restore_method": "retained override with original ExecStart"
+}

@@ -1,0 +1,15 @@
+test_cost_hurdle_uses_only_published_past_rates (test_conditional_carry.ConditionalCarryTests.test_cost_hurdle_uses_only_published_past_rates) ... ok
+test_reversal_exits_after_publication_and_execution_delay (test_conditional_carry.ConditionalCarryTests.test_reversal_exits_after_publication_and_execution_delay) ... ERROR
+
+======================================================================
+ERROR: test_reversal_exits_after_publication_and_execution_delay (test_conditional_carry.ConditionalCarryTests.test_reversal_exits_after_publication_and_execution_delay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_conditional_carry.py", line 20, in test_reversal_exits_after_publication_and_execution_delay
+    from conditional_carry import replay
+ImportError: cannot import name 'replay' from 'conditional_carry' (E:\project\QuanForge-springboot\tools\conditional_carry.py)
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.001s
+
+FAILED (errors=1)

@@ -1,0 +1,19 @@
+test_cost_hurdle_uses_only_published_past_rates (test_conditional_carry.ConditionalCarryTests.test_cost_hurdle_uses_only_published_past_rates) ... ok
+test_gap_can_exhaust_margin_before_a_planned_exit (test_conditional_carry.ConditionalCarryTests.test_gap_can_exhaust_margin_before_a_planned_exit) ... FAIL
+test_reversal_exits_after_publication_and_execution_delay (test_conditional_carry.ConditionalCarryTests.test_reversal_exits_after_publication_and_execution_delay) ... ok
+
+======================================================================
+FAIL: test_gap_can_exhaust_margin_before_a_planned_exit (test_conditional_carry.ConditionalCarryTests.test_gap_can_exhaust_margin_before_a_planned_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_conditional_carry.py", line 36, in test_gap_can_exhaust_margin_before_a_planned_exit
+    self.assertEqual(r['status'],'RESERVE_EXHAUSTED')
+AssertionError: 'HISTORICAL_MODEL' != 'RESERVE_EXHAUSTED'
+- HISTORICAL_MODEL
++ RESERVE_EXHAUSTED
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.004s
+
+FAILED (failures=1)

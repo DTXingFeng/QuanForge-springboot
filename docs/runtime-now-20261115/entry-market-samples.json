@@ -1,0 +1,401 @@
+[
+  {
+    "file": "entry-824.json",
+    "sha256": "872b3054245dd3363a87dfad7cda2158655b3d5660ba9504331e1385f561be01",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ZECUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794623400000",
+            "917.76",
+            "922",
+            "916.99",
+            "916.99",
+            "455.67",
+            "419024.0374"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674781156
+    }
+  },
+  {
+    "file": "entry-825.json",
+    "sha256": "f0be3a306d17c20bc5c5084ced6a6c001a450b0832717ece12b6c68b031456b4",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "SOLUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794624060000",
+            "75.56",
+            "75.86",
+            "75.56",
+            "75.82",
+            "6232.7",
+            "471973.9"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674781810
+    }
+  },
+  {
+    "file": "entry-826.json",
+    "sha256": "f40ced4fff3d14d146f337ddd74369518e58a8b4c13f615a05940a51d006afe7",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ZECUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794628680000",
+            "904.72",
+            "904.74",
+            "903.12",
+            "904.29",
+            "140.54",
+            "127042.3715"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674782693
+    }
+  },
+  {
+    "file": "entry-828.json",
+    "sha256": "077af3635cf3191bfa71c001dc1d3d276a920763b8a93c5e91fd23c8e233bec4",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ZECUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794632460000",
+            "905.23",
+            "906.07",
+            "901.96",
+            "902.6",
+            "451.6",
+            "407793.006"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674796215
+    }
+  },
+  {
+    "file": "entry-830.json",
+    "sha256": "ac8cf7109f4b41e762e8850455daaf43096d0d787425aacde6918302df11112a",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ZECUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794665340000",
+            "886.72",
+            "887.59",
+            "884.3",
+            "886.33",
+            "171.64",
+            "152089.1375"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674809407
+    }
+  },
+  {
+    "file": "entry-831.json",
+    "sha256": "9cf56846bcc94f44aa9f0b70a71e82cb505ac4390c94f95e7acc3746381f3fd7",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ETHUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794667020000",
+            "1854.11",
+            "1855.95",
+            "1845.9",
+            "1849.72",
+            "2547.3",
+            "4714168.2561"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674811379
+    }
+  },
+  {
+    "file": "entry-832.json",
+    "sha256": "ea987016e0b307eb0d6df27ef34deb6b810d458126adcf2beb31cf6f8df4df13",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ACEUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794667200000",
+            "0.10062",
+            "0.10063",
+            "0.09994",
+            "0.1001",
+            "27043.9",
+            "2711.838282"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674812250
+    }
+  },
+  {
+    "file": "entry-833.json",
+    "sha256": "9c53bfe06d5f90874c14b5d2ae237fa44d0b6b0bd05e1e0dedf04ac8da70eece",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ZECUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794669840000",
+            "878.16",
+            "879.07",
+            "872.3",
+            "872.82",
+            "477.44",
+            "418065.6501"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674812966
+    }
+  },
+  {
+    "file": "entry-834.json",
+    "sha256": "f99f823154f5d842920a45e6804d689f161a3ed119b9942e67727623f20738ba",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ZECUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794670560000",
+            "871.08",
+            "874.09",
+            "869.74",
+            "870.86",
+            "1180.59",
+            "1028901.7442"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674813513
+    }
+  },
+  {
+    "file": "entry-835.json",
+    "sha256": "c3f3d7c5b57885ef66acf14e42655a2fbfd77ef3f5215abcc2b79ef91b2239cd",
+    "response": {
+      "retCode": 0,
+      "retMsg": "OK",
+      "result": {
+        "symbol": "ZECUSDT",
+        "category": "linear",
+        "list": [
+          [
+            "1794671280000",
+            "880.22",
+            "880.27",
+            "878.02",
+            "879.24",
+            "334.25",
+            "293875.7052"
+          ]
+        ]
+      },
+      "retExtInfo": {},
+      "time": 1794674814705
+    }
+  },
+  {
+    "file": "entry-check.json",
+    "sha256": "b671787ca3b32b35a3e5b1fd58b60b73b3d22b7e0fb4b20b7d94dd4bcf14c327",
+    "response": {
+      "selection": "most recent 12 closed PAPER rows before market retrieval",
+      "requests": 12,
+      "observed": 10,
+      "recorded_entry_without_valid_limit_touch": 3,
+      "cases": [
+        {
+          "id": 824,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 921.0,
+          "entered_at": 1794623400000,
+          "high": "922",
+          "low": "916.99",
+          "limit_touch_possible": true,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "872b3054245dd3363a87dfad7cda2158655b3d5660ba9504331e1385f561be01"
+        },
+        {
+          "id": 825,
+          "symbol": "SOLUSDT",
+          "side": "SELL",
+          "entry": 75.9,
+          "entered_at": 1794624060000,
+          "high": "75.86",
+          "low": "75.56",
+          "limit_touch_possible": false,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "f0be3a306d17c20bc5c5084ced6a6c001a450b0832717ece12b6c68b031456b4"
+        },
+        {
+          "id": 826,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 905.0,
+          "entered_at": 1794628680000,
+          "high": "904.74",
+          "low": "903.12",
+          "limit_touch_possible": false,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "f40ced4fff3d14d146f337ddd74369518e58a8b4c13f615a05940a51d006afe7"
+        },
+        {
+          "id": 827,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 894.5,
+          "entered_at": 1794630900000,
+          "error_type": "TimeoutError"
+        },
+        {
+          "id": 828,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 903.8,
+          "entered_at": 1794632460000,
+          "high": "906.07",
+          "low": "901.96",
+          "limit_touch_possible": true,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "077af3635cf3191bfa71c001dc1d3d276a920763b8a93c5e91fd23c8e233bec4"
+        },
+        {
+          "id": 829,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 881.5,
+          "entered_at": 1794661620000,
+          "error_type": "TimeoutError"
+        },
+        {
+          "id": 830,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 884.5,
+          "entered_at": 1794665340000,
+          "high": "887.59",
+          "low": "884.3",
+          "limit_touch_possible": true,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "ac8cf7109f4b41e762e8850455daaf43096d0d787425aacde6918302df11112a"
+        },
+        {
+          "id": 831,
+          "symbol": "ETHUSDT",
+          "side": "SELL",
+          "entry": 1846.5,
+          "entered_at": 1794667020000,
+          "high": "1855.95",
+          "low": "1845.9",
+          "limit_touch_possible": true,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "9cf56846bcc94f44aa9f0b70a71e82cb505ac4390c94f95e7acc3746381f3fd7"
+        },
+        {
+          "id": 832,
+          "symbol": "ACEUSDT",
+          "side": "SELL",
+          "entry": 0.1002,
+          "entered_at": 1794667200000,
+          "high": "0.10063",
+          "low": "0.09994",
+          "limit_touch_possible": true,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "ea987016e0b307eb0d6df27ef34deb6b810d458126adcf2beb31cf6f8df4df13"
+        },
+        {
+          "id": 833,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 878.0,
+          "entered_at": 1794669840000,
+          "high": "879.07",
+          "low": "872.3",
+          "limit_touch_possible": true,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "9c53bfe06d5f90874c14b5d2ae237fa44d0b6b0bd05e1e0dedf04ac8da70eece"
+        },
+        {
+          "id": 834,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 869.8,
+          "entered_at": 1794670560000,
+          "high": "874.09",
+          "low": "869.74",
+          "limit_touch_possible": true,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "f99f823154f5d842920a45e6804d689f161a3ed119b9942e67727623f20738ba"
+        },
+        {
+          "id": 835,
+          "symbol": "ZECUSDT",
+          "side": "SELL",
+          "entry": 881.0,
+          "entered_at": 1794671280000,
+          "high": "880.27",
+          "low": "878.02",
+          "limit_touch_possible": false,
+          "original_reversed_touch_predicate": true,
+          "raw_sha256": "c3f3d7c5b57885ef66acf14e42655a2fbfd77ef3f5215abcc2b79ef91b2239cd"
+        }
+      ],
+      "note": "OHLC touch is necessary, not proof of queue fill; adverse entry below/above limit invalidates the recorded limit fill"
+    }
+  }
+]

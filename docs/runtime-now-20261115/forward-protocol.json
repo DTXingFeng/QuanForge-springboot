@@ -1,0 +1,16 @@
+{
+  "start": 1794675456835,
+  "watermark": 836,
+  "end_at": 1794679056835,
+  "entry_cutoff": 1794678456835,
+  "source": "read-only current QF-S PAPER feed",
+  "duration_minutes": 60,
+  "max_polls": 720,
+  "poll_seconds": 5,
+  "worker_source_sha256": "8b5dcb6e1690ba27c4f082009dcf2935cd45aa0181685198dca0276ecc3000b2",
+  "clock": {
+    "offset": 1460,
+    "uncertainty": 295,
+    "calibrated_at": 1794675454810
+  }
+}

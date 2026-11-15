@@ -1,0 +1,11 @@
+app:
+  paper-only: true
+  scheduling:
+    enabled: false
+  execution:
+    account-writes-enabled: false
+  paper:
+    root: data/paper-vnext
+spring:
+  datasource:
+    url: jdbc:sqlite:data/paper-lab-meta.db?journal_mode=WAL&busy_timeout=5000

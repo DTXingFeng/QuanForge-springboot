@@ -1,0 +1,60 @@
+{
+  "registered_utc": "2026-11-14T16:13:09.058959+00:00",
+  "source_hashes": {
+    "conditional_carry.py": "647627e00c24f67bca073d6a03c3f5263a003efc7ec0354c0d44b30e49217d70",
+    "crypto_edge_research.py": "28c605d0f1134d86cc40a7ba9d127e89c2e1e3ae5c38aa786a4e77733c74a12f",
+    "research_conditional_carry.py": "35cb2c13d1d46c9d0f75c862d6957e2347ec5a21acd5fd65b37b460063ac2f31"
+  },
+  "prior_dataset_gzip_sha256": "e74fbb58870f5761b4f74cccf1fc92ec7e0de9edcedffbc2092e5c080cbfd161",
+  "start": 1731542400000,
+  "end_exclusive": 1794614400000,
+  "symbols": [
+    "BTCUSDT"
+  ],
+  "capitals": [
+    "20",
+    "200",
+    "2000"
+  ],
+  "policies": [
+    "cash",
+    "static",
+    "conditional"
+  ],
+  "cost_cases": [
+    "base",
+    "double"
+  ],
+  "spot_fee": ".001",
+  "perp_fee": ".00055",
+  "slip": ".0005",
+  "period_days": 365,
+  "cases": 36,
+  "label": "EXPLORATORY_BTC_ONLY_DATA_AVAILABILITY_SUBSET",
+  "entry": {
+    "funding_history": 21,
+    "minimum_positive_count": 17,
+    "forecast": "min(mean_last_21, mean_last_3) * 90 settlements",
+    "hurdle": "forecast >= 1.5 * estimated four-leg roundtrip fees and slippage",
+    "rate_availability_delay_hours": 1,
+    "decision_to_execution_delay_hours": 1
+  },
+  "exit": {
+    "funding": "sum of last 3 published rates <= 0",
+    "short_margin_equity_fraction": ".25",
+    "hedge_loss_fraction_of_entry_capital": ".02",
+    "portfolio_peak_drawdown_stop": ".03",
+    "cooldown_days": 7
+  },
+  "sizing": "cash covers spot and full initial perp notional plus entry fees; quantities rounded down",
+  "no_auto_rebalance": "coin units remain matched; no automatic collateral transfer or borrowing",
+  "static": "enter start, hold to end unless reserve exhausted; identical price and fee model",
+  "fills": "simultaneous two-leg modeled taker fills; not demonstrated actual fills",
+  "max_public_attempts": 96,
+  "max_attempts_per_request": 2,
+  "expiry_screen": "BTC/ETH current dated futures only; exploratory quote screen, not an execution claim",
+  "no_optimisation": "all cases retained; no retuning after inspecting results",
+  "exclusion": "ETH historical page reached two timeout attempts before evaluation; no result-based exclusion",
+  "capital_supplement": "20 USDT added per user preference before reading replay results",
+  "subset_source_sha256": "6dbd5d0ddde374bec63081de23c81cd64141f8662f8c508566a4f75bb3c64a43"
+}

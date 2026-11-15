@@ -1,0 +1,43 @@
+{
+  "base": "http://192.168.8.240:40702",
+  "observed_at": 1794680490071,
+  "proxy_host": "127.0.0.1",
+  "proxy_port": "7890",
+  "ui_errors": [],
+  "desktop_mobile_no_horizontal_overflow": true,
+  "controls_acknowledged": true,
+  "api_requests": [
+    {
+      "url": "http://192.168.8.240:40702/api/runtime",
+      "method": "GET"
+    },
+    {
+      "url": "http://192.168.8.240:40702/api/paper/status",
+      "method": "GET"
+    },
+    {
+      "url": "http://192.168.8.240:40702/api/paper/proxy",
+      "method": "GET"
+    },
+    {
+      "url": "http://192.168.8.240:40702/api/paper/control",
+      "method": "POST"
+    },
+    {
+      "url": "http://192.168.8.240:40702/api/paper/status",
+      "method": "GET"
+    },
+    {
+      "url": "http://192.168.8.240:40702/api/paper/control",
+      "method": "POST"
+    },
+    {
+      "url": "http://192.168.8.240:40702/api/paper/status",
+      "method": "GET"
+    },
+    {
+      "url": "http://192.168.8.240:40702/api/paper/status",
+      "method": "GET"
+    }
+  ]
+}

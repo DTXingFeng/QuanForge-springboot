@@ -1,0 +1,8 @@
+{
+  "period_days": 90,
+  "base_net_usdt": "0.08001448357815",
+  "double_cost_net_usdt": "0.0291970949094",
+  "note": "Exploratory fixed-entry historical reference only. New live-positive-rate entry, quote fills and 25% margin buffer were not this backtest. XRP was selected after comparing multiple assets; no forward certification.",
+  "source_sha256": "31809d448c04bcd076abcfda94cdf25d07026241cd9044374bbda0a086d80910",
+  "forward_passed": false
+}

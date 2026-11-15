@@ -1,0 +1,223 @@
+{
+  "observed_utc_ms": 1794674561340,
+  "services": {
+    "quanforge.service": {
+      "MainPID": "1278",
+      "ExecMainStartTimestamp": "Mon 2026-11-09 17:39:14 CST",
+      "ExecMainExitTimestamp": "",
+      "ActiveState": "active",
+      "SubState": "running"
+    },
+    "quanforge-v5mech.service": {
+      "MainPID": "0",
+      "ExecMainStartTimestamp": "Mon 2026-11-09 17:39:14 CST",
+      "ExecMainExitTimestamp": "Mon 2026-11-09 17:43:59 CST",
+      "ActiveState": "inactive",
+      "SubState": "dead"
+    },
+    "quanforge-paper.service": {
+      "MainPID": "0",
+      "ExecMainStartTimestamp": "",
+      "ExecMainExitTimestamp": "",
+      "ActiveState": "inactive",
+      "SubState": "dead"
+    },
+    "quanforge-paper5.service": {
+      "MainPID": "0",
+      "ExecMainStartTimestamp": "",
+      "ExecMainExitTimestamp": "",
+      "ActiveState": "inactive",
+      "SubState": "dead"
+    },
+    "quanforge-paper5c.service": {
+      "MainPID": "0",
+      "ExecMainStartTimestamp": "",
+      "ExecMainExitTimestamp": "",
+      "ActiveState": "inactive",
+      "SubState": "dead"
+    },
+    "quanforge-forward-monitor.service": {
+      "MainPID": "0",
+      "ExecMainStartTimestamp": "Sat 2026-11-14 09:21:00 CST",
+      "ExecMainExitTimestamp": "Sat 2026-11-14 09:21:00 CST",
+      "ActiveState": "inactive",
+      "SubState": "dead"
+    }
+  },
+  "databases": {
+    "quanforge.db": {
+      "rows": 836,
+      "last_created_ms": 1794673412130,
+      "status": {
+        "LOSS": 441,
+        "WIN": 312,
+        "EXPIRED": 82,
+        "TRACKING": 1
+      },
+      "latest_equity": null
+    },
+    "paper_v5mech.db": {
+      "rows": 42,
+      "last_created_ms": 1793016000000,
+      "status": {
+        "LOSS": 27,
+        "WIN": 15
+      },
+      "latest_equity": [
+        {
+          "ts": "2026-10-26 23:00:00",
+          "eq_sizing": "risk",
+          "equity": 224.96,
+          "fixed_equity": 224.96
+        }
+      ]
+    },
+    "paper_trendrule.db": {
+      "rows": 2838,
+      "last_created_ms": 1789789500000,
+      "status": {
+        "WIN": 141,
+        "LOSS": 526,
+        "BLOCKED": 2170,
+        "EXPIRED": 1
+      },
+      "latest_equity": [
+        {
+          "ts": "2026-09-19 06:31:20",
+          "eq_sizing": "risk",
+          "equity": 66.9,
+          "fixed_equity": -233.77
+        }
+      ]
+    },
+    "paper_trendrule_tp5.db": {
+      "rows": 2606,
+      "last_created_ms": 1789789500000,
+      "status": {
+        "LOSS": 505,
+        "BLOCKED": 2002,
+        "WIN": 99
+      },
+      "latest_equity": [
+        {
+          "ts": "2026-09-19 06:27:01",
+          "eq_sizing": "risk",
+          "equity": 88.9,
+          "fixed_equity": -151.0
+        }
+      ]
+    },
+    "paper_trendrule_tp5c.db": {
+      "rows": 1496,
+      "last_created_ms": 1789789500000,
+      "status": {
+        "BLOCKED": 1192,
+        "LOSS": 261,
+        "WIN": 43
+      },
+      "latest_equity": [
+        {
+          "ts": "2026-09-19 06:30:13",
+          "eq_sizing": "risk",
+          "equity": 89.95,
+          "fixed_equity": -130.31
+        }
+      ]
+    }
+  },
+  "safe_config": [
+    {
+      "enabled": 1,
+      "auto_order_enabled": 0,
+      "scan_interval_minutes": 30,
+      "leverage": 100,
+      "auto_margin_pct": 5.0,
+      "watch_symbols": "BTCUSDT,ETHUSDT,SOLUSDT,ACEUSDT,ZECUSDT,SNDKUSDT",
+      "updated_at": 1789800128628
+    }
+  ],
+  "deployed_jar_sha256": "980b07de865cbb6714f64dc9cb90847c2cc8670b6dcd146ee9f4258a4dbf697d",
+  "cohorts": [
+    {
+      "created_within_days": 1,
+      "created": 13,
+      "closed_win_loss": 12,
+      "status": {
+        "LOSS": 8,
+        "WIN": 4,
+        "TRACKING": 1
+      },
+      "wins": 4,
+      "gross_price_return_sum_pct": "0.18",
+      "mean_gross_price_return_pct": "0.015",
+      "assumed_roundtrip_fee_pct": ".11",
+      "assumed_roundtrip_slip_pct": ".10",
+      "mean_after_assumed_fee_pct": "-0.095",
+      "mean_after_assumed_fee_and_slip_pct": "-0.195",
+      "missing_qty": 12,
+      "terminal_with_reported_return_including_expired": 12,
+      "expired_with_reported_return": 0,
+      "terminal_mean_gross_price_pct": "0.015",
+      "terminal_mean_after_assumed_fee_pct": "-0.095",
+      "terminal_mean_after_assumed_fee_and_slip_pct": "-0.195",
+      "expired_without_reported_return": 0,
+      "portfolio_net_usdt": null,
+      "reason": "No reliable quantity/cost ledger; sum of trade price returns is not account return"
+    },
+    {
+      "created_within_days": 7,
+      "created": 84,
+      "closed_win_loss": 68,
+      "status": {
+        "LOSS": 37,
+        "WIN": 31,
+        "EXPIRED": 15,
+        "TRACKING": 1
+      },
+      "wins": 31,
+      "gross_price_return_sum_pct": "8.84",
+      "mean_gross_price_return_pct": "0.13",
+      "assumed_roundtrip_fee_pct": ".11",
+      "assumed_roundtrip_slip_pct": ".10",
+      "mean_after_assumed_fee_pct": "0.02",
+      "mean_after_assumed_fee_and_slip_pct": "-0.08",
+      "missing_qty": 68,
+      "terminal_with_reported_return_including_expired": 68,
+      "expired_with_reported_return": 0,
+      "terminal_mean_gross_price_pct": "0.13",
+      "terminal_mean_after_assumed_fee_pct": "0.02",
+      "terminal_mean_after_assumed_fee_and_slip_pct": "-0.08",
+      "expired_without_reported_return": 15,
+      "portfolio_net_usdt": null,
+      "reason": "No reliable quantity/cost ledger; sum of trade price returns is not account return"
+    },
+    {
+      "created_within_days": 30,
+      "created": 212,
+      "closed_win_loss": 174,
+      "status": {
+        "WIN": 73,
+        "LOSS": 101,
+        "EXPIRED": 37,
+        "TRACKING": 1
+      },
+      "wins": 73,
+      "gross_price_return_sum_pct": "12.55",
+      "mean_gross_price_return_pct": "0.07212643678160919540229885057",
+      "assumed_roundtrip_fee_pct": ".11",
+      "assumed_roundtrip_slip_pct": ".10",
+      "mean_after_assumed_fee_pct": "-0.03787356321839080459770114943",
+      "mean_after_assumed_fee_and_slip_pct": "-0.1378735632183908045977011494",
+      "missing_qty": 174,
+      "terminal_with_reported_return_including_expired": 181,
+      "expired_with_reported_return": 7,
+      "terminal_mean_gross_price_pct": "0.08038674033149171270718232044",
+      "terminal_mean_after_assumed_fee_pct": "-0.02961325966850828729281767956",
+      "terminal_mean_after_assumed_fee_and_slip_pct": "-0.1296132596685082872928176796",
+      "expired_without_reported_return": 30,
+      "portfolio_net_usdt": null,
+      "reason": "No reliable quantity/cost ledger; sum of trade price returns is not account return"
+    }
+  ],
+  "capture_sha256": "982eb2bea65878fd8612c274b020fdbab71da3406671c079189d024893afb28a"
+}

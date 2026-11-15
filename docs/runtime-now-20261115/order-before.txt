@@ -1,0 +1,17 @@
+test_invalid_ai_output_is_quarantined_once (test_quote_paper_trial.QuotePaperTrialTests.test_invalid_ai_output_is_quarantined_once) ... ok
+test_out_of_order_quote_cannot_execute_a_stop_created_in_its_future (test_quote_paper_trial.QuotePaperTrialTests.test_out_of_order_quote_cannot_execute_a_stop_created_in_its_future) ... FAIL
+test_profit_protection_is_set_after_observed_profit_and_exits_on_later_quote (test_quote_paper_trial.QuotePaperTrialTests.test_profit_protection_is_set_after_observed_profit_and_exits_on_later_quote) ... ok
+test_sell_limit_does_not_fill_below_limit_and_restart_cannot_duplicate (test_quote_paper_trial.QuotePaperTrialTests.test_sell_limit_does_not_fill_below_limit_and_restart_cannot_duplicate) ... ok
+
+======================================================================
+FAIL: test_out_of_order_quote_cannot_execute_a_stop_created_in_its_future (test_quote_paper_trial.QuotePaperTrialTests.test_out_of_order_quote_cannot_execute_a_stop_created_in_its_future)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_quote_paper_trial.py", line 34, in test_out_of_order_quote_cannot_execute_a_stop_created_in_its_future
+    with self.assertRaisesRegex(ValueError,'out.of.order'):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.043s
+
+FAILED (failures=1)

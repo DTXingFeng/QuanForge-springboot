@@ -1,0 +1,17 @@
+test_cost_hurdle_uses_only_published_past_rates (test_conditional_carry.ConditionalCarryTests.test_cost_hurdle_uses_only_published_past_rates) ... ok
+test_gap_can_exhaust_margin_before_a_planned_exit (test_conditional_carry.ConditionalCarryTests.test_gap_can_exhaust_margin_before_a_planned_exit) ... ok
+test_missing_funding_and_duplicate_bars_cannot_be_treated_as_normal (test_conditional_carry.ConditionalCarryTests.test_missing_funding_and_duplicate_bars_cannot_be_treated_as_normal) ... FAIL
+test_reversal_exits_after_publication_and_execution_delay (test_conditional_carry.ConditionalCarryTests.test_reversal_exits_after_publication_and_execution_delay) ... ok
+
+======================================================================
+FAIL: test_missing_funding_and_duplicate_bars_cannot_be_treated_as_normal (test_conditional_carry.ConditionalCarryTests.test_missing_funding_and_duplicate_bars_cannot_be_treated_as_normal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_conditional_carry.py", line 43, in test_missing_funding_and_duplicate_bars_cannot_be_treated_as_normal
+    with self.assertRaises(ValueError):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.003s
+
+FAILED (failures=1)

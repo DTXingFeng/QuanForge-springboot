@@ -1,0 +1,483 @@
+{
+  "version": "paperlab-5.1-20261115",
+  "period_days": 30,
+  "windows": 3,
+  "gates": {
+    "trend": {
+      "historical_gate_passed": false,
+      "forward_paper_passed": false
+    },
+    "reversion": {
+      "historical_gate_passed": false,
+      "forward_paper_passed": false
+    },
+    "selector": {
+      "historical_gate_passed": false,
+      "forward_paper_passed": false
+    },
+    "cash": {
+      "historical_gate_passed": false,
+      "forward_paper_passed": false
+    }
+  },
+  "source": "HISTORICAL_OHLC_MODEL",
+  "forward_paper_passed": false,
+  "cases": [
+    {
+      "period": 1,
+      "cost_multiplier": 1,
+      "policy": "trend",
+      "start": 1786838400000,
+      "end_exclusive": 1789430400000,
+      "primary": {
+        "final_equity": "18.3503478180663",
+        "net_pnl": "-1.6496521819337",
+        "return_pct": "-8.2482609096685",
+        "max_drawdown_pct": "10.13717276776340499663582089",
+        "fees": "1.2786874925",
+        "funding_cost": "0.0020946894337",
+        "closed": 64,
+        "wins": 20,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 1,
+      "cost_multiplier": 1,
+      "policy": "reversion",
+      "start": 1786838400000,
+      "end_exclusive": 1789430400000,
+      "primary": {
+        "final_equity": "19.913179488",
+        "net_pnl": "-0.086820512",
+        "return_pct": "-0.43410256",
+        "max_drawdown_pct": "2.13479549237470909175585367",
+        "fees": "0.232260512",
+        "funding_cost": "0",
+        "closed": 11,
+        "wins": 6,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 1,
+      "cost_multiplier": 1,
+      "policy": "selector",
+      "start": 1786838400000,
+      "end_exclusive": 1789430400000,
+      "primary": {
+        "final_equity": "18.7691647810495",
+        "net_pnl": "-1.2308352189505",
+        "return_pct": "-6.1541760947525",
+        "max_drawdown_pct": "10.06565906897744953045065307",
+        "fees": "1.1985009245",
+        "funding_cost": "-0.0010757055495",
+        "closed": 59,
+        "wins": 20,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 1,
+      "cost_multiplier": 1,
+      "policy": "cash",
+      "start": 1786838400000,
+      "end_exclusive": 1789430400000,
+      "primary": {
+        "final_equity": "20",
+        "net_pnl": "0",
+        "return_pct": "0",
+        "max_drawdown_pct": "0",
+        "fees": "0",
+        "funding_cost": "0",
+        "closed": 0,
+        "wins": 0,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 1,
+      "cost_multiplier": 2,
+      "policy": "trend",
+      "start": 1786838400000,
+      "end_exclusive": 1789430400000,
+      "primary": {
+        "final_equity": "18.0142532346903",
+        "net_pnl": "-1.9857467653097",
+        "return_pct": "-9.9287338265485",
+        "max_drawdown_pct": "10.1141876015485",
+        "fees": "1.398829091",
+        "funding_cost": "0.0029876743097",
+        "closed": 47,
+        "wins": 16,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 1,
+      "cost_multiplier": 2,
+      "policy": "reversion",
+      "start": 1786838400000,
+      "end_exclusive": 1789430400000,
+      "primary": {
+        "final_equity": "19.93027869",
+        "net_pnl": "-0.06972131",
+        "return_pct": "-0.34860655",
+        "max_drawdown_pct": "0.83517376365037636443101293",
+        "fees": "0.06126131",
+        "funding_cost": "0",
+        "closed": 2,
+        "wins": 1,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 1,
+      "cost_multiplier": 2,
+      "policy": "selector",
+      "start": 1786838400000,
+      "end_exclusive": 1789430400000,
+      "primary": {
+        "final_equity": "18.0556750667011",
+        "net_pnl": "-1.9443249332989",
+        "return_pct": "-9.7216246664945",
+        "max_drawdown_pct": "10.00801780987941347262804041",
+        "fees": "1.548354511",
+        "funding_cost": "-0.0005595777011",
+        "closed": 51,
+        "wins": 19,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 1,
+      "cost_multiplier": 2,
+      "policy": "cash",
+      "start": 1786838400000,
+      "end_exclusive": 1789430400000,
+      "primary": {
+        "final_equity": "20",
+        "net_pnl": "0",
+        "return_pct": "0",
+        "max_drawdown_pct": "0",
+        "fees": "0",
+        "funding_cost": "0",
+        "closed": 0,
+        "wins": 0,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 2,
+      "cost_multiplier": 1,
+      "policy": "trend",
+      "start": 1789430400000,
+      "end_exclusive": 1792022400000,
+      "primary": {
+        "final_equity": "18.121988539",
+        "net_pnl": "-1.878011461",
+        "return_pct": "-9.390057305",
+        "max_drawdown_pct": "10.178423465",
+        "fees": "1.066997536",
+        "funding_cost": "0.003333925",
+        "closed": 52,
+        "wins": 20,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 2,
+      "cost_multiplier": 1,
+      "policy": "reversion",
+      "start": 1789430400000,
+      "end_exclusive": 1792022400000,
+      "primary": {
+        "final_equity": "20.100918805",
+        "net_pnl": "0.100918805",
+        "return_pct": "0.504594025",
+        "max_drawdown_pct": "2.39100412636902917971574024",
+        "fees": "0.324981195",
+        "funding_cost": "0",
+        "closed": 15,
+        "wins": 7,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 2,
+      "cost_multiplier": 1,
+      "policy": "selector",
+      "start": 1789430400000,
+      "end_exclusive": 1792022400000,
+      "primary": {
+        "final_equity": "17.9976044420245",
+        "net_pnl": "-2.0023955579755",
+        "return_pct": "-10.0119777898775",
+        "max_drawdown_pct": "10.0119777898775",
+        "fees": "1.0810105515",
+        "funding_cost": "0.0032150064755",
+        "closed": 52,
+        "wins": 18,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 2,
+      "cost_multiplier": 1,
+      "policy": "cash",
+      "start": 1789430400000,
+      "end_exclusive": 1792022400000,
+      "primary": {
+        "final_equity": "20",
+        "net_pnl": "0",
+        "return_pct": "0",
+        "max_drawdown_pct": "0",
+        "fees": "0",
+        "funding_cost": "0",
+        "closed": 0,
+        "wins": 0,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 2,
+      "cost_multiplier": 2,
+      "policy": "trend",
+      "start": 1789430400000,
+      "end_exclusive": 1792022400000,
+      "primary": {
+        "final_equity": "17.9625079038975",
+        "net_pnl": "-2.0374920961025",
+        "return_pct": "-10.1874604805125",
+        "max_drawdown_pct": "10.1874604805125",
+        "fees": "1.118613859",
+        "funding_cost": "0.0011282371025",
+        "closed": 36,
+        "wins": 10,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 2,
+      "cost_multiplier": 2,
+      "policy": "reversion",
+      "start": 1789430400000,
+      "end_exclusive": 1792022400000,
+      "primary": {
+        "final_equity": "20.019395816",
+        "net_pnl": "0.019395816",
+        "return_pct": "0.09697908",
+        "max_drawdown_pct": "0.37345622157066979918935303",
+        "fees": "0.029004184",
+        "funding_cost": "0",
+        "closed": 1,
+        "wins": 1,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 2,
+      "cost_multiplier": 2,
+      "policy": "selector",
+      "start": 1789430400000,
+      "end_exclusive": 1792022400000,
+      "primary": {
+        "final_equity": "17.930027184914",
+        "net_pnl": "-2.069972815086",
+        "return_pct": "-10.34986407543",
+        "max_drawdown_pct": "10.34986407543",
+        "fees": "1.098433688",
+        "funding_cost": "0.002579127086",
+        "closed": 35,
+        "wins": 9,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 2,
+      "cost_multiplier": 2,
+      "policy": "cash",
+      "start": 1789430400000,
+      "end_exclusive": 1792022400000,
+      "primary": {
+        "final_equity": "20",
+        "net_pnl": "0",
+        "return_pct": "0",
+        "max_drawdown_pct": "0",
+        "fees": "0",
+        "funding_cost": "0",
+        "closed": 0,
+        "wins": 0,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 3,
+      "cost_multiplier": 1,
+      "policy": "trend",
+      "start": 1792022400000,
+      "end_exclusive": 1794614400000,
+      "primary": {
+        "final_equity": "18.1628523776297",
+        "net_pnl": "-1.8371476223703",
+        "return_pct": "-9.1857381118515",
+        "max_drawdown_pct": "10.00274045180355986715261532",
+        "fees": "0.7937837325",
+        "funding_cost": "0.0028138898703",
+        "closed": 38,
+        "wins": 10,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 3,
+      "cost_multiplier": 1,
+      "policy": "reversion",
+      "start": 1792022400000,
+      "end_exclusive": 1794614400000,
+      "primary": {
+        "final_equity": "19.6720777666243",
+        "net_pnl": "-0.3279222333757",
+        "return_pct": "-1.6396111668785",
+        "max_drawdown_pct": "2.8216125753912779330121816",
+        "fees": "0.1717703735",
+        "funding_cost": "-0.0058581401243",
+        "closed": 8,
+        "wins": 3,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 3,
+      "cost_multiplier": 1,
+      "policy": "selector",
+      "start": 1792022400000,
+      "end_exclusive": 1794614400000,
+      "primary": {
+        "final_equity": "18.1226811765846",
+        "net_pnl": "-1.8773188234154",
+        "return_pct": "-9.386594117077",
+        "max_drawdown_pct": "10.14878704798642211831740345",
+        "fees": "0.769945451",
+        "funding_cost": "0.0028133724154",
+        "closed": 37,
+        "wins": 10,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 3,
+      "cost_multiplier": 1,
+      "policy": "cash",
+      "start": 1792022400000,
+      "end_exclusive": 1794614400000,
+      "primary": {
+        "final_equity": "20",
+        "net_pnl": "0",
+        "return_pct": "0",
+        "max_drawdown_pct": "0",
+        "fees": "0",
+        "funding_cost": "0",
+        "closed": 0,
+        "wins": 0,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 3,
+      "cost_multiplier": 2,
+      "policy": "trend",
+      "start": 1792022400000,
+      "end_exclusive": 1794614400000,
+      "primary": {
+        "final_equity": "18.245974477",
+        "net_pnl": "-1.754025523",
+        "return_pct": "-8.770127615",
+        "max_drawdown_pct": "10.35846035605482453963710458",
+        "fees": "1.247035603",
+        "funding_cost": "0.00145992",
+        "closed": 39,
+        "wins": 10,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 3,
+      "cost_multiplier": 2,
+      "policy": "reversion",
+      "start": 1792022400000,
+      "end_exclusive": 1794614400000,
+      "primary": {
+        "final_equity": "19.940043773",
+        "net_pnl": "-0.059956227",
+        "return_pct": "-0.299781135",
+        "max_drawdown_pct": "1.19235404661881791943946414",
+        "fees": "0.062806227",
+        "funding_cost": "0",
+        "closed": 2,
+        "wins": 1,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 3,
+      "cost_multiplier": 2,
+      "policy": "selector",
+      "start": 1792022400000,
+      "end_exclusive": 1794614400000,
+      "primary": {
+        "final_equity": "18.175256934",
+        "net_pnl": "-1.824743066",
+        "return_pct": "-9.12371533",
+        "max_drawdown_pct": "10.06214680144307535423822586",
+        "fees": "1.212811105",
+        "funding_cost": "0.001481961",
+        "closed": 38,
+        "wins": 8,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    },
+    {
+      "period": 3,
+      "cost_multiplier": 2,
+      "policy": "cash",
+      "start": 1792022400000,
+      "end_exclusive": 1794614400000,
+      "primary": {
+        "final_equity": "20",
+        "net_pnl": "0",
+        "return_pct": "0",
+        "max_drawdown_pct": "0",
+        "fees": "0",
+        "funding_cost": "0",
+        "closed": 0,
+        "wins": 0,
+        "invalid": false,
+        "ledger_cash_residual": "0"
+      }
+    }
+  ]
+}

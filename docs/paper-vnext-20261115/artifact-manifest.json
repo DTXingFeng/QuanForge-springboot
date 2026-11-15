@@ -1,0 +1,27 @@
+{
+  "version": "v5.1-paperlab-20261115",
+  "created_ms": 1794680364322,
+  "java_tests": {
+    "tests": 72,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "python_tests": 92,
+  "account_writes": false,
+  "scheduling": false,
+  "paper_only": true,
+  "forward_profitability_passed": false,
+  "git_head": "23b1a9b5001da28d2a84d87be02a160da83839ae",
+  "files": {
+    "app.jar": "ab0381bff6db2fcde842bec0017a6df89fd5eb60bf0acd978842b8c7968fe18e",
+    "carry-evidence.json": "0b899d3b5cfa64404af6dbc9ff96ce1f764fa279e70753f7094f49aeaef3284e",
+    "research-summary.json": "049d467a6e23210a8bf67fa9c40403664d62b0f20d563140d03f399be59c6ba0",
+    "tools/paper_vnext_carry.py": "616cfae925060f714825916ff6474c1427e35a4f59dc1a4081f07e2ae31e1e5c",
+    "tools/paper_vnext_carry_worker.py": "c532e1eed7135b168292b25ee65e52479c2143041910a453843435826c6f2e8e",
+    "tools/paper_vnext_ledger.py": "a5f934079a533f40cfa7257355df789945ef1ce8d80c26f2727a14430d1434d0",
+    "tools/paper_vnext_market.py": "42c78f11af880c0a51cad0e33b5c30eacf40ea57811ee4813c85313aaafb7366",
+    "tools/paper_vnext_strategy.py": "11b21dae47a1111bd985541dd2ca94fc5e5b069fa07a472922f1821167635c0f",
+    "tools/paper_vnext_worker.py": "723bcee13bb3578b9a85736e2182eeed9356ec22d86a233606c0645b84cf9ac5"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "selection": "most recent 12 closed PAPER rows before market retrieval",
+  "requests": 12,
+  "observed": 10,
+  "recorded_entry_without_valid_limit_touch": 3,
+  "cases": [
+    {
+      "id": 824,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 921.0,
+      "entered_at": 1794623400000,
+      "high": "922",
+      "low": "916.99",
+      "limit_touch_possible": true,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "872b3054245dd3363a87dfad7cda2158655b3d5660ba9504331e1385f561be01"
+    },
+    {
+      "id": 825,
+      "symbol": "SOLUSDT",
+      "side": "SELL",
+      "entry": 75.9,
+      "entered_at": 1794624060000,
+      "high": "75.86",
+      "low": "75.56",
+      "limit_touch_possible": false,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "f0be3a306d17c20bc5c5084ced6a6c001a450b0832717ece12b6c68b031456b4"
+    },
+    {
+      "id": 826,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 905.0,
+      "entered_at": 1794628680000,
+      "high": "904.74",
+      "low": "903.12",
+      "limit_touch_possible": false,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "f40ced4fff3d14d146f337ddd74369518e58a8b4c13f615a05940a51d006afe7"
+    },
+    {
+      "id": 827,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 894.5,
+      "entered_at": 1794630900000,
+      "error_type": "TimeoutError"
+    },
+    {
+      "id": 828,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 903.8,
+      "entered_at": 1794632460000,
+      "high": "906.07",
+      "low": "901.96",
+      "limit_touch_possible": true,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "077af3635cf3191bfa71c001dc1d3d276a920763b8a93c5e91fd23c8e233bec4"
+    },
+    {
+      "id": 829,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 881.5,
+      "entered_at": 1794661620000,
+      "error_type": "TimeoutError"
+    },
+    {
+      "id": 830,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 884.5,
+      "entered_at": 1794665340000,
+      "high": "887.59",
+      "low": "884.3",
+      "limit_touch_possible": true,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "ac8cf7109f4b41e762e8850455daaf43096d0d787425aacde6918302df11112a"
+    },
+    {
+      "id": 831,
+      "symbol": "ETHUSDT",
+      "side": "SELL",
+      "entry": 1846.5,
+      "entered_at": 1794667020000,
+      "high": "1855.95",
+      "low": "1845.9",
+      "limit_touch_possible": true,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "9cf56846bcc94f44aa9f0b70a71e82cb505ac4390c94f95e7acc3746381f3fd7"
+    },
+    {
+      "id": 832,
+      "symbol": "ACEUSDT",
+      "side": "SELL",
+      "entry": 0.1002,
+      "entered_at": 1794667200000,
+      "high": "0.10063",
+      "low": "0.09994",
+      "limit_touch_possible": true,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "ea987016e0b307eb0d6df27ef34deb6b810d458126adcf2beb31cf6f8df4df13"
+    },
+    {
+      "id": 833,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 878.0,
+      "entered_at": 1794669840000,
+      "high": "879.07",
+      "low": "872.3",
+      "limit_touch_possible": true,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "9c53bfe06d5f90874c14b5d2ae237fa44d0b6b0bd05e1e0dedf04ac8da70eece"
+    },
+    {
+      "id": 834,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 869.8,
+      "entered_at": 1794670560000,
+      "high": "874.09",
+      "low": "869.74",
+      "limit_touch_possible": true,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "f99f823154f5d842920a45e6804d689f161a3ed119b9942e67727623f20738ba"
+    },
+    {
+      "id": 835,
+      "symbol": "ZECUSDT",
+      "side": "SELL",
+      "entry": 881.0,
+      "entered_at": 1794671280000,
+      "high": "880.27",
+      "low": "878.02",
+      "limit_touch_possible": false,
+      "original_reversed_touch_predicate": true,
+      "raw_sha256": "c3f3d7c5b57885ef66acf14e42655a2fbfd77ef3f5215abcc2b79ef91b2239cd"
+    }
+  ],
+  "note": "OHLC touch is necessary, not proof of queue fill; adverse entry below/above limit invalidates the recorded limit fill"
+}
