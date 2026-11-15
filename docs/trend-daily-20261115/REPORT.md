@@ -170,3 +170,10 @@ python .audit-private/trend-daily-20261115/backtest.py       # 冻结协议回�
 3. **样本外宇宙测试**（BNB/ADA/UNI/AAVE/INJ/SUI/XLM/XMR/DOT/NEAR——趋势回测从未接触、按流动性预选冻结）：组合 **+41.2% / 同窗口（MDD 59%）**，加资金费 +40.1%——优势不是挑池子挑出来的。
 4. **逐币拆解（关键警示）**：UNI +205%、AAVE +182%、BNB +59% vs **SUI -84%、ADA -64%、XLM -61%、DOT -43%、INJ -34%**，XMR/NEAR 平——10 币中 4 币单独重亏、2 币打平。**该优势是组合现象，不是单币现象**：个别币胜率低，靠少数大赢家拉动（趋势跟踪典型右偏结构）。
 5. **对 20U 部署的含义**：最小名义约束使 20U 只能持 3-4 槽，集中版方差远大于组合版；**严禁**按本轮赢亏重挑池子（幸存者陷阱），池子维持流动性预选原则。证据：`.audit-private/funding-xs-20261115/verify2.py`。
+
+## 十、部署记录（2026-11-15 17:37 CST，树莓派 192.168.8.240）
+
+- worker：`tools/s1_daily_trend.py`（纯标准库、单次执行、幂等重放；开仓记 TRACKING、平仓回填 WIN/LOSS 含价格/资金费/手续费分解；`equity_snap` 同步记 BTC 持有基线）
+- systemd：`deploy/quanforge-s1-trend.service`（oneshot, User=xingfeng）+ `quanforge-s1-trend.timer`（每日 UTC 00:05，Persistent 断电补跑）——**未触碰任何既有服务**
+- 首跑验证：202U 起步扣建仓费后 199.79U，5 品种全 SELL（EMA20<EMA60，与当前下跌段一致）；二次触发零处理（幂等 ✓）
+- 判定日：2027-02-13（90 天），届时按 §7 验收线出判定；期间参数冻结不改池

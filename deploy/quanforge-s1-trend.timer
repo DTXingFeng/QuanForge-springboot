@@ -1,0 +1,10 @@
+[Unit]
+Description=QuanForge S1 daily-trend timer (每日 UTC 00:05, 断电补跑)
+
+[Timer]
+OnCalendar=*-*-* 00:05:00 UTC
+Persistent=true
+RandomizedDelaySec=60
+
+[Install]
+WantedBy=timers.target

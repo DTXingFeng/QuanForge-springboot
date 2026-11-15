@@ -1,0 +1,13 @@
+[Unit]
+Description=QuanForge S1 daily-trend PAPER worker (日线趋势前向验证, 单次执行)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=xingfeng
+Environment=PAPER_DB=/mnt/nvme/quanforge/data/paper_s1trend.db
+Environment=PAPER_SYMBOLS=BTCUSDT,ETHUSDT,SOLUSDT,XRPUSDT,DOGEUSDT
+ExecStart=/usr/bin/python3 /mnt/nvme/quanforge/tools/s1_daily_trend.py
+StandardOutput=append:/mnt/nvme/quanforge/logs/s1trend.log
+StandardError=append:/mnt/nvme/quanforge/logs/s1trend.log
