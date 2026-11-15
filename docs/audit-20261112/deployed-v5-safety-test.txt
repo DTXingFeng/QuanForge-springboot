@@ -1,0 +1,5 @@
+11-12 08:26:10 [demo-blocked] audit safety lock: deployed shadow execution disabled
+11-12 08:26:10 [demo-err] close ACEUSDT: audit safety lock: deployed shadow execution disabled
+11-12 08:26:10 [demo-err] reconcile: audit safety lock: deployed shadow execution disabled
+11-12 08:26:10 [demo-err] balance: audit safety lock: deployed shadow execution disabled
+PASS: patch applied to private copy; all shadow entry points blocked; network calls=0

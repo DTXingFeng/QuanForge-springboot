@@ -40,6 +40,7 @@ src/main/resources/static/
 
 ### 调试与验证产物 ###
 .debug/
+.audit-private/
 *.log
 
 ### 环境与密钥 ###

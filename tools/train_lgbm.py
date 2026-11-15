@@ -68,7 +68,7 @@ def main():
         df = pd.read_sql_query(
             "SELECT open_time, open, high, low, close, volume FROM kline_1m "
             "WHERE symbol=? ORDER BY open_time", conn, params=(sym.strip(),),
-            parse_dates=["open_time"]).set_index("open_time")
+            parse_dates={"open_time": {"unit": "ms"}}).set_index("open_time")
         if len(df) < 3000:
             continue
         feats = build(df)

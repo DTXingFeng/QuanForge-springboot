@@ -1,0 +1,151 @@
+{
+  "scope": "QF-S only; UTC throughout; historical observations, not causal estimates",
+  "sources": {
+    "quanforge.db": {
+      "records": 789,
+      "statuses": {
+        "LOSS": 420,
+        "WIN": 294,
+        "EXPIRED": 75
+      },
+      "entered": 732,
+      "priced_results": 730,
+      "positive": 302,
+      "mean_recorded_pct": -0.018575342465753427,
+      "sum_recorded_pct": -13.559999999999926,
+      "note": "Pct sum is not account return; results have mixed cost bases.",
+      "full_price_windows": 713,
+      "observed_positive_then_loss": 365,
+      "windows_with_final_sl_cross": 340,
+      "no_full_held_bar": 19
+    },
+    "paper_trendrule.db": {
+      "records": 2838,
+      "statuses": {
+        "WIN": 141,
+        "LOSS": 526,
+        "BLOCKED": 2170,
+        "EXPIRED": 1
+      },
+      "entered": 667,
+      "priced_results": 667,
+      "positive": 141,
+      "mean_recorded_pct": -0.065047976011994,
+      "sum_recorded_pct": -43.387000000000036,
+      "note": "Pct sum is not account return; results have mixed cost bases.",
+      "initial_equity": 200.0,
+      "final_recorded_equity": 66.9,
+      "max_recorded_realized_drawdown_pct": 75.22222222222223,
+      "equity_note": "Recorded gross paper equity, not net/liquidation-aware equity.",
+      "full_price_windows": 666,
+      "observed_positive_then_loss": 423,
+      "windows_with_final_sl_cross": 97,
+      "no_full_held_bar": 1
+    },
+    "paper_trendrule_tp5.db": {
+      "records": 2606,
+      "statuses": {
+        "LOSS": 505,
+        "BLOCKED": 2002,
+        "WIN": 99
+      },
+      "entered": 604,
+      "priced_results": 604,
+      "positive": 99,
+      "mean_recorded_pct": -0.0581158940397351,
+      "sum_recorded_pct": -35.10200000000002,
+      "note": "Pct sum is not account return; results have mixed cost bases.",
+      "initial_equity": 200.0,
+      "final_recorded_equity": 88.9,
+      "max_recorded_realized_drawdown_pct": 69.15552298955852,
+      "equity_note": "Recorded gross paper equity, not net/liquidation-aware equity.",
+      "full_price_windows": 603,
+      "observed_positive_then_loss": 419,
+      "windows_with_final_sl_cross": 96,
+      "no_full_held_bar": 1
+    },
+    "paper_trendrule_tp5c.db": {
+      "records": 1496,
+      "statuses": {
+        "BLOCKED": 1192,
+        "LOSS": 261,
+        "WIN": 43
+      },
+      "entered": 304,
+      "priced_results": 304,
+      "positive": 43,
+      "mean_recorded_pct": -0.10866447368421052,
+      "sum_recorded_pct": -33.034,
+      "note": "Pct sum is not account return; results have mixed cost bases.",
+      "initial_equity": 200.0,
+      "final_recorded_equity": 89.95,
+      "max_recorded_realized_drawdown_pct": 63.8673283284557,
+      "equity_note": "Recorded gross paper equity, not net/liquidation-aware equity.",
+      "full_price_windows": 304,
+      "observed_positive_then_loss": 221,
+      "windows_with_final_sl_cross": 44,
+      "no_full_held_bar": 0
+    },
+    "paper_v5mech.db": {
+      "records": 42,
+      "statuses": {
+        "LOSS": 27,
+        "WIN": 15
+      },
+      "entered": 42,
+      "priced_results": 42,
+      "positive": 15,
+      "mean_recorded_pct": 0.4423571428571429,
+      "sum_recorded_pct": 18.579000000000004,
+      "note": "Pct sum is not account return; results have mixed cost bases.",
+      "initial_equity": 200.0,
+      "final_recorded_equity": 224.96,
+      "max_recorded_realized_drawdown_pct": 11.020242914979757,
+      "equity_note": "Recorded gross paper equity, not net/liquidation-aware equity.",
+      "full_price_windows": 42,
+      "observed_positive_then_loss": 27,
+      "windows_with_final_sl_cross": 26,
+      "no_full_held_bar": 0
+    }
+  },
+  "exchange": {
+    "closed_records": 522,
+    "execution_records": 1139,
+    "order_records": 1052,
+    "closed_pnl_usdt": -174.78388014999996,
+    "closed_open_close_fees_usdt": 154.84123873999985,
+    "execution_types": {
+      "Trade": 1052,
+      "Funding": 87
+    },
+    "funding_cash_cost_usdt": 1.6341994099999997,
+    "trade_execution_fees_usdt": 154.80584569000007,
+    "closed_wins": 176,
+    "first_close_utc": "2026-08-19T03:23:02.871000+00:00",
+    "last_close_utc": "2026-10-27T00:00:46.754000+00:00",
+    "price_difference_gross_usdt": -18.3084832425998,
+    "closed_pnl_minus_price_gross_plus_fees_usdt": -1.6341581674001886,
+    "largest_single_row_reconciliation_residual_usdt": 0.8288722200000072,
+    "reconciliation_note": "Price gross uses reported average prices/closedSize. Residual may include funding, rounding, or other accounting; do not subtract fees again from closedPnl.",
+    "unique_java_close_candidates": 55,
+    "candidate_net_usdt": -64.76391152,
+    "candidate_fees_usdt": 19.395146120000007
+  },
+  "evidence_gaps": [
+    "No tick path or exact historical orderbook; intrabar extrema order is unknown.",
+    "No immutable AI input snapshot or complete management-event history.",
+    "Python original ledgers omit fees/funding/slippage and original fixed quantity.",
+    "Closed-PnL rows are account events, not necessarily one-to-one strategy trades.",
+    "V5 persisted entry times are signal bar OPEN times; actual design enters at CLOSE."
+  ],
+  "input_hashes": {
+    "quanforge.db": "7032509218c479ff8aad2b812ddd0d6ead40caaeb23b9dda607d4cb0e62afa56",
+    "paper_trendrule.db": "030ee9a9136c06def7f8e76af569e6edc7b45e08bfe52094b4f1c291ef7f69cb",
+    "paper_trendrule_tp5.db": "d929bfa794d36f70b7e93ea328636ae2d3152b2c68a28621dad4c669152014b7",
+    "paper_trendrule_tp5c.db": "b6ef6ca3449dd61cb0b089a60ed2cdf88e9424e6a40abf029273fdcf49a51d12",
+    "paper_v5mech.db": "8879759d6ef05584c677693178bef680a94081cee737f94ba123d65e30c3dd53",
+    "history-tail.sqlite": "21d4de1469eb06d8c6d2bc1ea64815908b4edb9416cc44e6a07b1ac396954d9a",
+    "history-v5.sqlite": "16f9d1e4c0b8978576d5d493dd672a847305ae3be40a898611c1d5679a223694",
+    "history.sqlite": "66e7cb02726760662b1393656d742c004c99800258fa32091997d4cd30a7a852"
+  }
+}

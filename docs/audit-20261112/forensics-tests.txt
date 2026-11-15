@@ -1,0 +1,9 @@
+test_missing_bar_is_not_claimed_full_coverage (test_audit_trade_evidence.EvidenceTests.test_missing_bar_is_not_claimed_full_coverage) ... ok
+test_partial_entry_and_exit_bars_are_excluded (test_audit_trade_evidence.EvidenceTests.test_partial_entry_and_exit_bars_are_excluded) ... ok
+test_python_utc_and_java_epoch_agree (test_audit_trade_evidence.EvidenceTests.test_python_utc_and_java_epoch_agree) ... ok
+test_short_excursions_have_correct_sign (test_audit_trade_evidence.EvidenceTests.test_short_excursions_have_correct_sign) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK

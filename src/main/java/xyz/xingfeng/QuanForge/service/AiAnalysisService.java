@@ -442,16 +442,18 @@ public class AiAnalysisService {
 		return true;
 	}
 
-	/** 拉 K 线返回 [opens, highs, lows, closes]（Bybit 公开接口，无需凭证，时间升序） */
+	/** Closed K lines only, using the same policy as AI tools; arrays are time ascending. */
 	private double[][] fetchKlines(String symbol, String interval, int limit) throws Exception {
+		long observedAt = System.currentTimeMillis();
 		String json = bybitService.getPublicRaw("/v5/market/kline",
 				Map.of("category", "linear", "symbol", symbol, "interval", interval, "limit",
-						String.valueOf(limit)));
+						String.valueOf(Math.min(1000, limit + 1))));
 		JSONObject resp = new JSONObject(json);
 		if (resp.getInt("retCode") != 0) {
 			throw new IllegalStateException("Bybit kline: " + resp.getString("retMsg"));
 		}
-		JSONArray list = resp.getJSONObject("result").getJSONArray("list");
+		JSONArray list = AiToolRegistry.closedKlines(resp.getJSONObject("result").getJSONArray("list"),
+				interval, observedAt, limit);
 		List<double[]> rows = new ArrayList<>();
 		for (int i = 0; i < list.length(); i++) {
 			JSONArray k = list.getJSONArray(i);

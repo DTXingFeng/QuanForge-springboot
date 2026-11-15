@@ -1,0 +1,11 @@
+{
+  "runtime_observed_ms": 1794592509204,
+  "mode": "DEMO",
+  "default_credential_name_matches": false,
+  "shadow_account_verified": false,
+  "positions_complete": true,
+  "positions_active": 0,
+  "orders_complete": true,
+  "orders_active": 0,
+  "deployed_jar_sha256": "980b07de865cbb6714f64dc9cb90847c2cc8670b6dcd146ee9f4258a4dbf697d"
+}

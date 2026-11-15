@@ -26,6 +26,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/credentials")
 public class ApiCredentialController {
+	@org.springframework.beans.factory.annotation.Autowired
+	private xyz.xingfeng.QuanForge.service.CredentialValidationService validation;
+
+	@GetMapping("/{id}/health")
+	public xyz.xingfeng.QuanForge.service.CredentialHealthRegistry.Health health(@PathVariable long id,
+			@org.springframework.web.bind.annotation.RequestParam(defaultValue="DEMO") xyz.xingfeng.QuanForge.client.BybitMode mode) {
+		return validation.current(id,mode);
+	}
+
+	@PostMapping("/{id}/validate")
+	public xyz.xingfeng.QuanForge.service.CredentialHealthRegistry.Health validate(@PathVariable long id,
+			@org.springframework.web.bind.annotation.RequestParam(defaultValue="DEMO") xyz.xingfeng.QuanForge.client.BybitMode mode) {
+		return validation.validate(id,mode);
+	}
 
 	private final ApiCredentialService service;
 

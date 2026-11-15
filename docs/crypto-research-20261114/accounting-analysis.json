@@ -1,0 +1,403 @@
+{
+  "independent_ledger_checks": [
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "cash",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "buy_hold",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "sma200",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "momentum63",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "funding_carry",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "cash",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "buy_hold",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "sma200",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "momentum63",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "arm": "funding_carry",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "cash",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "buy_hold",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "sma200",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "momentum63",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "funding_carry",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "cash",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "buy_hold",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "sma200",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "momentum63",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "arm": "funding_carry",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "cash",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "buy_hold",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "sma200",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "momentum63",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "funding_carry",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "cash",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "buy_hold",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "sma200",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "momentum63",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "arm": "funding_carry",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "cash",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "buy_hold",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "sma200",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "momentum63",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "funding_carry",
+      "cost_case": "base",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "cash",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "buy_hold",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "sma200",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "momentum63",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "arm": "funding_carry",
+      "cost_case": "double_fees_and_slippage",
+      "ledger_residual": "0"
+    }
+  ],
+  "all_40_ledgers_reconcile": true,
+  "funding_period_details": [
+    {
+      "symbol": "BTCUSDT",
+      "period": 1,
+      "events": 1094,
+      "negative_events": 165,
+      "longest_negative_funding_streak": 6,
+      "monthly_gross_income": {
+        "2024-11": "1.101657626303",
+        "2024-12": "1.0126327630365",
+        "2025-01": "0.7072964766161",
+        "2025-02": "0.3991819333454",
+        "2025-03": "0.1967408914658",
+        "2025-04": "0.163425168588",
+        "2025-05": "0.4235938333363",
+        "2025-06": "0.2608043107644",
+        "2025-07": "0.8829239604694",
+        "2025-08": "0.7759088544299",
+        "2025-09": "0.6125725573944",
+        "2025-10": "0.5266911848793",
+        "2025-11": "0.1240554781071"
+      },
+      "negative_calendar_month_buckets": 0,
+      "note": "first and last calendar-month buckets may be partial; no entry/exit costs allocated to these buckets"
+    },
+    {
+      "symbol": "BTCUSDT",
+      "period": 2,
+      "events": 1094,
+      "negative_events": 302,
+      "longest_negative_funding_streak": 14,
+      "monthly_gross_income": {
+        "2025-11": "0.1041344115891",
+        "2025-12": "0.2402218733387",
+        "2026-01": "0.2499247851531",
+        "2026-02": "0.0821324456723",
+        "2026-03": "-0.0078687310901",
+        "2026-04": "-0.0595542596728",
+        "2026-05": "0.132969228492",
+        "2026-06": "0.0764112136465",
+        "2026-07": "0.2496136541402",
+        "2026-08": "0.3134637673034",
+        "2026-09": "0.3120869176453",
+        "2026-10": "0.3313298559154",
+        "2026-11": "0.2085495048541"
+      },
+      "negative_calendar_month_buckets": 2,
+      "note": "first and last calendar-month buckets may be partial; no entry/exit costs allocated to these buckets"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 1,
+      "events": 1094,
+      "negative_events": 201,
+      "longest_negative_funding_streak": 7,
+      "monthly_gross_income": {
+        "2024-11": "1.410555266376",
+        "2024-12": "1.702027834956",
+        "2025-01": "0.74941764282",
+        "2025-02": "0.264746559738",
+        "2025-03": "0.140490834948",
+        "2025-04": "0.126013489056",
+        "2025-05": "0.446468750331",
+        "2025-06": "0.203186527281",
+        "2025-07": "0.757187313201",
+        "2025-08": "0.685553563782",
+        "2025-09": "0.668634083763",
+        "2025-10": "0.376743568308",
+        "2025-11": "0.010840858356"
+      },
+      "negative_calendar_month_buckets": 0,
+      "note": "first and last calendar-month buckets may be partial; no entry/exit costs allocated to these buckets"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "period": 2,
+      "events": 1094,
+      "negative_events": 313,
+      "longest_negative_funding_streak": 13,
+      "monthly_gross_income": {
+        "2025-11": "0.189442493436",
+        "2025-12": "0.128963987307",
+        "2026-01": "0.281205085332",
+        "2026-02": "0.020655277281",
+        "2026-03": "0.096156967785",
+        "2026-04": "-0.049685794245",
+        "2026-05": "0.162305849457",
+        "2026-06": "0.019137358419",
+        "2026-07": "0.183405691275",
+        "2026-08": "0.277227008235",
+        "2026-09": "0.27532445007",
+        "2026-10": "0.185492264796",
+        "2026-11": "0.112964002395"
+      },
+      "negative_calendar_month_buckets": 1,
+      "note": "first and last calendar-month buckets may be partial; no entry/exit costs allocated to these buckets"
+    }
+  ],
+  "market_making_cost_screen": [
+    {
+      "symbol": "BTCUSDT",
+      "snapshot_bid": "67202.6",
+      "snapshot_ask": "67202.7",
+      "snapshot_quoted_spread_bps": "0.01488036558082158962481390243",
+      "assumed_VIP0_perp_roundtrip_maker_fee_bps": "4",
+      "note": "one snapshot only; not a market making backtest; no rebates or queue priority assumed"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "snapshot_bid": "1908.01",
+      "snapshot_ask": "1908.02",
+      "snapshot_quoted_spread_bps": "0.05241048943535559206819652885",
+      "assumed_VIP0_perp_roundtrip_maker_fee_bps": "4",
+      "note": "one snapshot only; not a market making backtest; no rebates or queue priority assumed"
+    }
+  ],
+  "dataset_sha256": "90587349b3b7c0af10ef045d39d40dde7abccf2185ddf57ba17fc830af7a67ba",
+  "results_sha256": "476eec33642a5666b80a511a1d6b281784aa603cc8c2ea1da2cd226064372dd1"
+}

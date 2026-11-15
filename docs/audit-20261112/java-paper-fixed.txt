@@ -1,0 +1,27 @@
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\xingfeng\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+08:21:40.596 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ʵ������ #null ALTUSDT �ѳɽ��볡 100.0 qty=1.0
+08:21:40.611 [main] WARN xyz.xingfeng.QuanForge.service.OrphanPositionGuard -- �¶���λ�ѱ���: ALTUSDT Buy qty=1 entry=100.0 upl=0.0 -> SL=98.7030
+08:21:40.616 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ʵ������ #null ALTUSDT �ѳɽ��볡 100.0 qty=1.0
+08:21:40.640 [main] INFO xyz.xingfeng.QuanForge.service.DemoOrderExecutor -- ģ����ί���ѹ�: ALTUSDT BUY Market qty=5 entry=100.0000(last) lev=10x margin=5.0%
+08:21:40.645 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ʵ������ #null ALTUSDT �ѳɽ��볡 100.0 qty=1.0
+08:21:40.652 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ���ٽ���ʧ�� ALTUSDT #null: timeout
+08:21:40.653 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null ALTUSDT ����: LOSS -5.00%
+08:21:40.653 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ʵ������ #null ALTUSDT: pnl=-5.0000 ������=95.0
+08:21:40.657 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ʵ������ƽ��ʧ�� ALTUSDT #null: timeout
+08:21:40.664 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null BTCUSDT ����: LOSS -5.00%
+08:21:40.683 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null BTCUSDT ����: LOSS -5.00%
+08:21:40.692 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null BTCUSDT ����: �ֲֳ�ʱ����TTLʱ�������̼۽���
+08:21:40.698 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ���ٽ���ʧ�� BTCUSDT #null: PAPER�طų�4ҳԤ�㣬�������ٵȴ�����
+08:21:40.700 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ���ٽ���ʧ�� BTCUSDT #null: PAPER�ط�K��ȱ�ڣ���������: 1794442680000
+08:21:40.703 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null BTCUSDT ����: LOSS -5.00%
+08:21:40.705 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ���ٽ���ʧ�� BTCUSDT #null: PAPER�ط��ظ�K�߳�ͻ����������: 1794442740000
+08:21:40.710 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null BTCUSDT ����: LOSS -5.00%
+08:21:40.723 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null BTCUSDT �Ѵ����볡 100.0
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.064 s -- in xyz.xingfeng.QuanForge.service.PaperSettlementAuditTests
+Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.340 s -- in xyz.xingfeng.QuanForge.service.ExecutionSafetyTests
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.261 s -- in xyz.xingfeng.QuanForge.service.DemoEnvironmentTests

@@ -25,6 +25,7 @@ final class IndicatorMath {
 	/** EMA 序列（首值 SMA 播种） */
 	static double[] emaSeries(double[] values, int period) {
 		double[] out = new double[values.length];
+		java.util.Arrays.fill(out, Double.NaN);
 		if (period <= 0 || values.length < period) {
 			return out;
 		}

@@ -1,0 +1,432 @@
+﻿track_id,symbol,side,why,trigger,entry_order,entry_fills,entry_fee_usdt,complete_trade_net_usdt,missing
+1,BTCUSDT,BUY,BTC探底回升超短多,快讯关键词命中 3 条,b2355fb6-0a65-4379-81e7-9baa5538c84f,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+2,ETHUSDT,BUY,ETH探底回升短线做多,快讯关键词命中 3 条,74b87356-9df4-4a48-8dc9-9970b9de4782,1,0.003825,,exit order ownership; funding allocation; stop event history; wallet cashflows
+3,SOLUSDT,SELL,SOL短线触及阻力承压,快讯关键词命中 3 条,fdb8b23e-7d66-4243-a47d-286dd0fff053,1,0.5671952,,exit order ownership; funding allocation; stop event history; wallet cashflows
+4,HEMIUSDT,SELL,HEMI承压下行反弹偏弱,快讯关键词命中 3 条,609cd514-9aed-46cb-a2cf-6731ab19de44,1,0.2741508,,exit order ownership; funding allocation; stop event history; wallet cashflows
+5,ACEUSDT,SELL,ACE冲高回落短线做空,15m 涨跌 -1.53%；5m 急涨 0.94%；快讯关键词命中 3 条,22e80eb6-ac9b-4a34-ab2c-bf41dc19dca9,1,0.1369536,,exit order ownership; funding allocation; stop event history; wallet cashflows
+6,ACEUSDT,SELL,ACE冲高受阻回落下行,15m 涨跌 0.59%；1h 涨跌 -1.59%；5m 急跌 -0.92%；快讯关键词命中 2 条,b9a1948a-a6ba-4a97-9ab3-7372e966d091,1,0.04912392,,exit order ownership; funding allocation; stop event history; wallet cashflows
+7,HEMIUSDT,BUY,HEMI下轨探底反弹,快讯关键词命中 1 条,641ff553-f668-4a1f-abb0-e043086c12c6,1,0.09950105,,exit order ownership; funding allocation; stop event history; wallet cashflows
+8,ACEUSDT,SELL,ACE反弹受阻均线 顺势做空,15m 涨跌 -2.34%；1h 涨跌 -3.94%；5m 急涨 0.31%；快讯关键词命中 1 条,fb4c8a1d-a0e7-4b0a-b9f3-942b69a30774,1,0.049713,,exit order ownership; funding allocation; stop event history; wallet cashflows
+9,HEMIUSDT,SELL,HEMI冲高遇阻轻仓试空,15m 涨跌 1.45%；1h 涨跌 1.93%；快讯关键词命中 1 条,3feae255-c490-44ec-a22e-1f12c12e8db8,1,0.10166171,,exit order ownership; funding allocation; stop event history; wallet cashflows
+10,HEMIUSDT,SELL,HEMI放量急拉超买 迎短空回调,15m 涨跌 4.26%；1h 涨跌 4.18%；5m 急涨 3.96%；波动放大：5m 波幅 3.95% ≈ 3.9×ATR,a1053937-c328-4d3c-81f3-eec9a06ca74c,1,0.09908267,,exit order ownership; funding allocation; stop event history; wallet cashflows
+11,ACEUSDT,SELL,ACE反弹承压模型共振偏空,15m 涨跌 -1.33%,f0a5e77d-febd-4f17-8eda-00407d8bada9,1,0.13599475,,exit order ownership; funding allocation; stop event history; wallet cashflows
+12,SOLUSDT,BUY,SOL短线企稳利好 轻多介入,快讯关键词命中 1 条,d6c68d12-f272-40c8-91df-a9a093c62eca,1,0.52889375,,exit order ownership; funding allocation; stop event history; wallet cashflows
+13,HEMIUSDT,SELL,HEMI冲高受阻超买回落,15m 涨跌 -0.67%；1h 涨跌 14.87%；RSI14 81.2；5m 急跌 -0.67%；快讯关键词命中 1 条,c6ad6e3e-6672-4045-b8d6-9e49b6d688fd,1,0.09605883,,exit order ownership; funding allocation; stop event history; wallet cashflows
+14,ACEUSDT,BUY,ACE放量突破负费率轧空,15m 涨跌 1.16%；1h 涨跌 5.52%；5m 急涨 1.16%；快讯关键词命中 1 条,82926586-120f-42ed-9203-92752e5bbf15,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+15,ACEUSDT,BUY,ACE短线多头放量突破,15m 涨跌 -1.46%；1h 涨跌 8.38%；5m 急涨 1.45%；快讯关键词命中 3 条,3b886403-5aec-4522-8f55-7dfc65df6bc2,1,0.0473851,,exit order ownership; funding allocation; stop event history; wallet cashflows
+16,ETHUSDT,BUY,ETH探底回升短线多,快讯关键词命中 4 条,a5b8c734-1584-49ad-ac27-dc328e5e57a5,1,0.1757936,,exit order ownership; funding allocation; stop event history; wallet cashflows
+17,SOLUSDT,BUY,SOL短线企稳反弹偏多,快讯关键词命中 4 条,ce505f94-6df1-4aa8-8230-bdcf933ce71b,1,0.4901754,,exit order ownership; funding allocation; stop event history; wallet cashflows
+18,HEMIUSDT,SELL,HEMI冲高受阻回落 短线试空,15m 涨跌 0.76%；1h 涨跌 2.77%；RSI14 84.4；快讯关键词命中 4 条,eebdae62-ab45-4d2c-b0c8-1450797b1fbf,1,0.24514825,,exit order ownership; funding allocation; stop event history; wallet cashflows
+19,ACEUSDT,BUY,ACE多头放量突破 负费率轧空延续,15m 涨跌 -0.94%；1h 涨跌 6.30%；5m 急涨 0.80%；快讯关键词命中 4 条,41908a0a-d71f-4dec-9524-eb111ea57ffd,1,0.12122577,,exit order ownership; funding allocation; stop event history; wallet cashflows
+20,ETHUSDT,BUY,ETH放量突破回踩确认,快讯关键词命中 2 条,286b9ea8-0b7c-4286-911c-55e4a73dfe58,1,0.168388,,exit order ownership; funding allocation; stop event history; wallet cashflows
+21,SOLUSDT,BUY,SOL放量突破回踩 短多布局,快讯关键词命中 2 条,1f606404-69a9-4f2c-b4d3-ee1e2fa6e5c4,1,0.1708956,,exit order ownership; funding allocation; stop event history; wallet cashflows
+22,HEMIUSDT,BUY,HEMI放量突破新高短多,15m 涨跌 4.12%；1h 涨跌 5.85%；RSI14 88.4；5m 急涨 3.12%；快讯关键词命中 2 条,70d6cf8d-affa-489a-81a7-5016d8ea91fe,1,0.08531604,,exit order ownership; funding allocation; stop event history; wallet cashflows
+23,ACEUSDT,SELL,ACE短线高点下移 承压做空,15m 涨跌 0.63%；1h 涨跌 -2.28%；5m 急跌 -0.62%；快讯关键词命中 2 条,185f8bbc-fbdf-465e-8eed-f8288acf9c83,1,0.04272885,,exit order ownership; funding allocation; stop event history; wallet cashflows
+24,HEMIUSDT,SELL,HEMI冲高受阻短空,15m 涨跌 -0.55%；1h 涨跌 4.31%；RSI14 83.2；5m 急涨 2.08%；快讯关键词命中 2 条,30bb01da-7a7e-4dcc-9b65-64d0e3f455d4,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+25,ACEUSDT,SELL,ACE冲高回落空头延续,15m 涨跌 0.64%；1h 涨跌 -7.65%；5m 急涨 0.44%；快讯关键词命中 2 条,eb0f8410-e9bc-47d7-83bb-dd3d73c63c33,1,0.04323336,,exit order ownership; funding allocation; stop event history; wallet cashflows
+26,ETHUSDT,SELL,ETH触及高阻力区滞涨承压,快讯关键词命中 3 条,df18a79c-2310-4415-949b-217659539405,1,0.17664,,exit order ownership; funding allocation; stop event history; wallet cashflows
+27,HEMIUSDT,SELL,HEMI高位承压回落短空,1h 涨跌 -5.37%；快讯关键词命中 1 条,9b4d7930-878d-4d71-862b-b076b2338233,1,0.08973118,,exit order ownership; funding allocation; stop event history; wallet cashflows
+28,ACEUSDT,SELL,ACE反弹承压空,15m 涨跌 -0.56%；1h 涨跌 -2.60%；5m 急涨 0.63%；快讯关键词命中 3 条,c25bdbea-4861-43ed-b559-cbfb2de255b2,1,0.04465656,,exit order ownership; funding allocation; stop event history; wallet cashflows
+29,HEMIUSDT,SELL,HEMI冲高受阻放量急跌,15m 涨跌 -5.21%；5m 急跌 -0.93%；快讯关键词命中 3 条,d1e789dc-ba19-43ce-8898-8a7a2578191c,1,0.08789953,,exit order ownership; funding allocation; stop event history; wallet cashflows
+30,HEMIUSDT,BUY,HEMI多头探底回升 顺势短多,15m 涨跌 3.55%；1h 涨跌 1.60%；5m 急涨 0.37%；快讯关键词命中 2 条,18d8cc34-1e5f-4f26-9c4f-7c07757ed585,1,0.08700233,,exit order ownership; funding allocation; stop event history; wallet cashflows
+31,ACEUSDT,SELL,ACE承压冲高回落偏空,15m 涨跌 2.50%；1h 涨跌 1.15%；快讯关键词命中 2 条,8e487411-37fc-4c74-a304-4b4b7f740f3c,1,0.11976034,,exit order ownership; funding allocation; stop event history; wallet cashflows
+32,HEMIUSDT,BUY,HEMI超跌插针企稳博反弹,15m 涨跌 -8.76%；1h 涨跌 -12.13%；5m 急跌 -4.67%,7f340776-9551-417f-aa11-d829792752b0,1,0.08645213,,exit order ownership; funding allocation; stop event history; wallet cashflows
+33,ACEUSDT,BUY,ACE超跌反弹短多,1h 涨跌 2.08%,b167d294-10fb-42d8-ae87-4b3c05c1a181,1,0.0433814,,exit order ownership; funding allocation; stop event history; wallet cashflows
+34,HEMIUSDT,BUY,HEMI探底强V反 平台企稳看涨,15m 涨跌 -0.63%；1h 涨跌 -6.22%；5m 急涨 0.45%,4e9ec5dc-613f-4dc5-8c1f-b28d89a6b020,1,0.08842554,,exit order ownership; funding allocation; stop event history; wallet cashflows
+35,ACEUSDT,BUY,ACE多头放量突破 回踩顺势跟进,15m 涨跌 3.17%；1h 涨跌 4.27%；5m 急跌 -0.36%,8c296608-664f-4a9b-926a-d47fc99eaade,1,0.04435388,,exit order ownership; funding allocation; stop event history; wallet cashflows
+36,HEMIUSDT,SELL,HEMI反弹遇阻短空机会,15m 涨跌 2.07%；1h 涨跌 6.48%；5m 急涨 0.71%,5669aad8-51dc-41b0-aa0e-c048fd242cc0,1,0.24878871,,exit order ownership; funding allocation; stop event history; wallet cashflows
+37,BTCUSDT,BUY,BTC带宽极窄放量微破,布林带宽收窄至近60根最低（变盘临近）；快讯关键词命中 1 条,0bf62369-e83b-409b-86d9-3792c77c7197,1,0.46027625,,exit order ownership; funding allocation; stop event history; wallet cashflows
+38,ETHUSDT,BUY,ETH回踩支撑低吸,快讯关键词命中 1 条,23fa0616-00c7-4d7b-b498-9cea0652ddbd,1,0.16874,,exit order ownership; funding allocation; stop event history; wallet cashflows
+39,SOLUSDT,BUY,SOL突破后回踩企稳做多,快讯关键词命中 1 条,216ec05c-709f-4385-a905-e5a95809c818,1,0.4715502,,exit order ownership; funding allocation; stop event history; wallet cashflows
+40,HEMIUSDT,BUY,HEMI放量突破上行,1h 涨跌 6.16%；5m 急涨 0.40%；快讯关键词命中 1 条,938b9693-7e29-44c7-9bae-a88fb8c21ba3,1,0.08623489,,exit order ownership; funding allocation; stop event history; wallet cashflows
+41,HEMIUSDT,BUY,HEMI多头阶梯拉升顺势短多,15m 涨跌 1.24%；1h 涨跌 8.34%；快讯关键词命中 2 条,c1d1a3df-2440-4af1-a934-bc9e3c263d97,1,0.08752788,,exit order ownership; funding allocation; stop event history; wallet cashflows
+42,ACEUSDT,BUY,ACE探底回升负费率博反弹,1h 涨跌 -2.90%；5m 急涨 0.45%；快讯关键词命中 2 条,644e14dc-5a0d-4bb0-b138-0eaf7609ab23,1,0.04375198,,exit order ownership; funding allocation; stop event history; wallet cashflows
+43,BTCUSDT,SELL,BTC承压布林上轨短空,快讯关键词命中 2 条,1d921441-b092-43b3-ac2c-3bb76d536f1b,1,0.1806,,exit order ownership; funding allocation; stop event history; wallet cashflows
+44,ETHUSDT,BUY,ETH短线放量上攻多头顺势,快讯关键词命中 2 条,d597c326-a330-44f1-9337-f19e189a2cb1,1,0.1806962,,exit order ownership; funding allocation; stop event history; wallet cashflows
+45,SOLUSDT,BUY,SOL放量冲高蓄势 关注突破前高,快讯关键词命中 2 条,a0adcfcf-3926-4e4d-8e7d-cf3fd2f0612d,1,0.1798464,,exit order ownership; funding allocation; stop event history; wallet cashflows
+46,HEMIUSDT,BUY,HEMI多头回踩企稳看涨,15m 涨跌 -1.09%；1h 涨跌 2.18%；5m 急跌 -0.42%；快讯关键词命中 2 条,f7b12814-0183-47ed-8bea-748ca30c118e,1,0.24816003,,exit order ownership; funding allocation; stop event history; wallet cashflows
+47,ACEUSDT,BUY,ACE企稳反弹短多,15m 涨跌 -1.40%；1h 涨跌 -1.94%；5m 急涨 0.51%；快讯关键词命中 2 条,d93bc97a-8580-45fd-9ef0-d1e67066545e,1,0.12382473,,exit order ownership; funding allocation; stop event history; wallet cashflows
+48,ETHUSDT,BUY,ETH短线多头蓄势顺势做多,快讯关键词命中 1 条,1933ff0e-565b-4e94-a791-5eb1c37e3ea7,1,0.172962,,exit order ownership; funding allocation; stop event history; wallet cashflows
+49,SOLUSDT,SELL,SOL冲高受阻短线偏空,快讯关键词命中 1 条,e0eae0fc-205b-493c-8478-708f1b7eb4b0,1,0.1735776,,exit order ownership; funding allocation; stop event history; wallet cashflows
+50,HEMIUSDT,SELL,HEMI高位滞涨短空,15m 涨跌 1.02%；1h 涨跌 2.83%；5m 急跌 -0.68%；快讯关键词命中 1 条,80816e9f-512e-44c6-a273-5a2d53977b33,1,0.08666562,,exit order ownership; funding allocation; stop event history; wallet cashflows
+51,ACEUSDT,SELL,ACE破位下行 逢高偏空布局,15m 涨跌 -0.89%；布林带宽收窄至近60根最低（变盘临近）；快讯关键词命中 1 条,90be254c-6ef2-48da-a25c-2dc729301322,1,0.0432945,,exit order ownership; funding allocation; stop event history; wallet cashflows
+52,SOLUSDT,BUY,SOL回踩均线支撑逢低做多,快讯关键词命中 3 条,8def6e7d-c5ac-45c4-8db0-099ce7d6cbcc,1,0.48097885,,exit order ownership; funding allocation; stop event history; wallet cashflows
+53,ACEUSDT,SELL,ACE破位下行空头共振,1h 涨跌 -3.38%；快讯关键词命中 3 条,5d031ecc-ac01-426a-a486-284c645cc90a,1,0.12034965,,exit order ownership; funding allocation; stop event history; wallet cashflows
+54,ZECUSDT,SELL,ZEC冲高回落短线做空,快讯关键词命中 3 条,0f215512-de0a-4431-bbf1-15fa2c54be1b,1,0.0871352,,exit order ownership; funding allocation; stop event history; wallet cashflows
+56,BTCUSDT,SELL,BTC触及强阻超买回踩,RSI14 79.0；快讯关键词命中 1 条,06da2b9d-eef0-457b-8897-43129aac93f1,1,0.46429598,,exit order ownership; funding allocation; stop event history; wallet cashflows
+57,ETHUSDT,SELL,ETH超买遇阻短空机会,RSI14 76.0；波动放大：5m 波幅 0.30% ≈ 2.3×ATR,1c59609f-f566-4bc9-aebb-e8ccdd7d8348,1,0.1780384,,exit order ownership; funding allocation; stop event history; wallet cashflows
+58,SOLUSDT,SELL,SOL触及日高极度超买做空,RSI14 75.6；波动放大：5m 波幅 0.31% ≈ 2.0×ATR,c335a5fe-06f8-4bbe-8a3d-412dec92d6fd,1,0.1781136,,exit order ownership; funding allocation; stop event history; wallet cashflows
+59,ACEUSDT,BUY,ACE放量插针企稳 迎超跌反弹,1h 涨跌 -6.22%,7bd247d9-a7e9-49d9-af0d-1e76b3a456b7,1,0.0443313,,exit order ownership; funding allocation; stop event history; wallet cashflows
+60,ZECUSDT,BUY,ZEC放量突破顺势做多,1h 涨跌 1.19%,3dbac36f-aff8-411b-8772-5b7063e9135b,1,0.088064,,exit order ownership; funding allocation; stop event history; wallet cashflows
+62,BTCUSDT,BUY,BTC放量拉升多头延续,快讯关键词命中 1 条,cf4c9eab-c047-4d7b-9c55-bd859e2b0a91,1,0.42834,,exit order ownership; funding allocation; stop event history; wallet cashflows
+63,ETHUSDT,BUY,ETH冲高回踩企稳,快讯关键词命中 1 条,7c042b33-79b2-45b8-8b7e-3530d063ff78,1,0.16641,,exit order ownership; funding allocation; stop event history; wallet cashflows
+64,SOLUSDT,SELL,SOL冲高承压短空,1h 涨跌 1.16%；RSI14 75.7；快讯关键词命中 1 条,42bed734-7b34-4a4d-9199-36a162bf0108,1,0.46132515,,exit order ownership; funding allocation; stop event history; wallet cashflows
+65,ACEUSDT,SELL,ACE反弹受阻顺势空,5m 急跌 -0.45%；快讯关键词命中 1 条,0589a38b-a749-4c74-a997-d146b1ac091f,1,0.04189216,,exit order ownership; funding allocation; stop event history; wallet cashflows
+67,BTCUSDT,SELL,BTC冲高承压模型共振偏空,RSI14 80.1；快讯关键词命中 3 条,814e6339-5d25-4f4a-944a-0a342c8d3bb5,1,0.4297821,,exit order ownership; funding allocation; stop event history; wallet cashflows
+68,ETHUSDT,BUY,ETH回踩中轨企稳做多,快讯关键词命中 3 条,265d5bdf-5dfc-4999-ae70-5c2fcdf80979,1,0.45704098,,exit order ownership; funding allocation; stop event history; wallet cashflows
+70,BTCUSDT,SELL,BTC触及前高超买承压,RSI14 83.8；快讯关键词命中 1 条,d20848b9-b69b-4a3f-9684-200e88108498,1,0.43207626,,exit order ownership; funding allocation; stop event history; wallet cashflows
+71,SOLUSDT,SELL,SOL触顶超买 15m共振看空,RSI14 77.3；快讯关键词命中 1 条,e116c40f-6dae-4a43-ac1d-8fec5828e1f0,1,0.4584129,,exit order ownership; funding allocation; stop event history; wallet cashflows
+72,ACEUSDT,SELL,ACE破位下行弱反弹,15m 涨跌 0.58%；1h 涨跌 -3.46%；5m 急涨 0.58%；快讯关键词命中 2 条,c7c6d23d-bd72-48a7-baf8-8feb561fed45,1,0.11549209,,exit order ownership; funding allocation; stop event history; wallet cashflows
+74,ETHUSDT,SELL,ETH触及布林上轨承压回落,快讯关键词命中 2 条,112cb09a-879d-4a3b-b960-d388099ee463,1,0.44792517,,exit order ownership; funding allocation; stop event history; wallet cashflows
+75,SOLUSDT,SELL,SOL承压24h高点阻力,快讯关键词命中 2 条,249ae3db-2571-4a57-b563-92cb5e2cd359,1,0.4503928,,exit order ownership; funding allocation; stop event history; wallet cashflows
+76,ACEUSDT,SELL,ACE反弹受阻顺势做空,15m 涨跌 0.63%；1h 涨跌 -2.18%；5m 急跌 -0.53%；快讯关键词命中 2 条,3c779cc1-6951-4dce-a141-cc35f30379d6,1,0.11275216,,exit order ownership; funding allocation; stop event history; wallet cashflows
+77,ZECUSDT,SELL,ZEC触顶超买信号共振做空,1h 涨跌 1.83%；RSI14 79.2；5m 急涨 0.57%；波动放大：5m 波幅 0.70% ≈ 1.9×ATR；快讯关键词命中 2 条,b1382a15-cb11-429d-aac6-2a39e65c6398,1,0.0812448,,exit order ownership; funding allocation; stop event history; wallet cashflows
+79,BTCUSDT,SELL,BTC短线极度超买 关注冲高回落,1h 涨跌 1.04%；RSI14 90.2；快讯关键词命中 4 条,7a05a93d-0242-4944-bbe2-6d1e0045b945,1,0.40071873,,exit order ownership; funding allocation; stop event history; wallet cashflows
+80,ETHUSDT,BUY,ETH放量冲破2000关口,15m 涨跌 1.25%；1h 涨跌 3.01%；RSI14 89.4；5m 急涨 0.46%；波动放大：5m 波幅 0.76% ≈ 2.0×ATR；快讯关键词命中 4 条,56de67b3-5cbe-45c5-a52e-c39f62de3c3e,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+81,SOLUSDT,BUY,SOL放量突破强阻多头加速,15m 涨跌 0.66%；1h 涨跌 3.52%；RSI14 90.3；5m 急涨 0.41%；快讯关键词命中 4 条,546b14fd-64d5-422e-a0d7-6d2c18b9e743,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+82,ACEUSDT,BUY,ACE放量插针超跌反弹,15m 涨跌 -3.74%；1h 涨跌 -2.97%；5m 急涨 0.83%；快讯关键词命中 4 条,8a265eff-ea2e-4155-af55-abc61712feff,1,0.03823872,,exit order ownership; funding allocation; stop event history; wallet cashflows
+83,ZECUSDT,BUY,ZEC放量突破创日内新高,15m 涨跌 0.91%；1h 涨跌 5.95%；RSI14 91.4；快讯关键词命中 4 条,eb4eb807-f4c5-408f-b49f-904be4016c8f,1,0.2103717,,exit order ownership; funding allocation; stop event history; wallet cashflows
+85,BTCUSDT,SELL,BTC极端超买高位滞涨短空,15m 涨跌 0.82%；1h 涨跌 1.63%；RSI14 92.2；快讯关键词命中 4 条,833657fc-f0f4-428a-a13b-b8f592a997e1,1,0.146234,,exit order ownership; funding allocation; stop event history; wallet cashflows
+86,ETHUSDT,BUY,ETH放量突破两千关口 顺势回踩低多,15m 涨跌 2.03%；1h 涨跌 3.80%；RSI14 91.1；快讯关键词命中 4 条,ea2778bc-a52c-4462-8e95-2ab5875005f4,1,0.40890476,,exit order ownership; funding allocation; stop event history; wallet cashflows
+87,SOLUSDT,BUY,SOL放量突破回踩 顺势做多,15m 涨跌 0.89%；1h 涨跌 3.77%；RSI14 90.7；5m 急跌 -0.40%；快讯关键词命中 4 条,a1121710-7cd8-4e69-a326-f58baee9615e,1,0.4122382,,exit order ownership; funding allocation; stop event history; wallet cashflows
+88,BTCUSDT,SELL,BTC冲高受阻回落 偏空短线操作,RSI14 85.7；快讯关键词命中 4 条,237f87f7-f120-4cf4-962c-8aec4d16685f,1,0.150876,,exit order ownership; funding allocation; stop event history; wallet cashflows
+89,ETHUSDT,SELL,ETH高位超买回落短空,15m 涨跌 -0.63%；RSI14 86.1；5m 急跌 -0.35%；快讯关键词命中 4 条,a8c3d82b-9bc7-41a9-a028-1ed1c8961e6d,1,0.162708,,exit order ownership; funding allocation; stop event history; wallet cashflows
+90,SOLUSDT,SELL,SOL冲高受阻回落短空,RSI14 78.9；快讯关键词命中 4 条,9a8861b9-1711-438f-ac5f-86638ef62522,1,0.44556435,,exit order ownership; funding allocation; stop event history; wallet cashflows
+91,ACEUSDT,BUY,ACE超跌反弹短多机会,15m 涨跌 -1.08%；5m 急涨 0.37%；快讯关键词命中 4 条,9ac99e57-fef7-42de-a172-b9d41c3d8d61,1,0.11036312,,exit order ownership; funding allocation; stop event history; wallet cashflows
+92,ZECUSDT,BUY,ZEC强趋势高位整理看涨,RSI14 91.2；快讯关键词命中 4 条,415f02a9-470d-478b-a52a-04d0c6cffab8,1,0.0788526,,exit order ownership; funding allocation; stop event history; wallet cashflows
+93,BTCUSDT,SELL,BTC承压回落短空,快讯关键词命中 2 条,e2980d31-2d10-40ce-bd6f-d5a6b7cd9c54,1,0.176852,,exit order ownership; funding allocation; stop event history; wallet cashflows
+94,SOLUSDT,SELL,SOL短线震荡下行走弱,快讯关键词命中 2 条,33179ecd-8516-4907-bfd7-d1775bca4632,1,0.4968249,,exit order ownership; funding allocation; stop event history; wallet cashflows
+95,ACEUSDT,SELL,ACE空头排列承压 短线顺势试空,1h 涨跌 1.24%；快讯关键词命中 2 条,b4c8a4ff-77cc-498c-bcad-6d90ab03cede,1,0.04511069,,exit order ownership; funding allocation; stop event history; wallet cashflows
+96,ZECUSDT,BUY,ZEC踩稳支撑短线顺势做多,15m 涨跌 -0.53%；5m 急涨 0.43%；快讯关键词命中 2 条,4f34860f-9fd1-415f-9282-1b9984a53dae,1,0.24528785,,exit order ownership; funding allocation; stop event history; wallet cashflows
+97,BTCUSDT,BUY,BTC布林收窄向上突破多单,布林带宽收窄至近60根最低（变盘临近）；快讯关键词命中 1 条,c2d55c53-98ae-4f4e-ab87-8d484e9534f7,1,0.16392,,exit order ownership; funding allocation; stop event history; wallet cashflows
+98,ETHUSDT,SELL,ETH超买滞涨短空,RSI14 80.3；快讯关键词命中 1 条,b1720882-a35e-4aa3-a54e-9bd470a31f5c,1,0.4619164,,exit order ownership; funding allocation; stop event history; wallet cashflows
+99,SOLUSDT,BUY,SOL短线多头顺势逢低布局,快讯关键词命中 1 条,7412bea4-8ec3-4b52-a413-9ac89632a618,1,0.167688,,exit order ownership; funding allocation; stop event history; wallet cashflows
+100,ZECUSDT,BUY,ZEC利好回踩企稳做多,快讯关键词命中 1 条,934e542f-55da-4be4-8ce5-54823cd4a615,1,0.23270902,,exit order ownership; funding allocation; stop event history; wallet cashflows
+102,BTCUSDT,SELL,BTC短线冲高承压，小仓试空博回踩,快讯关键词命中 3 条,8a68d967-bb91-45bc-a2c6-e5b311eab7af,1,0.1648992,,exit order ownership; funding allocation; stop event history; wallet cashflows
+103,ETHUSDT,SELL,ETH天量冲高受阻 RSI超买偏空,15m 涨跌 2.37%；1h 涨跌 7.47%；RSI14 94.1；5m 急跌 -1.32%；波动放大：5m 波幅 2.10% ≈ 1.8×ATR；快讯关键词命中 2 条,5806e05a-822e-457a-8832-924498a4775b,1,0.17667,,exit order ownership; funding allocation; stop event history; wallet cashflows
+104,SOLUSDT,SELL,SOL放量冲高见顶做空,15m 涨跌 2.70%；1h 涨跌 4.32%；RSI14 89.7；5m 急跌 -0.57%；快讯关键词命中 2 条,81670fad-3ad8-48e3-bc20-18c1085869a1,1,0.48735995,,exit order ownership; funding allocation; stop event history; wallet cashflows
+105,ACEUSDT,BUY,ACE超跌反弹短多机会,15m 涨跌 0.72%；1h 涨跌 -1.57%；5m 急跌 -0.84%；快讯关键词命中 2 条,be730e9a-4e07-4376-8f77-30061b62fb76,1,0.12363689,,exit order ownership; funding allocation; stop event history; wallet cashflows
+106,ZECUSDT,SELL,ZEC放量冲高遇阻短空,15m 涨跌 2.76%；1h 涨跌 3.79%；RSI14 85.6；5m 急跌 -0.70%；快讯关键词命中 2 条,ab4423d6-16f5-4189-b869-42c0068be83a,1,0.24424516,,exit order ownership; funding allocation; stop event history; wallet cashflows
+108,BTCUSDT,BUY,BTC放量冲高回踩企稳,1h 涨跌 1.36%；RSI14 80.3；快讯关键词命中 1 条,67f1a465-5202-4122-9d56-9d9917c74566,1,0.15312,,exit order ownership; funding allocation; stop event history; wallet cashflows
+109,ETHUSDT,SELL,ETH冲高回落 5m短线顺势做空,15m 涨跌 -0.52%；RSI14 88.6,96dfb6a8-a6d9-49bc-97c1-70f2ca0bda9c,1,0.463282,,exit order ownership; funding allocation; stop event history; wallet cashflows
+110,SOLUSDT,BUY,SOL回踩均线企稳做多,15m 涨跌 -0.75%；RSI14 76.5,39ff709b-93d6-40f0-bf2a-519049a0ab60,1,0.4620847,,exit order ownership; funding allocation; stop event history; wallet cashflows
+111,ACEUSDT,SELL,ACE反弹承压布林上轨,15m 涨跌 1.62%；5m 急涨 0.52%；布林带宽收窄至近60根最低（变盘临近）,d375ff62-7c04-40ea-ad40-f60b6d3a1382,1,0.04283245,,exit order ownership; funding allocation; stop event history; wallet cashflows
+113,ETHUSDT,SELL,ETH 15m超买回落短空,RSI14 77.1,cec37045-6a39-4de8-952c-7769ba6f7694,1,0.166574,,exit order ownership; funding allocation; stop event history; wallet cashflows
+114,ACEUSDT,SELL,ACE短线承压顺势做空,1h 涨跌 -2.65%,8ceee6c8-743e-4fb2-ba21-88b11a764ac4,1,0.11605679,,exit order ownership; funding allocation; stop event history; wallet cashflows
+115,ZECUSDT,BUY,ZEC下探获支撑超短反弹,1h 涨跌 -1.02%,27bb93e2-ecb7-4848-8356-98f1c32f12d4,1,0.23213438,,exit order ownership; funding allocation; stop event history; wallet cashflows
+116,BTCUSDT,BUY,BTC多头整理回踩蓄势,快讯关键词命中 1 条,065a408e-c139-4823-9378-db0747da51d0,1,0.16632,,exit order ownership; funding allocation; stop event history; wallet cashflows
+117,SOLUSDT,BUY,SOL短线多头动能释放,快讯关键词命中 1 条,20bf5332-8a2b-41aa-a4d5-ae103b77d73b,1,0.4618691,,exit order ownership; funding allocation; stop event history; wallet cashflows
+119,BTCUSDT,BUY,BTC高位整固偏多,快讯关键词命中 1 条,786d9c08-1bd6-4ecc-9c27-8d10f1e08c2c,1,0.153252,,exit order ownership; funding allocation; stop event history; wallet cashflows
+120,ETHUSDT,SELL,ETH反弹遇阻偏空,快讯关键词命中 1 条,c686c2a9-e657-4635-a9bd-a92888714b77,1,0.158746,,exit order ownership; funding allocation; stop event history; wallet cashflows
+121,SOLUSDT,BUY,SOL多头趋势延续5m金叉企稳,快讯关键词命中 1 条,244fe759-22a1-4eed-a0e0-93966344a5e8,1,0.1586022,,exit order ownership; funding allocation; stop event history; wallet cashflows
+122,ACEUSDT,SELL,ACE弱势反抽承压 逢高短空,15m 涨跌 0.52%；1h 涨跌 -1.62%；5m 急涨 0.53%；快讯关键词命中 1 条,b0dae41a-5f72-47b9-b41e-7139dfa056ee,1,0.03982579,,exit order ownership; funding allocation; stop event history; wallet cashflows
+123,ZECUSDT,SELL,ZEC反弹承压偏空,快讯关键词命中 1 条,8c870d7c-dbc4-476a-b468-9e785f1832e5,1,0.21931652,,exit order ownership; funding allocation; stop event history; wallet cashflows
+124,BTCUSDT,BUY,BTC 5m触底反弹顺势做多,快讯关键词命中 1 条,4e1a2e64-9704-4fd1-b1dd-72feb5533b1b,1,0.38043335,,exit order ownership; funding allocation; stop event history; wallet cashflows
+125,ETHUSDT,BUY,ETH探底反包多头强劲,快讯关键词命中 1 条,af3eb8a7-0d37-414b-8ab1-955a081bdf34,1,0.148698,,exit order ownership; funding allocation; stop event history; wallet cashflows
+126,ACEUSDT,BUY,ACE短线超跌反弹,5m 急涨 0.40%；快讯关键词命中 1 条,3a7c5225-8298-4b7a-908e-542ea3f2d579,1,0.03813238,,exit order ownership; funding allocation; stop event history; wallet cashflows
+127,ZECUSDT,BUY,ZEC超跌反弹短多机会,快讯关键词命中 1 条,3d367386-9f33-4aaf-beef-d0ba6873acd1,1,0.20755504,,exit order ownership; funding allocation; stop event history; wallet cashflows
+129,ACEUSDT,SELL,ACE弱势顺势做空,MANUAL,4d797871-3cc7-4d0b-8ea9-62a9c04e826e,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+130,ACEUSDT,SELL,ACE短线空头顺势做空,MANUAL,dd4427fe-ff61-49b2-8fcb-24d49da2c31d,1,0.10488186,,exit order ownership; funding allocation; stop event history; wallet cashflows
+131,ACEUSDT,SELL,ACE反弹承压顺势沽空,MANUAL,6a2aa430-45e2-40b5-a179-8857f4cd453b,1,0.03741109,,exit order ownership; funding allocation; stop event history; wallet cashflows
+132,ACEUSDT,SELL,ACE反弹受阻顺势做空,MANUAL,128d7667-9c77-4fe3-a76d-61e62642db62,1,0.10672863,,exit order ownership; funding allocation; stop event history; wallet cashflows
+133,ACEUSDT,BUY,ACE放量突破多头共振,MANUAL,93898e88-242a-42a5-a8eb-0eb6de6329c8,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+134,ACEUSDT,BUY,ACE放量突破逼空上行,MANUAL,708c9afd-b4b7-4d4c-9bbe-2de92c8c09dd,1,0.03813472,,exit order ownership; funding allocation; stop event history; wallet cashflows
+135,ACEUSDT,BUY,ACE 探底回升多头延续,MANUAL,12c9bb8f-c369-45d3-98a2-e3d90c2e975a,1,0.03853606,,exit order ownership; funding allocation; stop event history; wallet cashflows
+136,ACEUSDT,BUY,ACE短线多头强劲 负费率助推逼空,MANUAL,9706f64d-568e-477c-a5ec-db93d9576bae,1,0.10827339,,exit order ownership; funding allocation; stop event history; wallet cashflows
+137,ACEUSDT,BUY,ACE 15m多头回踩顺势做多,MANUAL,33bb30f6-2f12-4ad8-b3e0-d96ca617ba3e,1,0.03934666,,exit order ownership; funding allocation; stop event history; wallet cashflows
+139,ACEUSDT,BUY,ACE多头放量突破,MANUAL,d6aafa2c-8f55-48f4-b349-18cd7057de3d,1,0.04114944,,exit order ownership; funding allocation; stop event history; wallet cashflows
+140,ACEUSDT,BUY,ACE多头顺势回踩确认,MANUAL,acb2e5d6-8946-4228-b36c-e594cbb73d16,1,0.10479582,,exit order ownership; funding allocation; stop event history; wallet cashflows
+141,ACEUSDT,BUY,ACE顺势突破多头延续,MANUAL,b096b571-9fec-4b36-98d6-4339179f3481,1,0.10985074,,exit order ownership; funding allocation; stop event history; wallet cashflows
+142,ACEUSDT,BUY,ACE多头放量突破顺势做多,MANUAL,1fd55356-02d1-4b27-8602-8689a9959620,1,0.113904,,exit order ownership; funding allocation; stop event history; wallet cashflows
+144,ACEUSDT,BUY,ACE突破上行顺势多,MANUAL,d721a63e-7cae-4831-a614-cf83001dafe3,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+146,ZECUSDT,BUY,ZEC放量突破多头主升,15m 涨跌 2.41%；1h 涨跌 4.77%；RSI14 76.3；快讯关键词命中 1 条,4dd8745d-607c-4e4f-9c98-9ed83af553ff,1,0.3260895,,exit order ownership; funding allocation; stop event history; wallet cashflows
+147,ACEUSDT,BUY,ACE多头趋势延续突破,MANUAL,d7f84916-f2ba-43ea-b7b2-2f81d2cb6570,1,0.10413003,,exit order ownership; funding allocation; stop event history; wallet cashflows
+148,ACEUSDT,BUY,ACE多头强劲顺势做多,MANUAL,eebf335b-afcd-4d46-806b-e676191bcd6d,1,0.03856338,,exit order ownership; funding allocation; stop event history; wallet cashflows
+149,ACEUSDT,BUY,ACE回踩企稳顺势做多,MANUAL,3a7f1cf4-c9a5-4400-9868-88bcf9b2930b,1,0.03745014,,exit order ownership; funding allocation; stop event history; wallet cashflows
+150,ACEUSDT,SELL,ACE破位下行短空,MANUAL,08a905be-027a-4cac-a19b-56421f986c80,1,0.03743784,,exit order ownership; funding allocation; stop event history; wallet cashflows
+151,ACEUSDT,SELL,ACE冲高回落空头加速,MANUAL,25af8294-3ca1-4739-816f-4016acac2533,1,0.10788838,,exit order ownership; funding allocation; stop event history; wallet cashflows
+152,ACEUSDT,SELL,ACE 破位下行顺势做空,MANUAL,c41e14de-b5a5-46b2-b3dc-f30d42238ffa,1,0.03801522,,exit order ownership; funding allocation; stop event history; wallet cashflows
+153,ACEUSDT,SELL,ACE跌破短期平台均线呈空头,MANUAL,35217eb8-9fc1-4097-85a0-5c7bf08a0b11,1,0.10156827,,exit order ownership; funding allocation; stop event history; wallet cashflows
+154,ACEUSDT,SELL,ACE短线空头顺势做空,MANUAL,0d897f10-1c99-4d42-86b7-372ecba9b922,1,0.03601988,,exit order ownership; funding allocation; stop event history; wallet cashflows
+155,ACEUSDT,SELL,ACE顺势破位下行,MANUAL,155bf430-7322-4a95-8fa6-4ce93babcb8b,1,0.10193635,,exit order ownership; funding allocation; stop event history; wallet cashflows
+156,ACEUSDT,SELL,ACE反弹承压顺势沽空,MANUAL,2022ee8d-8665-458d-a294-afd603b2f512,1,0.105895,,exit order ownership; funding allocation; stop event history; wallet cashflows
+157,ACEUSDT,SELL,ACE短线顺势逢高沽空,MANUAL,c9b6263f-69e9-44bb-9c06-252a912ddb9b,1,0.1056214,,exit order ownership; funding allocation; stop event history; wallet cashflows
+158,ACEUSDT,BUY,ACE短线放量突破多头共振,MANUAL,3de4f506-1ace-4ded-9ea1-35e23575f0c5,1,0.10644375,,exit order ownership; funding allocation; stop event history; wallet cashflows
+159,ZECUSDT,BUY,ZEC放量突破多头延续,MANUAL,3166c6ac-480a-44ee-ab88-ffb41f528f58,1,0.111202,,exit order ownership; funding allocation; stop event history; wallet cashflows
+160,ZECUSDT,BUY,ZEC 放量突破多头延续,MANUAL,550faf36-a547-4334-bb1a-3a71683e7549,1,0.32677414,,exit order ownership; funding allocation; stop event history; wallet cashflows
+161,ACEUSDT,BUY,ACE短线多头共振上攻,MANUAL,06f81bc9-e9dd-49f4-a7a2-d7f26299f41b,1,0.10997581,,exit order ownership; funding allocation; stop event history; wallet cashflows
+162,ZECUSDT,BUY,ZEC短线回踩企稳顺势做多,MANUAL,1b67044f-e54c-4f39-a2a2-63eb1ea230b9,1,0.32665556,,exit order ownership; funding allocation; stop event history; wallet cashflows
+163,ACEUSDT,BUY,ACE多头放量突破,MANUAL,b087c603-f2d3-4ad6-af6f-bccc30d4f05a,1,0.03742848,,exit order ownership; funding allocation; stop event history; wallet cashflows
+164,ZECUSDT,BUY,ZEC突破放量顺势看多,MANUAL,e2ae2981-427e-4ef7-a8a6-24592a0ebba8,1,0.111024,,exit order ownership; funding allocation; stop event history; wallet cashflows
+165,ACEUSDT,BUY,ACE负费率多头趋势回踩做多,MANUAL,ce313a71-a784-412a-afc5-61d7390d19e4,1,0.10137489,,exit order ownership; funding allocation; stop event history; wallet cashflows
+166,ZECUSDT,BUY,ZEC突破拉升回踩顺势做多,MANUAL,bb0ecf4c-44c4-4574-b263-47cb19ad5cde,1,0.121885,,exit order ownership; funding allocation; stop event history; wallet cashflows
+167,ACEUSDT,BUY,ACE多头均线回踩企稳,MANUAL,0846ea16-cb70-48e6-931d-49af9260c59a,1,0.10982345,,exit order ownership; funding allocation; stop event history; wallet cashflows
+168,ZECUSDT,BUY,ZEC多头强势放量突破,MANUAL,4436c817-6907-4866-8021-1bc803b3f021,1,0.31440585,,exit order ownership; funding allocation; stop event history; wallet cashflows
+169,ACEUSDT,SELL,ACE破位下行模型共振,MANUAL,8a80d2d0-206a-478c-8d63-77248f461d70,1,0.0975014,,exit order ownership; funding allocation; stop event history; wallet cashflows
+171,SOLUSDT,BUY,15m中轨支撑博超卖反弹,MANUAL,d2d85267-93c5-4850-80ce-56d5c7ef464e,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+172,SOLUSDT,BUY,SOL回踩插针强力收回 顺势做多,MANUAL,cc2db5f3-de40-4a32-b86b-c2bd50f3c951,1,0.3983496,,exit order ownership; funding allocation; stop event history; wallet cashflows
+173,ACEUSDT,SELL,ACE破位下行顺势做空,MANUAL,cfe45fc9-e170-4022-9ece-bf263ebc3c30,1,0.09482717,,exit order ownership; funding allocation; stop event history; wallet cashflows
+174,ZECUSDT,BUY,ZEC放量突破多头延续,MANUAL,229a697b-419c-4d8a-9b86-be57dfaff015,1,0.30310896,,exit order ownership; funding allocation; stop event history; wallet cashflows
+175,ACEUSDT,SELL,ACE空头延续 顺势下看支撑,MANUAL,9ef201d7-c8ce-427f-8479-1bd57d8fe16b,1,0.09988369,,exit order ownership; funding allocation; stop event history; wallet cashflows
+176,ZECUSDT,BUY,ZEC多头回踩企稳顺势多,MANUAL,19f6242e-0c2e-46c4-a00e-7dfb6e2da8e2,1,0.2839804,,exit order ownership; funding allocation; stop event history; wallet cashflows
+177,ACEUSDT,SELL,ACE 均线空头排列顺势做空,MANUAL,026cda37-b446-4f7f-961d-fccfde975d65,1,0.09004409,,exit order ownership; funding allocation; stop event history; wallet cashflows
+178,ACEUSDT,SELL,ACE冲高回落顺势偏空,MANUAL,0c1fecfd-8e5d-4673-87c0-f7cc8c225031,1,0.08044016,,exit order ownership; funding allocation; stop event history; wallet cashflows
+179,ACEUSDT,SELL,ACE 顺势短空,MANUAL,c0f8bb2c-dae1-46bf-a8fb-2102ba04d2b7,1,0.0296307,,exit order ownership; funding allocation; stop event history; wallet cashflows
+180,ACEUSDT,SELL,ACE承压EMA25 顺势看空,MANUAL,1f6b60c7-c80e-4e3d-a632-77f9daa2a958,1,0.0298572,,exit order ownership; funding allocation; stop event history; wallet cashflows
+182,ACEUSDT,BUY,ACE短线放量上攻 顺势跟多,MANUAL,39a27cff-5cac-4e34-8266-61663703ca65,1,0.0287631,,exit order ownership; funding allocation; stop event history; wallet cashflows
+183,ACEUSDT,BUY,ACE短线顺势回踩低多,MANUAL,30ed50d5-3553-4d75-b119-2b7f7fa903d8,1,0.08172694,,exit order ownership; funding allocation; stop event history; wallet cashflows
+184,ACEUSDT,SELL,ACE冲高受阻顺势做空,MANUAL,ba4ae5ce-e38e-42b8-b57a-494074c48913,1,0.0839,,exit order ownership; funding allocation; stop event history; wallet cashflows
+186,ZECUSDT,BUY,ZEC多头强劲顺势轻仓做多,MANUAL,8b03467c-5c36-405c-a861-14f24fa50767,1,0.30961359,,exit order ownership; funding allocation; stop event history; wallet cashflows
+189,ZECUSDT,BUY,ZEC多头顺势回踩低吸,MANUAL,aa0f2b61-7755-4b2c-838e-98e996753105,1,0.34034468,,exit order ownership; funding allocation; stop event history; wallet cashflows
+190,ACEUSDT,SELL,ACE反弹承压顺势做空,MANUAL,e8d8caba-be5d-4d93-ad57-3b674a42d6ef,1,0.11685669,,exit order ownership; funding allocation; stop event history; wallet cashflows
+191,ACEUSDT,SELL,ACE反弹承压顺势做空,MANUAL,3d2d66ee-77f2-43c9-b184-5451c741ff0f,1,0.11540408,,exit order ownership; funding allocation; stop event history; wallet cashflows
+194,ZECUSDT,BUY,ZEC 15m多头回调企稳顺势多,MANUAL,c79fb1d1-3f47-440f-a2d3-79047ebd16d6,1,0.2923888,,exit order ownership; funding allocation; stop event history; wallet cashflows
+195,ZECUSDT,BUY,ZEC多头趋势回踩企稳,MANUAL,4bd510c8-a797-4c72-92d3-c847bd203108,1,0.31580934,,exit order ownership; funding allocation; stop event history; wallet cashflows
+197,ZECUSDT,SELL,ZEC短线破位下行顺势做空,MANUAL,e3486b73-ad61-40c3-b60c-25c7e8c4507a,1,0.107736,,exit order ownership; funding allocation; stop event history; wallet cashflows
+198,SOLUSDT,BUY,SOL放量突破高位蓄势 顺势短多,MANUAL,643e2f36-daa2-45ee-82e8-ee554ac5f622,1,0.156168,,exit order ownership; funding allocation; stop event history; wallet cashflows
+200,ACEUSDT,BUY,ACE放量突破迎轧空,MANUAL,ca781bc0-960a-49e0-8075-3faa9c47c691,1,0.03443226,,exit order ownership; funding allocation; stop event history; wallet cashflows
+201,ACEUSDT,BUY,ACE放量突破均线多头共振,MANUAL,ef0c81b5-d2ac-4f0f-bb5f-0024fea74193,1,0.09627786,,exit order ownership; funding allocation; stop event history; wallet cashflows
+202,ACEUSDT,BUY,ACE回踩均线企稳做多,MANUAL,c8794e95-7480-4875-949e-52ad11ab0b59,1,0.09437162,,exit order ownership; funding allocation; stop event history; wallet cashflows
+203,ACEUSDT,SELL,ACE 破位阴跌顺势做空,MANUAL,97c656d4-7d2a-4285-ae00-1fd4c9fbdd7f,1,0.03330128,,exit order ownership; funding allocation; stop event history; wallet cashflows
+204,ZECUSDT,BUY,ZEC短线放量突破顺势做多,MANUAL,9276b6a8-4e5e-475c-9c53-5fb424f7a1dc,1,0.28505664,,exit order ownership; funding allocation; stop event history; wallet cashflows
+205,ACEUSDT,SELL,ACE短线顺势偏空,MANUAL,004e2891-9b48-417b-ad52-eb8bbe8e30e8,1,0.09734149,,exit order ownership; funding allocation; stop event history; wallet cashflows
+206,ZECUSDT,BUY,ZEC短线放量上攻顺势多,MANUAL,2e50c577-4cae-4a46-b381-ae343f28fb79,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+207,ZECUSDT,BUY,ZEC突破拉升顺势短多,MANUAL,4a1bfdef-91a9-4a94-8357-601aa38a6107,1,0.30717786,,exit order ownership; funding allocation; stop event history; wallet cashflows
+208,ZECUSDT,BUY,ZEC突破拉升回踩企稳,MANUAL,0d0d5c10-5141-4d4d-b2dc-cde158709309,1,0.113967,,exit order ownership; funding allocation; stop event history; wallet cashflows
+209,ACEUSDT,BUY,ACE短线放量反弹,MANUAL,a156b729-f61a-4050-a38d-ee170184da8e,1,0.11055329,,exit order ownership; funding allocation; stop event history; wallet cashflows
+210,SOLUSDT,BUY,SOL放量长下影探底反弹,MANUAL,1147bb01-e322-4ba3-9fe5-b7d45a6f9e08,1,0.405834,,exit order ownership; funding allocation; stop event history; wallet cashflows
+211,ZECUSDT,BUY,ZEC急跌插针企稳顺势多,MANUAL,4430b358-738c-4005-8c64-e90d3d11357c,1,0.30259873,,exit order ownership; funding allocation; stop event history; wallet cashflows
+212,ACEUSDT,SELL,ACE破位下行模型共振看跌,MANUAL,d03523ed-efbb-47e0-9f5c-d9d5e0656ace,1,0.10697731,,exit order ownership; funding allocation; stop event history; wallet cashflows
+213,ACEUSDT,SELL,ACE顺势破位下行空单,15m 涨跌 -1.01%；1h 涨跌 -1.56%,80a252af-9c0d-4c1b-94dd-3cbef7065c88,1,0.11122178,,exit order ownership; funding allocation; stop event history; wallet cashflows
+214,ZECUSDT,SELL,ZEC 15m空头下行 顺势逢高做空,MANUAL,e35af604-f2b6-4227-845c-09bce2abe606,1,0.11662,,exit order ownership; funding allocation; stop event history; wallet cashflows
+215,ACEUSDT,BUY,ACE放量突破逼空上行,MANUAL,3b93eb0b-7157-410a-a421-e112251f449c,1,0.03876,,exit order ownership; funding allocation; stop event history; wallet cashflows
+216,ACEUSDT,BUY,ACE多头趋势延续 顺势低多,MANUAL,c8cfd761-5256-4fe8-a2ac-d2ec3aa53b39,1,0.1062919,,exit order ownership; funding allocation; stop event history; wallet cashflows
+217,ACEUSDT,BUY,ACE多头趋势延续顺势做多,MANUAL,43a4c296-75ea-48c0-8062-5170bb188ce8,1,0.10573149,,exit order ownership; funding allocation; stop event history; wallet cashflows
+218,ACEUSDT,BUY,ACE回踩支撑顺势做多,MANUAL,3b7fdbe7-65e1-4e7b-97b0-9f8284195551,1,0.09870453,,exit order ownership; funding allocation; stop event history; wallet cashflows
+219,ACEUSDT,BUY,ACE回踩15m支撑博短多,MANUAL,c3461176-2181-4663-b756-89b6b4028777,1,0.09784377,,exit order ownership; funding allocation; stop event history; wallet cashflows
+220,ACEUSDT,BUY,ACE 15m多头回踩企稳,MANUAL,1a9c9799-a99c-4abc-8e7c-7198450dbf56,1,0.03572598,,exit order ownership; funding allocation; stop event history; wallet cashflows
+221,ACEUSDT,BUY,ACE回踩企稳顺势做多,MANUAL,c65a7961-c66e-4551-8ea2-f5e71e03b324,1,0.096809,,exit order ownership; funding allocation; stop event history; wallet cashflows
+222,ACEUSDT,SELL,ACE短线顺势承压做空,MANUAL,527b7541-f4c4-412e-a465-2e6038b61769,1,0.09144135,,exit order ownership; funding allocation; stop event history; wallet cashflows
+223,ACEUSDT,SELL,ACE承压下行空头延续,MANUAL,e35be4e8-7f77-408a-91ba-8ca4cdba350e,1,0.03599484,,exit order ownership; funding allocation; stop event history; wallet cashflows
+226,ZECUSDT,BUY,ZEC多头放量突破顺势做多,MANUAL,2b09000a-fac1-4217-b11d-2b6a6ec5d759,1,0.120988,,exit order ownership; funding allocation; stop event history; wallet cashflows
+227,ZECUSDT,SELL,ZEC高位破位下行做空,MANUAL,b34f23fe-023e-4ee9-bfe8-7eb9dcb42542,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+228,ZECUSDT,SELL,ZEC放量破位急跌 顺势短空,MANUAL,cca26d03-c955-468f-bd7f-219383c13fef,1,0.1067136,,exit order ownership; funding allocation; stop event history; wallet cashflows
+229,ACEUSDT,SELL,ACE破位下行顺势做空,MANUAL,853d0c6c-f233-45a8-9a16-b0e858df1b77,1,0.0975964,,exit order ownership; funding allocation; stop event history; wallet cashflows
+230,ZECUSDT,SELL,ZEC顺势空单机会,MANUAL,e20d1d44-cdd6-43a1-9d43-4d6be6fa53d0,1,0.28739403,,exit order ownership; funding allocation; stop event history; wallet cashflows
+231,ACEUSDT,SELL,ACE破位下行顺势做空,MANUAL,2f78e6e2-d6da-42e0-b89e-eaa59792a020,1,0.09897301,,exit order ownership; funding allocation; stop event history; wallet cashflows
+232,ZECUSDT,SELL,ZEC 15m空头下行顺势做空,MANUAL,34f691fe-c9cf-4259-9e25-35dd75dbc246,1,0.30001059,,exit order ownership; funding allocation; stop event history; wallet cashflows
+233,ACEUSDT,SELL,ACE 15m单边下行 反弹阻力位顺势做空,MANUAL,8b8c2832-f354-43fb-b1db-c702028346ba,1,0.09712987,,exit order ownership; funding allocation; stop event history; wallet cashflows
+234,ACEUSDT,SELL,ACE短线反弹遇阻顺势做空,MANUAL,fb92e57d-2a4e-4d26-a79e-6380ae413a88,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+235,ACEUSDT,SELL,ACE反弹承压顺势做空,MANUAL,7263f162-1b44-40d5-854e-128a98db6ea3,1,0.09572711,,exit order ownership; funding allocation; stop event history; wallet cashflows
+236,ZECUSDT,SELL,ZEC顺势空头延续,MANUAL,2b3921a5-f42a-4e8c-8982-a424a3fd7d73,1,0.10272,,exit order ownership; funding allocation; stop event history; wallet cashflows
+237,SOLUSDT,BUY,SOL放量突破百元关口,MANUAL,864b29a8-237a-4413-be38-0611850836f5,1,0.3682789,,exit order ownership; funding allocation; stop event history; wallet cashflows
+238,ACEUSDT,SELL,ACE 顺15m/1h空头趋势逢高做空,MANUAL,6215969e-f712-43c0-84b6-c8eb6eb0728a,1,0.0929773,,exit order ownership; funding allocation; stop event history; wallet cashflows
+239,SOLUSDT,BUY,SOL多头趋势顺势低多,MANUAL,85d92976-184a-436f-ac80-f7526f6a537c,1,0.38682435,,exit order ownership; funding allocation; stop event history; wallet cashflows
+240,ACEUSDT,BUY,ACE放量突破回踩企稳,MANUAL,d627fc93-04b1-4e20-96a0-0de8b75443ca,1,0.03534996,,exit order ownership; funding allocation; stop event history; wallet cashflows
+241,ACEUSDT,BUY,ACE突破均线上行 短线顺势做多,MANUAL,5819cb3e-a22c-483d-a9b6-065d33c11637,1,0.09551623,,exit order ownership; funding allocation; stop event history; wallet cashflows
+242,ACEUSDT,BUY,ACE放量突破轧空，顺势做多,MANUAL,20ee51b3-1551-4e0a-8b8e-cee61d1c8bb7,1,0.03404237,,exit order ownership; funding allocation; stop event history; wallet cashflows
+243,ACEUSDT,BUY,ACE放量突破多头共振,MANUAL,89e8acf2-37c4-44d7-a36d-3f80b107bcd2,1,0.09390663,,exit order ownership; funding allocation; stop event history; wallet cashflows
+244,ACEUSDT,BUY,ACE回踩企稳顺势做多,MANUAL,7df8da00-b20e-470b-b3c5-c71993c9f527,1,0.09105327,,exit order ownership; funding allocation; stop event history; wallet cashflows
+245,ACEUSDT,SELL,ACE冲高回落5m受阻做空,MANUAL,8d5d8945-f9e7-4630-9a8a-d60b0217e6fe,1,0.0884962,,exit order ownership; funding allocation; stop event history; wallet cashflows
+246,ZECUSDT,SELL,ZEC破位下行顺势短空,MANUAL,92f35243-e671-495b-be7f-88c03f6ba3f2,1,0.26343977,,exit order ownership; funding allocation; stop event history; wallet cashflows
+248,ZECUSDT,SELL,ZEC 15m破位下行反弹承压偏空,MANUAL,55a9acf6-ce2d-4997-98bd-f699cae2af0b,1,0.097291,,exit order ownership; funding allocation; stop event history; wallet cashflows
+249,ZECUSDT,SELL,ZEC短线空头顺势下挫,MANUAL,622116f2-e154-4f03-8950-2fcf562109f0,1,0.102501,,exit order ownership; funding allocation; stop event history; wallet cashflows
+252,ACEUSDT,BUY,ACE回踩中轨企稳 顺势做多,MANUAL,85210c96-bb0b-477c-adac-0810277fe1bf,1,0.08667255,,exit order ownership; funding allocation; stop event history; wallet cashflows
+253,ZECUSDT,SELL,ZEC 15m空头延续顺势做空,MANUAL,5e3df473-09a7-45df-b1e5-95e98dd775a6,1,0.26087182,,exit order ownership; funding allocation; stop event history; wallet cashflows
+255,ZECUSDT,SELL,ZEC破位下行顺势空,MANUAL,e64cc82b-93fc-4675-aa79-84697769bb4b,1,0.098952,,exit order ownership; funding allocation; stop event history; wallet cashflows
+256,ACEUSDT,SELL,ACE 15m跌破下行顺势空,MANUAL,95521268-ce2c-445b-af3a-18973778e46e,1,0.08765083,,exit order ownership; funding allocation; stop event history; wallet cashflows
+257,ACEUSDT,SELL,ACE反弹承压顺势做空,MANUAL,f833d88f-6b63-4cb4-8229-90ab33c02196,1,0.09014773,,exit order ownership; funding allocation; stop event history; wallet cashflows
+258,ACEUSDT,SELL,ACE下行趋势反弹遇阻做空,MANUAL,577411f4-905e-48ef-8626-e0e4df9b5fb5,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+259,ACEUSDT,SELL,ACE破位下行顺势做空,MANUAL,c2bb79b0-6553-4e01-935f-4888cd261748,1,0.09061614,,exit order ownership; funding allocation; stop event history; wallet cashflows
+260,ZECUSDT,SELL,ZEC 15m顺势空单,MANUAL,96313974-2d73-42b6-814f-2c3a38b6a79a,1,0.26797056,,exit order ownership; funding allocation; stop event history; wallet cashflows
+261,ACEUSDT,SELL,ACE反弹承压 顺势做空,MANUAL,faf3225d-6d9e-40b6-ade4-a56527654f18,1,0.08305549,,exit order ownership; funding allocation; stop event history; wallet cashflows
+262,ZECUSDT,SELL,ZEC破位加速顺势做空,MANUAL,9195b846-e21f-432f-a649-a38dc430e6a0,1,0.24334915,,exit order ownership; funding allocation; stop event history; wallet cashflows
+264,ACEUSDT,SELL,ACE反弹承压顺势空,MANUAL,5cdcf5fc-c808-446b-9af1-c3b816380f7f,1,0.02855575,,exit order ownership; funding allocation; stop event history; wallet cashflows
+265,ACEUSDT,SELL,ACE破位下行顺势偏空,MANUAL,43999716-b8a9-4dc4-86a3-85edb4fd0fff,1,0.08013896,,exit order ownership; funding allocation; stop event history; wallet cashflows
+266,ACEUSDT,SELL,ACE反弹承压顺势做空,MANUAL,4e232243-6fc5-432e-8f9b-e28c63629856,1,0.08172768,,exit order ownership; funding allocation; stop event history; wallet cashflows
+267,ACEUSDT,SELL,ACE反弹承压顺势做空,MANUAL,d8816c28-16d9-4422-9030-56b429e28d9a,1,0.08030794,,exit order ownership; funding allocation; stop event history; wallet cashflows
+268,SOLUSDT,BUY,SOL放量突破箱体 回踩顺势做多,MANUAL,c2cc2409-cef2-42dc-9c14-6f6e3f521d08,1,0.31263375,,exit order ownership; funding allocation; stop event history; wallet cashflows
+271,ZECUSDT,BUY,ZEC多头放量突破顺势做多,MANUAL,429f0c69-5956-46e3-acbb-f099493d8b26,1,0.23940576,,exit order ownership; funding allocation; stop event history; wallet cashflows
+272,ACEUSDT,BUY,ACE放量突破顺势做多,MANUAL,b7ca11c3-dcc6-444e-9f00-720282408ffd,1,0.07814323,,exit order ownership; funding allocation; stop event history; wallet cashflows
+275,SOLUSDT,SELL,SOL放量击穿下轨空头延续,MANUAL,f65a3086-7d3a-4ee1-8657-97a5e7b53725,1,0.302577,,exit order ownership; funding allocation; stop event history; wallet cashflows
+276,ZECUSDT,SELL,ZEC破位反弹遇阻顺势做空,MANUAL,eb0fc1e5-5a37-445f-9d11-30615ca86a14,1,0.22068338,,exit order ownership; funding allocation; stop event history; wallet cashflows
+277,SOLUSDT,SELL,SOL 5m下行中继破位做空,MANUAL,06ff4005-96a1-4eec-970c-548874931f3a,1,0.28534,,exit order ownership; funding allocation; stop event history; wallet cashflows
+278,SOLUSDT,BUY,SOL短线探底回升多,MANUAL,079dd2d4-1511-4353-9486-bd5def03a643,1,0.26565,,exit order ownership; funding allocation; stop event history; wallet cashflows
+279,SOLUSDT,BUY,SOL触底强力反弹做多,MANUAL,bdb850a1-f540-4240-8add-022fa7aba1c7,1,0.2803416,,exit order ownership; funding allocation; stop event history; wallet cashflows
+280,ZECUSDT,BUY,ZEC放量V反 短多顺势上攻,MANUAL,84b3a8dd-399c-4fee-ab24-d0646fea2900,1,0.21510456,,exit order ownership; funding allocation; stop event history; wallet cashflows
+281,ZECUSDT,BUY,ZEC多头强势回踩企稳,MANUAL,50885cf9-fd77-4765-a8c3-f9117353b472,1,0.21354168,,exit order ownership; funding allocation; stop event history; wallet cashflows
+282,ACEUSDT,BUY,ACE突破放量回踩做多,MANUAL,f1e38498-979b-4f17-b959-f99f1af63365,1,0.06874345,,exit order ownership; funding allocation; stop event history; wallet cashflows
+283,ZECUSDT,BUY,15m多头放量 顺势轻仓做多,MANUAL,63ac01ce-30e0-490e-b657-6aff6bc9f748,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+284,ZECUSDT,BUY,ZEC多头趋势回踩企稳做多,MANUAL,1d8df1e3-88eb-457a-af4a-d750387a3760,1,0.20263551,,exit order ownership; funding allocation; stop event history; wallet cashflows
+285,ACEUSDT,SELL,ACE 1h单边下行破位顺势短空,MANUAL,04d4fda2-6a5f-4cb4-b88e-3fdbdf332883,1,0.06592944,,exit order ownership; funding allocation; stop event history; wallet cashflows
+286,ZECUSDT,SELL,ZEC破位下行顺势短空,MANUAL,32e0d05e-6abe-4295-a9ab-b56bd5f4efeb,1,0.072842,,exit order ownership; funding allocation; stop event history; wallet cashflows
+287,ZECUSDT,SELL,ZEC放量破位空头共振,MANUAL,f74ed26b-8b7b-4e74-9a4c-83a4857a8b4c,1,0.077503,,exit order ownership; funding allocation; stop event history; wallet cashflows
+288,ZECUSDT,SELL,ZEC 15m破位下行 反弹受阻顺势做空,MANUAL,e53b53f9-56f9-4e40-af1d-fd83151f5c20,1,0.19792685,,exit order ownership; funding allocation; stop event history; wallet cashflows
+289,ACEUSDT,BUY,ACE放量突破多头延续,MANUAL,5281961c-eabd-41ee-a42e-86d7a78aa089,1,0.07020295,,exit order ownership; funding allocation; stop event history; wallet cashflows
+290,ZECUSDT,BUY,ZEC放量突破顺势多,MANUAL,bccc6c95-300b-4251-884d-3c302e55660d,1,0.20413025,,exit order ownership; funding allocation; stop event history; wallet cashflows
+292,ACEUSDT,SELL,ACE放量破位顺势空,MANUAL,4a7342f0-2bac-45cc-a9d6-69df45c07d26,1,0.0666788,,exit order ownership; funding allocation; stop event history; wallet cashflows
+293,ACEUSDT,BUY,ACE放量突破短多,MANUAL,50eeb944-6f81-4491-8907-b832de445686,1,0.0668989,,exit order ownership; funding allocation; stop event history; wallet cashflows
+294,ACEUSDT,BUY,ACE放量突破多单,MANUAL,6288b84c-42d5-43a6-a177-7e79d5a11c6e,1,0.06667862,,exit order ownership; funding allocation; stop event history; wallet cashflows
+295,ACEUSDT,BUY,ACE放量突破多头延续,MANUAL,c354d481-e030-4ccf-9209-66cb2d2f3350,1,0.06857917,,exit order ownership; funding allocation; stop event history; wallet cashflows
+296,ACEUSDT,BUY,ACE放量拉升突破顺势多,MANUAL,2742b524-b2a4-454f-a568-c790e02912a7,1,0.02575224,,exit order ownership; funding allocation; stop event history; wallet cashflows
+297,ACEUSDT,BUY,ACE回踩企稳偏多,MANUAL,3b0b324d-3252-4ddb-8dc3-54e3611a7193,1,0.07145431,,exit order ownership; funding allocation; stop event history; wallet cashflows
+298,ACEUSDT,BUY,ACE回踩企稳多头延续,MANUAL,5d052e65-234e-456c-9071-71d0581774d7,1,0.07449627,,exit order ownership; funding allocation; stop event history; wallet cashflows
+299,ACEUSDT,BUY,ACE多头延续回踩企稳,MANUAL,333b9943-3643-4b23-a0e7-1ab3363d192a,1,0.07307722,,exit order ownership; funding allocation; stop event history; wallet cashflows
+300,ACEUSDT,BUY,ACE多头强势蓄势,MANUAL,a65013d7-c220-4919-8a0b-97fe0d593a31,1,0.07094352,,exit order ownership; funding allocation; stop event history; wallet cashflows
+301,ACEUSDT,BUY,ACE顺势多头企稳反弹,MANUAL,b6368d09-5b61-4f99-916e-1f57cbe317ab,1,0.06945848,,exit order ownership; funding allocation; stop event history; wallet cashflows
+302,ZECUSDT,SELL,ZEC短线破位放量 顺势反弹高空,MANUAL,069ecb41-57fa-4914-ab9f-e583abb8838e,1,0.075735,,exit order ownership; funding allocation; stop event history; wallet cashflows
+303,ACEUSDT,BUY,ACE放量突破逼空上行,MANUAL,13cb82b8-8808-482b-9c55-83273deeea35,1,0.07234113,,exit order ownership; funding allocation; stop event history; wallet cashflows
+304,ACEUSDT,BUY,ACE放量突破多头共振,MANUAL,2f3b8709-75bb-4f78-ab0b-8e5aa3e624a2,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+305,ACEUSDT,BUY,ACE放量突破逼空,MANUAL,fe9e8639-2658-4cb7-885c-87d0c7610fd1,1,0.0754548,,exit order ownership; funding allocation; stop event history; wallet cashflows
+306,ACEUSDT,BUY,ACE放量突破多头共振,MANUAL,6da06038-a414-409c-9ca0-e42e9542dd89,1,0.07311604,,exit order ownership; funding allocation; stop event history; wallet cashflows
+307,ACEUSDT,BUY,ACE放量突破多头顺势,MANUAL,4e390edf-f7cb-4caa-a84c-2601414cabcc,1,0.07743041,,exit order ownership; funding allocation; stop event history; wallet cashflows
+308,ACEUSDT,BUY,ACE短线多头顺势做多,MANUAL,12e591e3-b5a0-406d-b2d1-fca1c402d4c1,1,0.07555686,,exit order ownership; funding allocation; stop event history; wallet cashflows
+309,ACEUSDT,BUY,ACE多头趋势中继震荡走强,MANUAL,50b0a489-2f4b-45ae-8daf-8a3516674687,1,0.0269797,,exit order ownership; funding allocation; stop event history; wallet cashflows
+310,ACEUSDT,BUY,ACE多头排列 顺势跟多,MANUAL,240ea26b-0fc0-46d0-bea5-7556140db50b,1,0.07470813,,exit order ownership; funding allocation; stop event history; wallet cashflows
+311,ACEUSDT,BUY,ACE多头趋势延续且深负费率轧空,MANUAL,0655cb88-a61a-49fc-a654-4e8a19c77a1e,1,0.07481056,,exit order ownership; funding allocation; stop event history; wallet cashflows
+312,ACEUSDT,BUY,ACE多头顺势回踩多,MANUAL,65a0ee65-5f3c-4581-a059-0ca338afe9ce,1,0.07701252,,exit order ownership; funding allocation; stop event history; wallet cashflows
+313,ACEUSDT,BUY,ACE多头逼空延续,MANUAL,e9309e7e-9ef3-4679-aa14-7821837b2446,1,0.02939808,,exit order ownership; funding allocation; stop event history; wallet cashflows
+314,ACEUSDT,BUY,ACE短线放量逼空顺势做多,MANUAL,d8e4cd4a-a798-42ff-a867-43f122f04417,1,0.03050941,,exit order ownership; funding allocation; stop event history; wallet cashflows
+315,ACEUSDT,BUY,ACE多头顺势回踩多,MANUAL,0768d566-a811-4e72-8419-b09717b183bf,1,0.0305258,,exit order ownership; funding allocation; stop event history; wallet cashflows
+316,ACEUSDT,BUY,ACE回踩支撑顺势做多,MANUAL,4a6f8aa0-131e-4c89-98bc-f11ceb3029b0,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+317,ACEUSDT,BUY,ACE多头回踩企稳做多,MANUAL,f14d4544-8832-4402-b48c-ef66a1955ba7,1,0.08174598,,exit order ownership; funding allocation; stop event history; wallet cashflows
+318,ACEUSDT,SELL,ACE短线顺势承压做空,MANUAL,5eccf45a-6554-40da-a6aa-99c62c7e80cf,1,0.02872765,,exit order ownership; funding allocation; stop event history; wallet cashflows
+319,ACEUSDT,SELL,ACE高位滞涨破位下行,MANUAL,36fc8e5a-e79e-4299-82f0-dc921d08186e,1,0.07736556,,exit order ownership; funding allocation; stop event history; wallet cashflows
+320,ACEUSDT,SELL,ACE短线承压顺势偏空,MANUAL,a2464232-be28-47ad-9e71-ca4ded41d98c,1,0.0287844,,exit order ownership; funding allocation; stop event history; wallet cashflows
+321,ACEUSDT,SELL,ACE承压下行顺势做空,MANUAL,11a09f91-ce3d-46fa-b5d5-7371e0486fea,1,0.08087112,,exit order ownership; funding allocation; stop event history; wallet cashflows
+322,ACEUSDT,SELL,ACE 15m空头下行顺势做空,MANUAL,7f900ab4-33a1-4dfc-9ad5-32948b3fd59f,1,0.08047645,,exit order ownership; funding allocation; stop event history; wallet cashflows
+323,ACEUSDT,BUY,ACE放量突破超短做多,MANUAL,2f41aa54-4c5a-44fd-8164-e97c61b3c59e,1,0.02854446,,exit order ownership; funding allocation; stop event history; wallet cashflows
+324,ACEUSDT,BUY,ACE回踩中轨企稳 负费率轧空做多,MANUAL,c6c0639d-5f55-4858-85f5-4f3b6da4e55a,1,0.07730239,,exit order ownership; funding allocation; stop event history; wallet cashflows
+325,ACEUSDT,BUY,ACE低位抬升轧空多,MANUAL,8aba1216-ac9b-466d-b31f-50ff0427fb74,1,0.07539836,,exit order ownership; funding allocation; stop event history; wallet cashflows
+326,ACEUSDT,SELL,ACE破位下行 5m顺势逢高做空,MANUAL,cd2a76d5-a17a-48f6-876f-a2630570309e,1,0.07528577,,exit order ownership; funding allocation; stop event history; wallet cashflows
+328,ACEUSDT,SELL,ACE反弹承压顺势偏空,MANUAL,83f74ff6-025d-4209-8a7d-7b01351a73ff,1,0.07525204,,exit order ownership; funding allocation; stop event history; wallet cashflows
+329,ACEUSDT,SELL,ACE顺1h跌势反弹遇阻做空,MANUAL,1ccc4a56-9887-4462-9076-95a501aad0bb,1,0.0736678,,exit order ownership; funding allocation; stop event history; wallet cashflows
+330,ACEUSDT,SELL,ACE空头趋势反抽遇阻,MANUAL,ea02ed8a-59d8-4925-bba9-77470a5fb35a,1,0.07575125,,exit order ownership; funding allocation; stop event history; wallet cashflows
+331,ACEUSDT,SELL,ACE反弹承压顺势做空,MANUAL,6467a2f6-60fd-4957-ab35-565f5ea91046,1,0.02763571,,exit order ownership; funding allocation; stop event history; wallet cashflows
+332,ACEUSDT,SELL,ACE顺势反弹遇阻偏空,MANUAL,a0c30ca5-73fb-4a02-9629-55c14223029a,1,0.02765264,,exit order ownership; funding allocation; stop event history; wallet cashflows
+333,ACEUSDT,BUY,ACE触底放量反弹短多,MANUAL,7c470b71-00f6-4d05-9b94-dbf3c9153a83,1,0.02743872,,exit order ownership; funding allocation; stop event history; wallet cashflows
+335,ZECUSDT,BUY,ZEC多头强势放量破高,MANUAL,10301b93-53a9-4edc-b1cc-d6aeaed27e76,1,0.22053251,,exit order ownership; funding allocation; stop event history; wallet cashflows
+336,ZECUSDT,BUY,ZEC 放量突破顺势做多,MANUAL,7476aee6-6b1d-4d00-b613-cacd7b6ce169,1,0.23506698,,exit order ownership; funding allocation; stop event history; wallet cashflows
+337,ZECUSDT,BUY,ZEC多头放量突破顺势做多,MANUAL,afee5676-2807-48f0-8526-02e5ebe6ddc6,1,0.24461448,,exit order ownership; funding allocation; stop event history; wallet cashflows
+338,ZECUSDT,BUY,ZEC多头顺势回踩企稳,MANUAL,84521964-31b0-41ff-8f1b-7ab37b0c2848,1,0.095523,,exit order ownership; funding allocation; stop event history; wallet cashflows
+339,ZECUSDT,BUY,ZEC多头强劲顺势做多,MANUAL,f7a07671-dbea-45d7-89e0-fb3801a2e0b4,1,0.094227,,exit order ownership; funding allocation; stop event history; wallet cashflows
+340,ZECUSDT,BUY,ZEC多头趋势回踩顺势做多,MANUAL,8bd69249-ab7b-41bf-aef0-05597c8a0029,1,0.27153522,,exit order ownership; funding allocation; stop event history; wallet cashflows
+341,ACEUSDT,BUY,ACE突破回踩顺势做多,MANUAL,34241eb2-b79d-41b6-a45c-f75ab2437f91,1,0.09490889,,exit order ownership; funding allocation; stop event history; wallet cashflows
+342,ZECUSDT,BUY,ZEC 放量突破多头延续,MANUAL,f02a7d0a-2cae-4cc2-b530-876f484b1c45,1,0.27936425,,exit order ownership; funding allocation; stop event history; wallet cashflows
+343,SOLUSDT,SELL,非农超预期放量下挫SOL空,MANUAL,a0f54fda-e77b-48b3-bdb3-590f6c4e7200,1,0.3556608,,exit order ownership; funding allocation; stop event history; wallet cashflows
+344,ETHUSDT,SELL,非农超预期利空 ETH巨阴破位,MANUAL,f7eb0153-e00c-407a-8ed8-baa6941c2d5f,1,0.337524,,exit order ownership; funding allocation; stop event history; wallet cashflows
+345,ACEUSDT,SELL,ACE破位下行顺势做空,MANUAL,df5833b4-5ae1-4bea-95ad-fe3480428bc2,1,0.0312489,,exit order ownership; funding allocation; stop event history; wallet cashflows
+346,ZECUSDT,SELL,ZEC破千假突破放量下挫,MANUAL,5da1ce97-1bc8-473e-9a82-93aa6e292eae,1,0.26412617,,exit order ownership; funding allocation; stop event history; wallet cashflows
+347,ZECUSDT,SELL,ZEC放量破位 顺势反弹沽空,MANUAL,0936cade-763e-49d8-8605-be05c4345d83,1,0.087615,,exit order ownership; funding allocation; stop event history; wallet cashflows
+348,ZECUSDT,BUY,ZEC放量突破顺势做多,MANUAL,b4308ab7-4cd9-41cc-bc33-5479eef478a5,1,0.083271,,exit order ownership; funding allocation; stop event history; wallet cashflows
+349,ZECUSDT,BUY,ZEC 15m多头回踩接多,MANUAL,b607536a-39a3-4d8c-9411-fe8480c3e97b,1,0.088236,,exit order ownership; funding allocation; stop event history; wallet cashflows
+350,ZECUSDT,BUY,ZEC多头趋势回调企稳做多,MANUAL,d49ab8a6-e55d-4b07-9807-713f05375869,1,0.22935605,,exit order ownership; funding allocation; stop event history; wallet cashflows
+351,ACEUSDT,BUY,ACE放量突破高位震荡顺势做多,MANUAL,5ef29aa0-8361-44fb-bb4e-bb694c225819,1,0.07265914,,exit order ownership; funding allocation; stop event history; wallet cashflows
+352,ZECUSDT,BUY,ZEC放量突破顺势做多,MANUAL,3802fdf8-94af-41a8-8d93-8e577bd1fe0a,1,0.077652,,exit order ownership; funding allocation; stop event history; wallet cashflows
+353,ZECUSDT,BUY,ZEC巨量多头突破顺势跟进,MANUAL,08736628-1a5b-4376-9087-10e2bf1e9918,1,0.20812165,,exit order ownership; funding allocation; stop event history; wallet cashflows
+354,ZECUSDT,BUY,ZEC突破放量模型多头共振,MANUAL,94df40cf-ce2f-4aa9-a2d8-75b8d12073df,1,0.080255,,exit order ownership; funding allocation; stop event history; wallet cashflows
+355,ZECUSDT,BUY,ZEC强大多头放量突破,MANUAL,aaa15c35-2d23-4a65-81eb-4a1c025fd5c3,1,0.23986138,,exit order ownership; funding allocation; stop event history; wallet cashflows
+356,ZECUSDT,BUY,ZEC多头趋势回踩企稳做多,MANUAL,826775b6-891e-4999-983e-820134383ec5,1,0.22524425,,exit order ownership; funding allocation; stop event history; wallet cashflows
+357,ZECUSDT,BUY,ZEC多头回踩企稳,MANUAL,73a4bb8f-ca79-4b83-8653-876caea369a8,1,0.22478995,,exit order ownership; funding allocation; stop event history; wallet cashflows
+358,ZECUSDT,BUY,ZEC多头延续回踩企稳,MANUAL,fc1fe94c-973e-4b3f-8057-12e35d87132d,1,0.079798,,exit order ownership; funding allocation; stop event history; wallet cashflows
+359,ZECUSDT,BUY,ZEC多头回踩企稳顺势做多,MANUAL,16c9c2ec-61fc-4129-ab82-b8877743dc56,1,0.20854944,,exit order ownership; funding allocation; stop event history; wallet cashflows
+360,ZECUSDT,SELL,ZEC放量破位顺势短空,MANUAL,4f0b64d9-2e0d-4fe6-a450-c28700104cce,1,0.19895134,,exit order ownership; funding allocation; stop event history; wallet cashflows
+361,ZECUSDT,BUY,15m放量V反顺势做多,MANUAL,aa41b533-7f75-4714-937c-3886e6c45397,1,0.19570155,,exit order ownership; funding allocation; stop event history; wallet cashflows
+362,ZECUSDT,BUY,ZEC多头顺势回踩低吸,MANUAL,f39afc17-52de-4792-8804-c174731f940c,1,0.17962115,,exit order ownership; funding allocation; stop event history; wallet cashflows
+363,ZECUSDT,BUY,ZEC 回踩突破平台接多,MANUAL,cb22c2c6-c2f0-4431-bd5d-52da6693ff1d,1,0.1958357,,exit order ownership; funding allocation; stop event history; wallet cashflows
+365,ZECUSDT,SELL,ZEC 15m放量破位顺势空,MANUAL,bba0763c-6969-4d41-a58b-2915c5f0d4a6,1,0.068092,,exit order ownership; funding allocation; stop event history; wallet cashflows
+366,ACEUSDT,BUY,ACE放量突破顺势做多,MANUAL,66db6891-4af7-44a2-a02a-612db14724ea,1,0.02329411,,exit order ownership; funding allocation; stop event history; wallet cashflows
+367,ACEUSDT,BUY,ACE突破放量多头共振,MANUAL,5a8cda09-adc3-410d-b7e3-070c82e36dc1,1,0.02469536,,exit order ownership; funding allocation; stop event history; wallet cashflows
+368,ACEUSDT,SELL,ACE冲高回落放量跳水,MANUAL,eb256df7-8d23-4cac-9066-a81983e0f2fc,1,0.06606214,,exit order ownership; funding allocation; stop event history; wallet cashflows
+369,ACEUSDT,BUY,ACE多头回踩企稳,MANUAL,1f729daa-8465-4668-863f-5873db67543c,1,0.02345665,,exit order ownership; funding allocation; stop event history; wallet cashflows
+370,ACEUSDT,BUY,ACE回踩企稳做多,MANUAL,1799bc1c-09a2-4050-92a6-4e4d661e0be3,1,0.0642235,,exit order ownership; funding allocation; stop event history; wallet cashflows
+371,ACEUSDT,BUY,ACE放量突破多头挤压,MANUAL,70fbf507-7df8-4ac7-8f0a-2cd345d96e80,1,0.0650047,,exit order ownership; funding allocation; stop event history; wallet cashflows
+372,ACEUSDT,BUY,ACE多头放量突破轧空,MANUAL,3f0dc026-e6f8-40bc-83d2-379ff2bf4a56,1,0.06733056,,exit order ownership; funding allocation; stop event history; wallet cashflows
+373,ACEUSDT,BUY,ACE回踩企稳 模型共振做多,MANUAL,cfd985a7-16cc-464b-8688-13d4e9b30a9e,1,0.06758802,,exit order ownership; funding allocation; stop event history; wallet cashflows
+374,ACEUSDT,BUY,ACE突破回踩确认多头,MANUAL,8c26f3e7-d84e-4388-a2eb-cbc880466c90,1,0.06746759,,exit order ownership; funding allocation; stop event history; wallet cashflows
+375,ACEUSDT,BUY,ACE多头放量拉升回踩做多,MANUAL,df319819-67b9-4be4-9263-066658761fdc,1,0.02544282,,exit order ownership; funding allocation; stop event history; wallet cashflows
+376,ACEUSDT,BUY,ACE多头趋势延续回踩企稳,MANUAL,eb0265a7-b5f3-40d0-8db8-3dfc479a3765,1,0.07036764,,exit order ownership; funding allocation; stop event history; wallet cashflows
+377,ACEUSDT,BUY,ACE回踩企稳超短做多,MANUAL,f02a1e05-0815-41fd-9d49-80d38aed1f80,1,0.06824356,,exit order ownership; funding allocation; stop event history; wallet cashflows
+378,ACEUSDT,BUY,ACE多头顺势做多,MANUAL,2dc1770f-413e-4016-98f7-395d2eace459,1,0.06871814,,exit order ownership; funding allocation; stop event history; wallet cashflows
+379,ACEUSDT,BUY,ACE回踩企稳偏多博弈,MANUAL,feab8525-ba71-4dce-ae80-74e5b095b2ac,1,0.06896722,,exit order ownership; funding allocation; stop event history; wallet cashflows
+380,ACEUSDT,BUY,ACE短线筑底反弹多,MANUAL,7ec74d32-ebdc-4ec6-836d-eb0327370787,1,0.06803501,,exit order ownership; funding allocation; stop event history; wallet cashflows
+381,ACEUSDT,SELL,ACE放量破位顺势短空,MANUAL,ee8fde68-26e5-4528-a8cd-25b2af33d49f,1,0.06752351,,exit order ownership; funding allocation; stop event history; wallet cashflows
+382,ACEUSDT,SELL,ACE 5m破位顺势做空,MANUAL,057351fe-2946-45c0-9b5f-bd9aaea735a3,1,0.06869822,,exit order ownership; funding allocation; stop event history; wallet cashflows
+383,ACEUSDT,SELL,ACE 15m空头顺势做空,MANUAL,adeea078-9f35-40e9-b2d1-4d85ede87ee7,1,0.07087626,,exit order ownership; funding allocation; stop event history; wallet cashflows
+384,ACEUSDT,BUY,ACE放量突破横盘箱体,MANUAL,c23289c9-909b-4419-b9a7-0ff814c9eb24,1,0.07120163,,exit order ownership; funding allocation; stop event history; wallet cashflows
+385,ZECUSDT,SELL,ZEC放量破位顺势做空,MANUAL,f5933bd0-52c9-49eb-bd4d-3579e141938c,1,0.21237964,,exit order ownership; funding allocation; stop event history; wallet cashflows
+387,ZECUSDT,BUY,ZEC多头突破冲击前高,MANUAL,30e578e2-85c9-4d90-a49e-10976d5db94b,1,0.20011415,,exit order ownership; funding allocation; stop event history; wallet cashflows
+388,ZECUSDT,BUY,ZEC顺势回踩均线做多,MANUAL,832e251c-c905-464f-9e64-e47793b97284,1,0.20889088,,exit order ownership; funding allocation; stop event history; wallet cashflows
+389,ZECUSDT,BUY,ZEC放量突破多头延续,MANUAL,0a2a53ab-515b-4104-b950-3de1d8c3b9e8,1,0.071862,,exit order ownership; funding allocation; stop event history; wallet cashflows
+390,ZECUSDT,BUY,ZEC多头趋势回调企稳,MANUAL,976d6ccf-edff-45a6-abf3-c94b420bf340,1,0.19557412,,exit order ownership; funding allocation; stop event history; wallet cashflows
+391,ZECUSDT,BUY,ZEC多头趋势延续 5m回踩企稳顺势多,MANUAL,06fd5241-e7eb-47c6-9ab9-dcd26b5083cf,1,0.18957362,,exit order ownership; funding allocation; stop event history; wallet cashflows
+393,ZECUSDT,BUY,ZEC多头趋势回踩确认,1h 涨跌 1.26%；快讯关键词命中 4 条,014f9791-3fc0-40d2-8550-94217bf066f2,1,0.18366205,,exit order ownership; funding allocation; stop event history; wallet cashflows
+394,ZECUSDT,SELL,ZEC顺势反抽空,MANUAL,41a007bb-1584-4055-9d1b-1db624bd0338,1,0.064376,,exit order ownership; funding allocation; stop event history; wallet cashflows
+395,ZECUSDT,SELL,ZEC顺势空头延续,MANUAL,42b89121-0adb-469c-b0b0-a1a457eb06ad,1,0.17340752,,exit order ownership; funding allocation; stop event history; wallet cashflows
+396,ACEUSDT,BUY,ACE短线多头放量反弹,MANUAL,c3aab526-f18a-4631-b2dd-2963cc211a28,1,0.05691428,,exit order ownership; funding allocation; stop event history; wallet cashflows
+397,ACEUSDT,SELL,ACE短线顺势空头承压,MANUAL,a7bda274-ddec-44ec-86b9-cf0c96d23f9e,1,0.05566858,,exit order ownership; funding allocation; stop event history; wallet cashflows
+398,ZECUSDT,SELL,ZEC放量破位 空头趋势顺势做空,MANUAL,514726c4-6807-483a-a51a-5b021ee25d84,1,0.16380925,,exit order ownership; funding allocation; stop event history; wallet cashflows
+401,ZECUSDT,SELL,ZEC顺空头趋势反弹做空,MANUAL,fd375572-b354-403f-b4a3-2e62b9e1a71a,1,0.063234,,exit order ownership; funding allocation; stop event history; wallet cashflows
+402,ZECUSDT,SELL,ZEC破位下行顺势做空,MANUAL,06bfea10-615f-4a2e-93d5-1bf4afe731a4,1,0.16616743,,exit order ownership; funding allocation; stop event history; wallet cashflows
+403,ZECUSDT,SELL,ZEC破位下行顺势做空,MANUAL,43ba7d6c-8c44-492a-8f5a-35bbb5ce3a9e,1,0.16225638,,exit order ownership; funding allocation; stop event history; wallet cashflows
+404,ZECUSDT,SELL,ZEC单边空头延续顺势空,MANUAL,5706444f-76f0-4eb2-89cd-a1c6f74a9ded,1,0.17213042,,exit order ownership; funding allocation; stop event history; wallet cashflows
+405,ZECUSDT,SELL,ZEC顺势空头反弹承压,MANUAL,5ded022b-3785-44d3-b5c3-81ba7ad3718e,1,0.16224208,,exit order ownership; funding allocation; stop event history; wallet cashflows
+406,ZECUSDT,SELL,ZEC顺势反弹承压做空,MANUAL,c573680e-2fb1-42f6-bbf2-5ff8a6b59a5e,1,0.15594425,,exit order ownership; funding allocation; stop event history; wallet cashflows
+407,ZECUSDT,SELL,ZEC破位下行顺势偏空,MANUAL,7e9f0869-3fcf-4275-8328-2e31be3c21ca,1,0.16037164,,exit order ownership; funding allocation; stop event history; wallet cashflows
+408,ZECUSDT,SELL,ZEC破位下行顺势空,MANUAL,a6e10098-2b65-4c25-a7dc-42eb33192640,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+409,ZECUSDT,SELL,ZEC放量破位顺势做空,MANUAL,034fb251-e704-46e6-a11a-5227254cba3c,1,0.16556848,,exit order ownership; funding allocation; stop event history; wallet cashflows
+410,ZECUSDT,SELL,ZEC放量破位顺势做空,MANUAL,43c20052-b6ee-4650-8978-ca9cfffe0387,1,0.1635018,,exit order ownership; funding allocation; stop event history; wallet cashflows
+411,ETHUSDT,BUY,ETH数据插针反弹，短多测试前高,快讯关键词命中 3 条,0dcac04d-a71f-45cf-bdbb-067669e9877a,1,0.20416853,,exit order ownership; funding allocation; stop event history; wallet cashflows
+412,ETHUSDT,BUY,ETH数据插针放量V转多,MANUAL,f3ae5659-7c24-4c63-b287-831a6bb5b7c2,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+413,SOLUSDT,BUY,SOL巨量V反突破100,MANUAL,9a9c5c8a-641b-4d19-99ce-0bb5dcbb295e,1,0.076456,,exit order ownership; funding allocation; stop event history; wallet cashflows
+414,ZECUSDT,BUY,ZEC突破放量上攻多单,MANUAL,586cbb8c-70e0-4fbb-9606-1b101750b72e,1,0.15935288,,exit order ownership; funding allocation; stop event history; wallet cashflows
+415,ZECUSDT,BUY,ZEC短线放量突破 顺势做多,MANUAL,fd86ce47-26bb-4868-840a-a9421fcdd7ab,1,0.053153,,exit order ownership; funding allocation; stop event history; wallet cashflows
+416,ETHUSDT,BUY,ETH放量突破2510顺势做多,MANUAL,7c5a0923-5b4e-42d7-9b9e-51595118d279,1,0.20734313,,exit order ownership; funding allocation; stop event history; wallet cashflows
+418,SOLUSDT,BUY,SOL放量破高 多头模型共振,MANUAL,daab8653-9b9f-40d2-905b-4dfbe660a4c5,1,0.18830625,,exit order ownership; funding allocation; stop event history; wallet cashflows
+420,ZECUSDT,BUY,15m多头放量回踩 顺势做多,MANUAL,c46545b7-b1f1-4a89-b306-eee03fca89e8,1,0.1562946,,exit order ownership; funding allocation; stop event history; wallet cashflows
+421,ZECUSDT,BUY,ZEC多头趋势延续 负费率助推顺势做多,MANUAL,5ef6f220-757b-4149-8b21-f3fd6d2281d0,1,0.15158369,,exit order ownership; funding allocation; stop event history; wallet cashflows
+422,ZECUSDT,SELL,ZEC放量破位反弹承压 顺势做空,MANUAL,d01fa7af-df1d-48a5-8b17-2ce0c7af512a,1,0.055632,,exit order ownership; funding allocation; stop event history; wallet cashflows
+423,ZECUSDT,SELL,ZEC放量破位顺势做空,MANUAL,3d73f31e-6921-49b2-9fb2-e94491fa245d,1,0.149545,,exit order ownership; funding allocation; stop event history; wallet cashflows
+426,ZECUSDT,BUY,ZEC多头强劲顺势轻仓做多,MANUAL,00e8b5bb-b3d0-4a94-83ad-45637deeb988,1,0.055269,,exit order ownership; funding allocation; stop event history; wallet cashflows
+427,ZECUSDT,BUY,ZEC 15m多头回调企稳做多,MANUAL,a08b5707-3838-404e-9e92-4dd25d2200eb,1,0.14385448,,exit order ownership; funding allocation; stop event history; wallet cashflows
+428,ZECUSDT,BUY,ZEC回踩15m均线企稳短多,MANUAL,a0ae3856-90c7-4662-935e-75d1957e32ee,1,0.14349874,,exit order ownership; funding allocation; stop event history; wallet cashflows
+429,ACEUSDT,BUY,ACE放量突破多头共振,MANUAL,a209633d-6f91-48e4-8d2f-ac64a6f7c3e4,1,0.04632443,,exit order ownership; funding allocation; stop event history; wallet cashflows
+430,ACEUSDT,BUY,ACE突破回踩顺势做多,MANUAL,1389e7a3-05a6-4e5c-9b01-3245f285c4d3,1,0.04666269,,exit order ownership; funding allocation; stop event history; wallet cashflows
+431,ACEUSDT,BUY,ACE突破上攻费率轧空,MANUAL,3d42cc65-a5a7-4724-b9fa-162200f8680a,1,0.01762782,,exit order ownership; funding allocation; stop event history; wallet cashflows
+432,ACEUSDT,BUY,ACE多头强劲负费轧空,MANUAL,94742603-4b6e-4a2f-82b7-983abe1ff1fe,1,0.0186238,,exit order ownership; funding allocation; stop event history; wallet cashflows
+433,ACEUSDT,BUY,ACE多头顺势回踩确认,MANUAL,0ef34032-a41a-4111-8613-8ab98ba7c6ef,1,0.04986108,,exit order ownership; funding allocation; stop event history; wallet cashflows
+434,ACEUSDT,SELL,ACE冲高受阻回落 5m顺势空,MANUAL,8832761e-45ad-4ebd-96b3-c5c82cc1be68,1,0.0504329,,exit order ownership; funding allocation; stop event history; wallet cashflows
+435,ACEUSDT,BUY,ACE多头顺势突破 资金费极度偏空,MANUAL,985b74cc-5eba-485d-b147-9dbe3e06e0f6,1,0.05030814,,exit order ownership; funding allocation; stop event history; wallet cashflows
+436,ACEUSDT,SELL,ACE顺势反弹承压做空,MANUAL,50d676fd-6177-47f5-bcf7-7ff78fe038f6,1,0.01795872,,exit order ownership; funding allocation; stop event history; wallet cashflows
+438,ZECUSDT,SELL,ZEC反弹承压顺势做空,5m 急涨 0.62%；波动放大：5m 波幅 1.16% ≈ 2.1×ATR；快讯关键词命中 4 条,a065fb95-3a66-4546-9324-356cbd1269cb,1,0.14302723,,exit order ownership; funding allocation; stop event history; wallet cashflows
+439,ACEUSDT,SELL,ACE冲高回落承压 顺势偏空,MANUAL,4b369bd2-b1fb-46c7-b333-b00c55e55fb7,1,0.04840528,,exit order ownership; funding allocation; stop event history; wallet cashflows
+440,ZECUSDT,SELL,ZEC破位下行 空头动能强劲,MANUAL,6e6833c3-e37e-44df-9f89-0d0d45633eb6,1,0.048664,,exit order ownership; funding allocation; stop event history; wallet cashflows
+441,ZECUSDT,SELL,ZEC承压回落 顺势空,MANUAL,0ed456a0-d6b9-4128-876c-6ace6109a32e,1,0.12977234,,exit order ownership; funding allocation; stop event history; wallet cashflows
+442,ETHUSDT,SELL,ETH破位下行顺势短空,MANUAL,863c624c-7e90-466a-958a-e4b5679a0e61,1,0.18448661,,exit order ownership; funding allocation; stop event history; wallet cashflows
+443,ACEUSDT,SELL,ACE短线空头顺势下行,MANUAL,c1fd1ad5-0df7-4c5c-89c3-794bda331465,1,0.0458986,,exit order ownership; funding allocation; stop event history; wallet cashflows
+444,SOLUSDT,SELL,SOL放量击穿98关口顺势做空,MANUAL,fecf155a-b1f0-48d0-9e49-10c1844ff7dd,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+445,ETHUSDT,SELL,ETH利空放量跳水 空头延续,MANUAL,4a277bf3-8f38-4f29-b0e3-4ca564954222,1,0.19586325,,exit order ownership; funding allocation; stop event history; wallet cashflows
+446,ZECUSDT,SELL,ZEC破位下行顺势做空,MANUAL,65b87955-1ff6-47de-85db-fe8bc755f7f4,1,0.056784,,exit order ownership; funding allocation; stop event history; wallet cashflows
+447,SOLUSDT,SELL,SOL放量破位空头强劲,MANUAL,e52fef40-bf5b-4de3-bf55-309faa3b48d1,1,0.1916046,,exit order ownership; funding allocation; stop event history; wallet cashflows
+448,SOLUSDT,BUY,SOL超跌放量插针反弹,MANUAL,647a0d04-d5ec-427f-916c-be0ec6875b5e,1,0.1729728,,exit order ownership; funding allocation; stop event history; wallet cashflows
+449,ZECUSDT,BUY,ZEC放量V反短多机会,MANUAL,a2d6c7d5-49b0-46d9-9dad-5243bc70961e,1,0.1270709,,exit order ownership; funding allocation; stop event history; wallet cashflows
+450,ZECUSDT,SELL,ZEC冲高回落放量下破 顺势做空,MANUAL,76265a4b-9b73-4fae-aa3b-88376265ef5a,1,0.1235674,,exit order ownership; funding allocation; stop event history; wallet cashflows
+451,ZECUSDT,BUY,ZEC多头回踩企稳做多,MANUAL,bc7a874a-1559-44f1-a04d-76f9a82a4973,1,0.11448855,,exit order ownership; funding allocation; stop event history; wallet cashflows
+453,ZECUSDT,BUY,ZEC多头趋势延续顺势做多,MANUAL,2be3992e-b5f6-4946-ad45-97a9279e4054,1,0.11042504,,exit order ownership; funding allocation; stop event history; wallet cashflows
+454,ZECUSDT,BUY,ZEC多头蓄势回踩企稳,MANUAL,832a0f6b-91d1-44a3-a809-ceace3aac5dc,1,0.10312583,,exit order ownership; funding allocation; stop event history; wallet cashflows
+455,ACEUSDT,SELL,ACE反弹承压模型共振顺势做空,MANUAL,9a35659c-76c4-4c5c-9787-cb4c8a0b3ed6,1,0.03775963,,exit order ownership; funding allocation; stop event history; wallet cashflows
+456,SOLUSDT,BUY,SOL放量突破上轨偏多,MANUAL,6321c097-0107-4b5b-9c6d-2b17481d8b03,1,0.1457676,,exit order ownership; funding allocation; stop event history; wallet cashflows
+457,ETHUSDT,BUY,ETH放量突破短多,MANUAL,00ddec34-71fd-4037-9b10-5e1218212870,1,0.14622971,,exit order ownership; funding allocation; stop event history; wallet cashflows
+458,ZECUSDT,BUY,ZEC放量突破顺势做多,MANUAL,b0ab5eae-e52e-488a-8cea-1d735a5dd1ce,1,0.041104,,exit order ownership; funding allocation; stop event history; wallet cashflows
+459,ZECUSDT,BUY,ZEC放量脉冲回踩顺势做多,MANUAL,2e67be96-20a7-40b9-b2b2-1683a974a639,1,0.11647416,,exit order ownership; funding allocation; stop event history; wallet cashflows
+460,ACEUSDT,SELL,ACE空头顺势压制,MANUAL,88eeeaac-85e3-4fb0-9862-0415cd7a409d,1,0.03936787,,exit order ownership; funding allocation; stop event history; wallet cashflows
+461,ZECUSDT,BUY,ZEC多头回踩插针顺势做多,MANUAL,a0c60da8-a7a3-4431-89ca-ae5bfc459ce1,0,,,exit order ownership; funding allocation; stop event history; wallet cashflows
+462,ETHUSDT,SELL,ETH冲高受阻反弹承压偏空,MANUAL,82ddfdff-04c2-4d9b-a480-e6306d8042f7,1,0.052866,,exit order ownership; funding allocation; stop event history; wallet cashflows
+463,ZECUSDT,BUY,ZEC突破放量延续多头,MANUAL,4f371d52-6806-404e-9aec-a2bfa64894c0,1,0.040674,,exit order ownership; funding allocation; stop event history; wallet cashflows
+464,ETHUSDT,SELL,ETH触顶承压短空,MANUAL,8dd091c8-bd75-461a-ada7-a90c53b8f7e6,1,0.14588547,,exit order ownership; funding allocation; stop event history; wallet cashflows
+465,SOLUSDT,SELL,SOL冲高承压回落 维持空头思路,MANUAL,a15d2639-c21d-487c-af9d-2ab4aa9760ba,1,0.1457973,,exit order ownership; funding allocation; stop event history; wallet cashflows
+467,ZECUSDT,BUY,ZEC多头顺势延续,MANUAL,ed29eb6c-3e62-4d11-a2ae-a7295b4c154f,1,0.11053763,,exit order ownership; funding allocation; stop event history; wallet cashflows
+468,ZECUSDT,SELL,ZEC冲高遇阻转弱做空,MANUAL,a237469f-ed1d-4e53-9496-dbd114aa303c,1,0.10001761,,exit order ownership; funding allocation; stop event history; wallet cashflows
+469,ZECUSDT,BUY,ZEC放量突破短多,MANUAL,98491313-31ad-4aed-80c2-c06ab8d0c2e7,1,0.09562053,,exit order ownership; funding allocation; stop event history; wallet cashflows
+470,ZECUSDT,BUY,ZEC多头放量顺势跟进,MANUAL,e35057d2-4b35-4915-b29c-f72155c97824,1,0.09761538,,exit order ownership; funding allocation; stop event history; wallet cashflows
+473,ZECUSDT,BUY,ZEC放量突破 多头动能强劲,MANUAL,73c436c1-b93e-48eb-8ae5-6ec8c7426dee,1,0.10045393,,exit order ownership; funding allocation; stop event history; wallet cashflows
+474,ZECUSDT,BUY,ZEC多头回踩企稳,MANUAL,facfa4f1-6af7-4516-a53e-d32ee0cc6e35,1,0.1023737,,exit order ownership; funding allocation; stop event history; wallet cashflows
+475,ZECUSDT,BUY,ZEC多头回踩企稳顺势多,MANUAL,17e8a75a-51e8-4f18-9018-44d9d51cf5e6,1,0.038038,,exit order ownership; funding allocation; stop event history; wallet cashflows
+476,ZECUSDT,BUY,ZEC利好冲高回踩 顺势做多,快讯关键词命中 2 条,905d141e-42f9-4051-a673-061f481c2a10,1,0.10589436,,exit order ownership; funding allocation; stop event history; wallet cashflows
+477,BTCUSDT,BUY,BTC探底回升短线多,快讯关键词命中 1 条,e643f77f-c97f-4c04-9ae9-215b0adfac1c,1,0.12642614,,exit order ownership; funding allocation; stop event history; wallet cashflows
+478,ZECUSDT,BUY,ZEC放量反弹突破,15m 涨跌 0.81%；快讯关键词命中 2 条,108a3a93-922c-450b-ac6e-69cff14aabdd,1,0.10709628,,exit order ownership; funding allocation; stop event history; wallet cashflows
+479,ZECUSDT,BUY,ZEC多头趋势强劲 回踩顺势做多,MANUAL,de238326-c97c-4caa-b059-01b804a2ad5d,1,0.10849982,,exit order ownership; funding allocation; stop event history; wallet cashflows
+481,ZECUSDT,SELL,ZEC冲高受阻顺势做空,MANUAL,381a20c7-ccf9-445a-8aff-0cf286b15576,1,0.1051286,,exit order ownership; funding allocation; stop event history; wallet cashflows
+483,ZECUSDT,BUY,ZEC多头放量突破,MANUAL,6aa89203-cf9e-4af1-8082-8d4fe74f0903,1,0.040144,,exit order ownership; funding allocation; stop event history; wallet cashflows
+484,ZECUSDT,BUY,ZEC放量突破多头延续,MANUAL,8fa8f2c2-cdc6-4afb-b415-0bd4e0802c9e,1,0.04082,,exit order ownership; funding allocation; stop event history; wallet cashflows
+485,ZECUSDT,BUY,ZEC多头强势放量突破,MANUAL,2ca1fe82-341d-41ee-b937-d2b3dfeeed45,1,0.04082,,exit order ownership; funding allocation; stop event history; wallet cashflows

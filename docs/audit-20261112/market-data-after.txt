@@ -1,0 +1,53 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -----------------< xyz.xingfeng:QuanForge-springboot >------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ QuanForge-springboot ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ QuanForge-springboot ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 66 source files with javac [debug parameters release 21] to target\classes
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ QuanForge-springboot ---
+[INFO] skip non existing resourceDirectory E:\project\QuanForge-springboot\src\test\resources
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ QuanForge-springboot ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 5 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /E:/project/QuanForge-springboot/src/test/java/xyz/xingfeng/QuanForge/service/MarketDataAuditTests.java: E:\project\QuanForge-springboot\src\test\java\xyz\xingfeng\QuanForge\service\MarketDataAuditTests.javaʹ����δ�����򲻰�ȫ�Ĳ�����
+[INFO] /E:/project/QuanForge-springboot/src/test/java/xyz/xingfeng/QuanForge/service/MarketDataAuditTests.java: �й���ϸ��Ϣ, ��ʹ�� -Xlint:unchecked ���±��롣
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ QuanForge-springboot ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running xyz.xingfeng.QuanForge.service.MarketDataAuditTests
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\xingfeng\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+08:10:40.490 [main] INFO xyz.xingfeng.QuanForge.service.AiToolRegistry -- [AI����] get_kline ��ʱ 9ms ��� 198 �ֽ�
+08:10:40.498 [main] WARN xyz.xingfeng.QuanForge.service.AiToolRegistry -- [AI����] get_kline ִ��ʧ��: K line gap before 1794442140000
+08:10:40.535 [main] INFO xyz.xingfeng.QuanForge.service.AiToolRegistry -- [AI����] get_indicators ��ʱ 6ms ��� 327 �ֽ�
+08:10:40.869 [main] INFO xyz.xingfeng.QuanForge.service.KlineHistoryService -- [KlineDL] BTCUSDT ������ɣ�У��/д�� 1 �������ڹ� 0 ��
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.310 s -- in xyz.xingfeng.QuanForge.service.MarketDataAuditTests
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.691 s
+[INFO] Finished at: 2026-11-12T08:10:40+08:00
+[INFO] ------------------------------------------------------------------------

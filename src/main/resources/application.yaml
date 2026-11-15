@@ -45,6 +45,8 @@ spring:
 
 # ===== 加密配置 =====
 app:
+  execution:
+    account-writes-enabled: false
   crypto:
     # AES-256 主密钥（Base64，32 字节）。此处为随机示例值，仅保证开箱即用；
     # 生产/自用请务必覆盖：环境变量 APP_CRYPTO_KEY，或 gitignore 掉的 application-local.yaml

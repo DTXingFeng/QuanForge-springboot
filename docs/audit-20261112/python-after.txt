@@ -1,0 +1,21 @@
+test_buy_limit_above_bar_is_fillable (test_paper_engine.PaperTests.test_buy_limit_above_bar_is_fillable) ... ok
+test_buy_limit_below_entire_bar_does_not_fill (test_paper_engine.PaperTests.test_buy_limit_below_entire_bar_does_not_fill) ... ok
+test_limit_fill_bar_stop_is_not_ignored (test_paper_engine.PaperTests.test_limit_fill_bar_stop_is_not_ignored) ... ok
+test_short_loss_does_not_move_break_even (test_paper_engine.PaperTests.test_short_loss_does_not_move_break_even) ... ok
+test_short_profit_moves_break_even (test_paper_engine.PaperTests.test_short_profit_moves_break_even) ... ok
+test_v5_database_failure_rolls_back_memory_and_cursor (test_paper_engine.PaperTests.test_v5_database_failure_rolls_back_memory_and_cursor) ... ok
+test_v5_duplicate_response_does_not_double_settle (test_paper_engine.PaperTests.test_v5_duplicate_response_does_not_double_settle) ... ok
+test_v5_gap_stop_uses_open_not_unavailable_stop_price (test_paper_engine.PaperTests.test_v5_gap_stop_uses_open_not_unavailable_stop_price) ... ok
+test_v5_missing_hour_preserves_cursor (test_paper_engine.PaperTests.test_v5_missing_hour_preserves_cursor) ... ok
+test_v5_notional_is_fixed_at_entry (test_paper_engine.PaperTests.test_v5_notional_is_fixed_at_entry) ... ok
+test_v5_out_of_order_and_duplicate_bars_are_canonical (test_paper_engine.PaperTests.test_v5_out_of_order_and_duplicate_bars_are_canonical) ... ok
+test_v5_outage_replays_stop_in_intermediate_bar (test_paper_engine.PaperTests.test_v5_outage_replays_stop_in_intermediate_bar) ... ok
+test_v5_restart_preserves_cursor_and_regime (test_paper_engine.PaperTests.test_v5_restart_preserves_cursor_and_regime) ... ok
+test_v5_timeout_preserves_cursor_and_position (test_paper_engine.PaperTests.test_v5_timeout_preserves_cursor_and_position) ... ok
+test_v5_unfinished_bar_cannot_trigger_stop (test_paper_engine.PaperTests.test_v5_unfinished_bar_cannot_trigger_stop) ... ok
+test_warmup_excludes_unfinished_rest_bar (test_paper_engine.PaperTests.test_warmup_excludes_unfinished_rest_bar) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.889s
+
+OK

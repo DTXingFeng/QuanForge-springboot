@@ -1,0 +1,34 @@
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\xingfeng\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+01:03:04.537 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- �����۶ϼ��ʧ�� ALTUSDT : Cannot invoke "String.length()" because "s" is null
+01:03:04.542 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- �������ż����ʧ�� ALTUSDT: Cannot invoke "String.length()" because "s" is null
+01:03:04.544 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ģ�����µ�ʧ�ܣ�����ֽ����� ALTUSDT BUY: accepted; response lost
+01:03:04.544 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ������ѽ���[PAPER]: ALTUSDT BUY entry=100.0 sl=95.0 tp=110.0
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.225 s <<< FAILURE! -- in xyz.xingfeng.QuanForge.service.ExecutionSafetyTests
+[ERROR] xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.acceptedButLostResponseMustNeverBecomePaper -- Time elapsed: 1.206 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "DEMO"
+ but was: "PAPER"
+	at xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.acceptedButLostResponseMustNeverBecomePaper(ExecutionSafetyTests.java:58)
+
+[ERROR] Failures:
+[ERROR]   ExecutionSafetyTests.acceptedButLostResponseMustNeverBecomePaper:58
+expected: "DEMO"
+ but was: "PAPER"
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project QuanForge-springboot: There are test failures.
+[ERROR]
+[ERROR] See E:\project\QuanForge-springboot\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

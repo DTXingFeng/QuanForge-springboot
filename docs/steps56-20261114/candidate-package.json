@@ -1,0 +1,13 @@
+{
+  "bundle": "E:\\project\\QuanForge-springboot\\.audit-private\\steps56-20261114\\candidate.zip",
+  "bundle_sha256": "72d26626c5250bc40564aa7da919cef18239fa0db5592a2637d4f2bcab3e1025",
+  "candidate_sha256": "7b450347dd31051f68f06839e92470e357128e95b0c3de1da7eb971cfa6efe02",
+  "tests": {
+    "tests": 59,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "manifest_sha256": "a7122a1f39190c8c903c1d44707ebd859b5abe59b56349e83fd6975d85d325df",
+  "status": "CANDIDATE_ONLY_NOT_ADMITTED_FOR_DEMO"
+}

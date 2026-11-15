@@ -1,0 +1,90 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -----------------< xyz.xingfeng:QuanForge-springboot >------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ QuanForge-springboot ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ QuanForge-springboot ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ QuanForge-springboot ---
+[INFO] skip non existing resourceDirectory E:\project\QuanForge-springboot\src\test\resources
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ QuanForge-springboot ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ QuanForge-springboot ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running xyz.xingfeng.QuanForge.service.MarketDataAuditTests
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\xingfeng\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+08:05:39.167 [main] INFO xyz.xingfeng.QuanForge.service.AiToolRegistry -- [AI����] get_indicators ��ʱ 8ms ��� 318 �ֽ�
+08:05:39.513 [main] INFO xyz.xingfeng.QuanForge.service.KlineHistoryService -- [KlineDL] BTCUSDT ������ɣ����� 2 �������ڹ� 0 ��
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 1.171 s <<< FAILURE! -- in xyz.xingfeng.QuanForge.service.MarketDataAuditTests
+[ERROR] xyz.xingfeng.QuanForge.service.MarketDataAuditTests.emaDoesNotInventZeroWhenInsufficientHistory -- Time elapsed: 0.094 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: NaN
+ but was: 0.0
+	at xyz.xingfeng.QuanForge.service.MarketDataAuditTests.emaDoesNotInventZeroWhenInsufficientHistory(MarketDataAuditTests.java:67)
+
+[ERROR] xyz.xingfeng.QuanForge.service.MarketDataAuditTests.aiIndicatorsExcludeUnfinishedCandle -- Time elapsed: 0.710 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 100.0
+ but was: 999.0
+	at xyz.xingfeng.QuanForge.service.MarketDataAuditTests.aiIndicatorsExcludeUnfinishedCandle(MarketDataAuditTests.java:61)
+
+[ERROR] xyz.xingfeng.QuanForge.service.MarketDataAuditTests.historyRevisitsRequestedWindowAndNeverStoresOpenBar -- Time elapsed: 0.345 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 1794441600000L
+ but was: 1794441780000L
+	at xyz.xingfeng.QuanForge.service.MarketDataAuditTests.historyRevisitsRequestedWindowAndNeverStoresOpenBar(MarketDataAuditTests.java:43)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+[ERROR]   MarketDataAuditTests.aiIndicatorsExcludeUnfinishedCandle:61
+expected: 100.0
+ but was: 999.0
+[ERROR]   MarketDataAuditTests.emaDoesNotInventZeroWhenInsufficientHistory:67
+expected: NaN
+ but was: 0.0
+[ERROR]   MarketDataAuditTests.historyRevisitsRequestedWindowAndNeverStoresOpenBar:43
+expected: 1794441600000L
+ but was: 1794441780000L
+[INFO]
+[ERROR] Tests run: 3, Failures: 3, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.471 s
+[INFO] Finished at: 2026-11-12T08:05:39+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project QuanForge-springboot: There are test failures.
+[ERROR]
+[ERROR] See E:\project\QuanForge-springboot\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

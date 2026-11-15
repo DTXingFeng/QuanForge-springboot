@@ -47,7 +47,7 @@ SLIP_LIMIT = 0.0003
 PENDING_TTL_MIN = 120
 WARMUP_BARS = 900                            # EMA200 热身
 DB = os.environ.get("PAPER_DB", "/mnt/nvme/quanforge/data/paper_trendrule.db")
-SYS_VERSION = (f"v4.8.4-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
+SYS_VERSION = (f"v4.8.4-audit20261112-trendrule-paper-tp{TP_R:g}R-{SIZING}{RISK_PCT:g}-gate{VOL_GATE:g}"
                + (f"-risk0cap{RISK0_CAP:g}" if RISK0_CAP > 0 else ""))
 PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 
@@ -172,10 +172,14 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
                    ts_ms); pos.pop(sym); return
         # 保本移动(与回测引擎同构): 浮盈过半 -> SL 移到入场价
         if not p.get("breakeven"):
-            prog = ((c - p["entry"]) if buy else (p["entry"] - c)) / (p["tp"] - p["entry"])
+            prog = ((c - p["entry"]) if buy else (p["entry"] - c)) / abs(p["tp"] - p["entry"])
             if prog >= 0.5:
                 p["sl"] = p["entry"]
                 p["breakeven"] = True
+                if p.get("rowid"):
+                    con.execute("update ai_advice_track set stop_loss=? where id=? and status='OPEN'",
+                                (p["sl"], p["rowid"]))
+                    con.commit()
         if (ts_ms - p["fill_ms"]) / 60000 > (TTL_MAJORS if sym in MAJORS else TTL_ALTS):
             pct = (c - p["entry"]) / p["entry"] * (100 if buy else -100)
             settle(con, sym, p, "WIN" if pct >= 0 else "LOSS", pct, ts_ms, "TTL平仓")
@@ -186,9 +190,10 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
     if sym in pending:
         q = pending[sym]
         buy = q["action"] == "BUY"
-        touched = h >= q["entry"] if buy else l <= q["entry"]
+        touched = l <= q["entry"] if buy else h >= q["entry"]
         if touched:
-            q["entry"] = q["entry"] * (1 + (SLIP_LIMIT if buy else -SLIP_LIMIT))
+            # A limit order never fills worse than its stated limit. OHLC cannot
+            # establish queue priority; use the limit itself (no invented improvement).
             q["fill_ms"] = ts_ms
             # v4.8.4: 成交即落库(OPEN), 重启可恢复持仓
             cur = con.execute(
@@ -203,6 +208,13 @@ def on_bar(con, sym, ts_ms, o, h, l, c, v):
             pending.pop(sym)
             log(f"[fill] {fmt(ts_ms)} {sym} {q['action']} @{q['entry']:.6g} "
                 f"sl={q['sl']:.6g} tp={q['tp']:.6g}")
+            # OHLC cannot order intrabar entry/TP. A stop crossed on the fill
+            # candle is conservatively executable; do not grant a free risk bar.
+            if (l <= q["sl"] if buy else h >= q["sl"]):
+                stop_fill = min(o, q["sl"]) if buy else max(o, q["sl"])
+                pct = (stop_fill-q["entry"])/q["entry"]*(100 if buy else -100)
+                settle(con, sym, q, "LOSS", pct, ts_ms, "成交bar穿止损(保守)")
+                pos.pop(sym)
         elif (ts_ms - q["plan_ms"]) / 60000 > PENDING_TTL_MIN:
             record(con, sym, q["action"], q["entry"], q["sl"], q["tp"], "EXPIRED",
                    None, "等入场超时", q["plan_ms"], None, ts_ms)
@@ -307,6 +319,8 @@ def warmup(con):
                 before = dq[-1][0] if dq else 0
                 added = 0
                 for b in sorted(rows):
+                    if b[0] + 60000 > int(time.time() * 1000):
+                        continue
                     if not dq or b[0] > dq[-1][0]:
                         dq.append(b)
                         added += 1

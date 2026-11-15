@@ -1,0 +1,257 @@
+{
+  "expired_visible": true,
+  "zero_days_future_expiry_warns": true,
+  "network_not_expired": true,
+  "read_only_not_trade_certification": true,
+  "failed_wallet_not_zero": true,
+  "renewal_recovers": true,
+  "unexpected_mutations": 0,
+  "api_intercepted": true,
+  "real_accounts_used": false,
+  "calls": [
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/mode",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/mode",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/mode",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/validate?mode=DEMO",
+      "method": "POST"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/validate?mode=DEMO",
+      "method": "POST"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/validate?mode=DEMO",
+      "method": "POST"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/validate?mode=DEMO",
+      "method": "POST"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/mode",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/wallet-balance?name=my-demo-bybit",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/tickers&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/mode",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/wallet-balance?name=my-demo-bybit",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/tickers&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/instruments-info&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/kline&category=linear&symbol=BTCUSDT&interval=60&limit=300",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=my-demo-bybit&endpoint=/v5/order/realtime&category=linear&settleCoin=USDT&openOnly=0",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=my-demo-bybit&endpoint=/v5/order/realtime&category=linear&settleCoin=USDT&openOnly=0",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=my-demo-bybit&endpoint=/v5/position/list&category=linear&settleCoin=USDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=my-demo-bybit&endpoint=/v5/position/list&category=linear&settleCoin=USDT",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/mode",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/wallet-balance?name=my-demo-bybit",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/tickers&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/mode",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/wallet-balance?name=my-demo-bybit",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/tickers&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/instruments-info&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/kline&category=linear&symbol=BTCUSDT&interval=60&limit=300",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=my-demo-bybit&endpoint=/v5/order/realtime&category=linear&settleCoin=USDT&openOnly=0",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=my-demo-bybit&endpoint=/v5/order/realtime&category=linear&settleCoin=USDT&openOnly=0",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=my-demo-bybit&endpoint=/v5/position/list&category=linear&settleCoin=USDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=my-demo-bybit&endpoint=/v5/position/list&category=linear&settleCoin=USDT",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "credentials",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/mode",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/wallet-balance?name=demo-ui-fixture",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/tickers&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/wallet-balance?name=demo-ui-fixture",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/tickers&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/market?endpoint=/v5/market/instruments-info&category=linear&symbol=BTCUSDT",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=demo-ui-fixture&endpoint=/v5/order/realtime&category=linear&settleCoin=USDT&openOnly=0",
+      "method": "GET"
+    },
+    {
+      "path": "bybit/get?name=demo-ui-fixture&endpoint=/v5/position/list&category=linear&settleCoin=USDT",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    },
+    {
+      "path": "credentials/1/health?mode=DEMO",
+      "method": "GET"
+    }
+  ]
+}

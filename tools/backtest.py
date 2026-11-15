@@ -277,7 +277,7 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch
                 else:
                     last = bar["close"]
                     prog = ((last - p.entry) if buy else (p.entry - last)) \
-                        / (p.tp - p.entry)
+                        / abs(p.tp - p.entry)
                     # 保本移动：浮盈过半
                     if not p.breakeven and prog >= 0.5:
                         p.sl = p.entry
@@ -352,13 +352,21 @@ def run(symbols, days, arm, budget, out_db, latency_s=0, seg_offset=0, end_epoch
             q = pending.get(sym)
             if q is not None:
                 buy = q.action == "BUY"
-                touched = bar["high"] >= q.entry if buy else bar["low"] <= q.entry
+                touched = bar["low"] <= q.entry if buy else bar["high"] >= q.entry
                 age = (i_ts.value - q.ts.value) / 6e10
                 if touched:
-                    q.entry = q.entry * (1 + (SLIP_LIMIT if buy else -SLIP_LIMIT))
+                    # A limit fill cannot be worse than its limit (queue unknown).
                     q.ts = i_ts
                     pos[sym] = q
                     pending.pop(sym)
+                    # No free stop-exempt fill candle; intrabar order unknown,
+                    # so conservatively honour a crossed stop, never claim TP.
+                    if (bar["low"] <= q.sl if buy else bar["high"] >= q.sl):
+                        stop_fill = min(bar["open"], q.sl) if buy else max(bar["open"], q.sl)
+                        pct = (stop_fill-q.entry)/q.entry*(100 if buy else -100)
+                        losses_90.setdefault(sym + "|" + q.action, []).append(i_ts.value)
+                        settle(q, "LOSS", pct, i_ts, "成交bar穿止损(保守)")
+                        pos.pop(sym)
                 elif age > 120:
                     out.execute("insert into ai_advice_track(symbol,action,entry,stop_loss,"
                                 "take_profit,status,result_pct,note,sys_version,created_at) "

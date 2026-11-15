@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "registered_utc": "2026-11-14T10:46:42.645205+00:00",
+  "source_sha256": "28c605d0f1134d86cc40a7ba9d127e89c2e1e3ae5c38aa786a4e77733c74a12f",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT"
+  ],
+  "arms": [
+    "cash",
+    "buy_hold",
+    "sma200",
+    "momentum63",
+    "funding_carry"
+  ],
+  "initial_capital_per_independent_run": "200",
+  "start": 1731542400000,
+  "end_exclusive": 1794614400000,
+  "warmup_days": 240,
+  "periods": "two consecutive 365-day windows, each resets capital and positions",
+  "signal_execution": "closed daily signal; following daily open; terminal close predeclared",
+  "costs": {
+    "spot_fee_per_side": "0.001",
+    "perp_fee_per_side": "0.00055",
+    "adverse_slippage_per_leg": "0.0005"
+  },
+  "cost_cases": [
+    "base",
+    "double_fees_and_slippage"
+  ],
+  "max_public_GET_attempts": 96,
+  "constraints": "present-day published instrument minimum/quantity steps applied to historical simulation",
+  "funding": "actual historical settlement rate times that hour mark open, strictly inside holding period",
+  "margin": "reserve full entry perp notional; hourly high before funding credit; no spot collateral offsets; no rebalancing",
+  "drawdown": "daily close liquidation NAV; not intraday DD",
+  "selection": "all 40 cases retained; no optimisation or automatic deployment"
+}

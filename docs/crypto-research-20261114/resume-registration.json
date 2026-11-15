@@ -1,0 +1,7 @@
+{
+  "reason": "single read timeout at request 38",
+  "retained_successful_replies": 37,
+  "prior_failed_requests": 1,
+  "max_total_network_attempts": 96,
+  "resume_source_sha256": "41f095921eda73569db5badc817055ea5deefcdee6b13d229539dca76a801840"
+}

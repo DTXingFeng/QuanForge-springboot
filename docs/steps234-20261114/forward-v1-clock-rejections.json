@@ -1,0 +1,54 @@
+{
+  "mode": "LOCAL_PAPER",
+  "complete_net_performance": false,
+  "funding": "UNKNOWN",
+  "config_hash": "7ca20d1fa20c91c88300a6c0f0d8dc3e5a59661a783bcef566b3cc3683cedbea",
+  "cursor": 1794589200000,
+  "entries": 0,
+  "closed": 0,
+  "fees_assumed": "0",
+  "net_equity": null,
+  "equity_before_funding": "200",
+  "max_drawdown_before_funding": "0",
+  "position": null,
+  "halted": false,
+  "delayed_bars": 0,
+  "trades": [],
+  "poll_errors": [
+    {
+      "stage": "quote",
+      "type": "ValueError",
+      "at": 1794590726940
+    },
+    {
+      "stage": "quote",
+      "type": "ValueError",
+      "at": 1794590734227
+    }
+  ],
+  "polls_requested": 2,
+  "background_process_installed": false,
+  "strategy_advantage": "NOT_ESTABLISHED",
+  "config": {
+    "name": "qfs-mechanical-paper-v1",
+    "symbol": "BTCUSDT",
+    "interval_ms": 900000,
+    "max_age_ms": 990000,
+    "decision_ttl_ms": 90000,
+    "quote_ttl_ms": 15000,
+    "warmup": 240,
+    "fast": 20,
+    "slow": 60,
+    "initial_equity": "200",
+    "fee_rate": "0.00055",
+    "slippage_rate": "0.0005",
+    "risk_fraction": "0.01",
+    "max_notional_ratio": "1",
+    "stop_atr": "1.2",
+    "ttl_bars": 96,
+    "max_drawdown": "0.10",
+    "daily_loss_limit": "0.03",
+    "implementation_hash": "1de971ae50fe253ab551c8e28713a3bf234e40296faf3a32ccf9aed077d3cacc"
+  },
+  "note": "Synthetic fills and costs; funding unknown; no exchange orders."
+}

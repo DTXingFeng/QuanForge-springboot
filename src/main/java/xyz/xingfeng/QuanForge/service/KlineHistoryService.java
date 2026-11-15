@@ -68,18 +68,17 @@ public class KlineHistoryService {
 
 	private String doDownload(String symbol, LocalDateTime earliest) {
 		try {
-			LocalDateTime from = earliest;
-			LocalDateTime latest = repository.latestOpenTime(symbol);
-			if (latest != null && latest.isAfter(from)) {
-				from = latest; // 增量：从库里最后一根继续
-			}
+			// A maximum timestamp does not prove the preceding interval is complete.
+			// Revisit the explicitly requested bounded interval so retries repair holes.
+			LocalDateTime from = earliest.withSecond(0).withNano(0);
 			long total = 0;
 			LocalDateTime cursor = from;
-			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
+			long cutoffMs = now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 			while (cursor.isBefore(now)) {
 				// Bybit: start/end 为毫秒时间戳，窗口 [start, end]，倒序返回
 				long startMs = cursor.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-				long endMs = startMs + 1000 * MINUTE_MS - 1;
+				long endMs = Math.min(startMs + 1000 * MINUTE_MS - 1, cutoffMs - 1);
 				// HTTP 在无事务上下文执行（不占连接）；仅 saveAll 开短事务
 				List<Kline1m> rows = fetch(symbol, startMs, endMs);
 				if (!rows.isEmpty()) {
@@ -89,7 +88,7 @@ public class KlineHistoryService {
 				cursor = cursor.plusMinutes(1000);
 				Thread.sleep(150); // 对 Bybit 限速礼貌：每窗之间歇一下
 			}
-			String msg = String.format("%s 下载完成：新增 %d 根，库内共 %d 根",
+			String msg = String.format("%s 下载完成：校验/写入 %d 根，库内共 %d 根",
 					symbol, total, repository.countBySymbol(symbol));
 			log.info("[KlineDL] {}", msg);
 			return msg;
@@ -113,9 +112,13 @@ public class KlineHistoryService {
 		ZoneId zone = ZoneId.systemDefault();
 		for (int i = 0; i < list.length(); i++) {
 			JSONArray k = list.getJSONArray(i);
+			long timestamp = k.getLong(0);
+			if (timestamp < startMs || timestamp > endMs || timestamp % MINUTE_MS != 0) {
+				continue; // Reject current/out-of-window/misaligned rows even if API ignores end.
+			}
 			// Bybit 元素 [start, open, high, low, close, volume, turnover]
 			LocalDateTime openTime = LocalDateTime.ofInstant(
-					Instant.ofEpochMilli(k.getLong(0)), zone);
+					Instant.ofEpochMilli(timestamp), zone);
 			rows.add(new Kline1m(symbol, openTime,
 					k.getDouble(1), k.getDouble(2), k.getDouble(3), k.getDouble(4),
 					k.getDouble(5), k.getDouble(6)));

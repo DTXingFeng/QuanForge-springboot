@@ -91,7 +91,7 @@ public class AiToolRegistry {
 				});
 
 		register("get_kline",
-				"获取 K 线（OHLCV）。interval: 1/5/15/30/60/240/D（分钟），limit ≤ 200。判断趋势与形态用。",
+				"获取已收盘 K 线（OHLCV，不含当前未完成柱）。interval: 1/5/15/30/60/240/D（分钟），limit ≤ 200。判断趋势与形态用。",
 				obj()
 						.put("symbol", obj().put("type", "string"))
 						.put("interval", obj().put("type", "string").put("description", "默认 15"))
@@ -116,6 +116,9 @@ public class AiToolRegistry {
 								.put(num(k.getString(5))));
 					}
 					return new JSONObject().put("symbol", symbol).put("interval", interval)
+							.put("barPolicy", "CLOSED_ONLY")
+							.put("dataThroughEpochMs", rows.length() == 0 ? JSONObject.NULL
+									: candleEnd(rows.getJSONArray(0).getLong(0), interval))
 							.put("order", "时间倒序").put("count", out.length())
 							.put("klines", out).toString();
 				});
@@ -129,6 +132,9 @@ public class AiToolRegistry {
 				args -> {
 					String symbol = sym(args);
 					String interval = args.optString("interval", "15");
+					if (!INTERVALS.contains(interval)) {
+						return err("interval 非法: " + interval);
+					}
 					double[][] khlc = klineArrays(symbol, interval, 150);
 					if (khlc == null) {
 						return err(symbol + " 无 K 线数据");
@@ -141,6 +147,8 @@ public class AiToolRegistry {
 					double[] kdj = IndicatorMath.kdjLast(highs, lows, closes, 9, 3, 3);
 					return new JSONObject()
 							.put("symbol", symbol).put("interval", interval)
+							.put("barPolicy", "CLOSED_ONLY")
+							.put("dataThroughEpochMs", (long) khlc[3][0])
 							.put("lastPrice", round(closes[closes.length - 1]))
 							.put("MA7", round(IndicatorMath.smaLast(closes, 7)))
 							.put("MA25", round(IndicatorMath.smaLast(closes, 25)))
@@ -235,8 +243,8 @@ public class AiToolRegistry {
 		// ---- 统计模型 ----
 		register("get_model_prediction",
 				"统计模型（LightGBM 双模型按品种域路由）预测未来 30 分钟方向概率。"
-				+ "返回 probUp（涨概率 0~1）、zone 置信区间与该区回测准确率 expectedAcc——"
-				+ "高置信区回测约 58%（仅主流币域）、中区约 54%、低区应忽略。"
+				+ "返回 probUp（模型分数 0~1）、zone 分桶与历史条件样本准确率 expectedAccuracy。"
+				+ "校准样本按未来波动筛选，不能当作实时胜率或盈利概率；需独立前向验证。"
 				+ "用于与你的定性判断交叉验证：与你的方向一致→confidence 上调；"
 				+ "明显分歧→倾向 HOLD 并在 detail 说明分歧点。"
 				+ "非主流/非山寨清单内的冷门品种为分布外推断（inDomain=false），参考意义降低。",
@@ -271,7 +279,11 @@ public class AiToolRegistry {
 									.put("confidence", r.getDouble("confidence"))
 									.put("zone", r.getString("zone"))
 									.put("expectedAccuracy", r.opt("expectedAcc"))
-									.put("note", "未来30分钟方向概率；高置信区回测58%/中54%/低区间忽略")
+									.put("inDomain", r.optBoolean("inDomain", false))
+									.put("domain", r.optString("domain", "unknown"))
+									.put("barPolicy", "CLOSED_ONLY")
+									.put("dataThroughEpochMs", candleEnd(rows.getJSONArray(0).getLong(0), "1"))
+									.put("note", "历史准确率基于按未来波动筛选的条件样本；不代表实时胜率或扣成本后的盈利概率")
 									.toString();
 						}
 					} catch (Exception e) {
@@ -446,15 +458,71 @@ public class AiToolRegistry {
 		return list.isEmpty() ? null : list.getJSONObject(0);
 	}
 
-	/** 原始 K 线行（Bybit 倒序原样） */
+	/** Closed, unique K lines in descending timestamp order; no live candle in research inputs. */
 	private JSONArray rawKlines(String symbol, String interval, int limit) throws Exception {
+		long observedAt = System.currentTimeMillis();
 		String json = bybitService.getPublicRaw("/v5/market/kline",
 				Map.of("category", "linear", "symbol", symbol,
-						"interval", interval, "limit", String.valueOf(limit)));
-		return new JSONObject(json).getJSONObject("result").getJSONArray("list");
+						"interval", interval, "limit", String.valueOf(Math.min(1000, limit + 1))));
+		JSONObject response = new JSONObject(json);
+		if (response.optInt("retCode", -1) != 0) {
+			throw new IllegalStateException("Bybit kline rejected: " + response.optString("retMsg"));
+		}
+		JSONArray rows = response.getJSONObject("result").getJSONArray("list");
+		return closedKlines(rows, interval, observedAt, limit);
 	}
 
-	/** K 线转数值数组（时间升序）：[highs, lows, closes] */
+	/** Shared by agent tools and fixed-context/trigger loaders to keep candle policy identical. */
+	static JSONArray closedKlines(JSONArray rows, String interval, long observedAt, int limit) {
+		java.util.TreeMap<Long, JSONArray> closed = new java.util.TreeMap<>(java.util.Comparator.reverseOrder());
+		for (int i = 0; i < rows.length(); i++) {
+			JSONArray row = rows.getJSONArray(i);
+			long start = row.getLong(0);
+			if (start < 0 || candleEnd(start, interval) > observedAt) continue;
+			if (interval.chars().allMatch(Character::isDigit) && start % (Long.parseLong(interval) * 60_000L) != 0) {
+				throw new IllegalStateException("Unaligned K line timestamp");
+			}
+			double o = row.getDouble(1), h = row.getDouble(2), l = row.getDouble(3), c = row.getDouble(4);
+			if (!Double.isFinite(o) || !Double.isFinite(h) || !Double.isFinite(l) || !Double.isFinite(c)
+					|| Math.min(Math.min(o,h),Math.min(l,c)) <= 0 || h < Math.max(o,c) || l > Math.min(o,c) || l > h) {
+				throw new IllegalStateException("Invalid K line OHLC");
+			}
+			JSONArray previous = closed.putIfAbsent(start, row);
+			if (previous != null && !previous.toString().equals(row.toString())) {
+				throw new IllegalStateException("Conflicting K lines at " + start);
+			}
+		}
+		JSONArray result = new JSONArray();
+		if (!closed.isEmpty()) {
+			long newest = closed.firstKey();
+			long end = candleEnd(newest, interval);
+			if (observedAt - end > end - newest + 60_000L) {
+				throw new IllegalStateException("Stale K line tail");
+			}
+		}
+		Long newer = null;
+		for (Map.Entry<Long, JSONArray> row : closed.entrySet()) {
+			if (result.length() == limit) break;
+			if (newer != null && candleEnd(row.getKey(), interval) != newer) {
+				throw new IllegalStateException("K line gap before " + newer);
+			}
+			result.put(row.getValue());
+			newer = row.getKey();
+		}
+		return result;
+	}
+
+	static long candleEnd(long start, String interval) {
+		java.time.ZonedDateTime utc = java.time.Instant.ofEpochMilli(start).atZone(java.time.ZoneOffset.UTC);
+		return switch (interval) {
+			case "D" -> utc.plusDays(1).toInstant().toEpochMilli();
+			case "W" -> utc.plusWeeks(1).toInstant().toEpochMilli();
+			case "M" -> utc.plusMonths(1).toInstant().toEpochMilli();
+			default -> Math.addExact(start, Math.multiplyExact(Long.parseLong(interval), 60_000L));
+		};
+	}
+
+	/** K 线转数值数组（时间升序）：[highs, lows, closes, [dataThroughEpochMs]] */
 	private double[][] klineArrays(String symbol, String interval, int limit) {
 		try {
 			JSONArray rows = rawKlines(symbol, interval, limit);
@@ -471,7 +539,8 @@ public class AiToolRegistry {
 				lows[i] = Double.parseDouble(k.getString(3));
 				closes[i] = Double.parseDouble(k.getString(4));
 			}
-			return new double[][] { highs, lows, closes };
+			return new double[][] { highs, lows, closes,
+					{ candleEnd(rows.getJSONArray(0).getLong(0), interval) } };
 		} catch (Exception e) {
 			return null;
 		}

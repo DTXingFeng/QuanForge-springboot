@@ -11,14 +11,13 @@ import java.util.Locale;
 
 /**
  * v4.8.5 孤儿仓位兜底巡检：每 5 分钟扫一遍实盘持仓，
- * 发现 size&gt;0 且 TP/SL 双空的仓位 → 自动设保本止损 + TG 告警。
+ * 发现 size&gt;0 且缺止损的仓位 → 自动设保护性止损 + TG 告警。
  * <p>
  * 背景：2026-08-21 ETHUSDT 孤儿仓位——委托成交后跟踪行写入 SQLITE_BUSY 失败，
  * 无人设 TP/SL，100x 杠杆裸奔 3 天（靠运气浮盈）。任何"成交了但没人管"的路径
  * （写库失败 / 进程崩溃 / 重启丢状态 / 网络中断在链路中间）都由此兜底。
  * <p>
- * 判定口径：takeProfit 与 stopLoss 均为空或 0 才动手（tracker 正常管理的仓位
- * 两者同设；巡检先设的保本 SL 会被 tracker 随后的正式 TP/SL 覆盖，无冲突）。
+ * 止盈存在也不能替代止损；本巡检只补缺失的 SL，保留已有 TP。
  */
 @Component
 public class OrphanPositionGuard {
@@ -47,7 +46,8 @@ public class OrphanPositionGuard {
 				continue;
 			}
 			String symbol = p.optString("symbol", "");
-			if (isSet(p.optString("takeProfit", "")) || isSet(p.optString("stopLoss", ""))) {
+			// A take-profit alone does not limit downside risk.
+			if (isSet(p.optString("stopLoss", ""))) {
 				continue;
 			}
 			double avg = Double.parseDouble(p.optString("avgPrice", "0"));
@@ -68,13 +68,13 @@ public class OrphanPositionGuard {
 						symbol, side, qty, avg, upl, String.format(Locale.ROOT, "%.6g", sl));
 				telegram.send(String.format(Locale.ROOT,
 						"🛡️ 孤儿仓位兜底: %s %s qty=%s entry=%.6g 浮盈=%.2f\n"
-								+ "TP/SL 双空（跟踪链路曾断裂），已设保护性止损 SL=%.6g\n"
+								+ "仓位缺少止损，已设保护性止损 SL=%.6g\n"
 								+ "请人工确认该仓位归属",
 						symbol, side, qty, avg, upl, sl));
 			} catch (Exception e) {
 				log.error("孤儿仓位保护失败 {}: {}", symbol, e.getMessage());
 				telegram.send(String.format(Locale.ROOT,
-						"🚨 孤儿仓位保护失败: %s %s qty=%s TP/SL双空，设保护性止损报错: %s\n"
+						"🚨 孤儿仓位保护失败: %s %s qty=%s 缺少止损，设保护性止损报错: %s\n"
 								+ "下轮巡检自动重试; 若持续失败请立即人工处理!",
 						symbol, side, qty, e.getMessage()));
 			}

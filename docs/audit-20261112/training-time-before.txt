@@ -1,0 +1,49 @@
+FF
+======================================================================
+FAIL: test_training_and_inference_share_epoch_millisecond_minutes (test_audit_training_timestamps.TrainingTimestampTests.test_training_and_inference_share_epoch_millisecond_minutes) (filename='train_lgbm.py')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\test_audit_training_timestamps.py", line 56, in test_training_and_inference_share_epoch_millisecond_minutes
+    module.main()
+  File "E:\project\QuanForge-springboot\tools\train_lgbm.py", line 74, in main
+    feats = build(df)
+            ^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1108, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1112, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1173, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\project\QuanForge-springboot\tools\test_audit_training_timestamps.py", line 43, in inspect
+    self.assertEqual(df.index[1] - df.index[0], module.pd.Timedelta(minutes=1))
+AssertionError: Timedelta('0 days 16:40:00') != Timedelta('0 days 00:01:00')
+
+======================================================================
+FAIL: test_training_and_inference_share_epoch_millisecond_minutes (test_audit_training_timestamps.TrainingTimestampTests.test_training_and_inference_share_epoch_millisecond_minutes) (filename='train_baseline.py')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\test_audit_training_timestamps.py", line 56, in test_training_and_inference_share_epoch_millisecond_minutes
+    module.main()
+  File "E:\project\QuanForge-springboot\tools\train_baseline.py", line 85, in main
+    feats = build_features(df)
+            ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1108, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1112, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1173, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\project\QuanForge-springboot\tools\test_audit_training_timestamps.py", line 43, in inspect
+    self.assertEqual(df.index[1] - df.index[0], module.pd.Timedelta(minutes=1))
+AssertionError: Timedelta('0 days 16:40:00') != Timedelta('0 days 00:01:00')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.632s
+
+FAILED (failures=2)

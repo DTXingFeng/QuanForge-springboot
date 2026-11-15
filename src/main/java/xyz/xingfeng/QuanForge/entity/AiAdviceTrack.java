@@ -91,6 +91,19 @@ public class AiAdviceTrack {
 	@Column(name = "order_id", length = 64)
 	private String orderId;
 
+	/** Durable identity saved before the first exchange request. Never regenerated on recovery. */
+	@Column(name = "order_link_id", length = 36, unique = true)
+	private String orderLinkId;
+
+	/** Conservative single-owner reservation for this configured Demo account. Null on terminal rows. */
+	@Column(name = "demo_slot", length = 64, unique = true)
+	private String demoSlot;
+
+	public String getOrderLinkId() { return orderLinkId; }
+	public void setOrderLinkId(String value) { orderLinkId = value; }
+	public String getDemoSlot() { return demoSlot; }
+	public void setDemoSlot(String value) { demoSlot = value; }
+
 	/** 实际下单数量 */
 	@Column(name = "qty")
 	private Double qty;

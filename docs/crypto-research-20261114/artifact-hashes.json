@@ -1,0 +1,14 @@
+{
+  "accounting-analysis.json": "abd78636059bf4c30973a395e04deedb6614be9ab38f95447618428d2bda697f",
+  "capture-manifest.json": "1eaf64ec680f38d962b7e7000af0f956337a38e0d8f3bd8ea5f38ab1d2d9485b",
+  "comparison.csv": "24c07901ee502867c9a57e77835cabcde4b62389cd77ec7542dbe95ac06b2a93",
+  "dataset.json.gz": "e74fbb58870f5761b4f74cccf1fc92ec7e0de9edcedffbc2092e5c080cbfd161",
+  "directional-comparison.png": "a1ebb74f5ea1e43ee645cc6237c1b1601e6991542ff4be0980b0c4b662bc2871",
+  "feature-before.txt": "e2201b856a04eacf50f58977a61e84e66e8252763ab1a9f753e0da431bd35211",
+  "funding-comparison.png": "432ca7830edb50089312528b08d49209da4038ac285f53cb37b4fbfe32b71386",
+  "protocol.json": "fc4a39eb1913f192f49edcdf87e7b37e81986bade5e5954115468516900e3e4a",
+  "python-tests.txt": "24e4bcbed9ded7cf16c77d4a8c70dbc1edc46bb82bcaf8e0320c04d9e9f88828",
+  "results.json.gz": "af96b490064d4d6b1321658fad5a08cf0131ca4f20d2139e522ba774fd199f2e",
+  "resume-manifest.json": "f3973fafa8793034fb07cc328323f5df60e63dc3d83baad42c210a3a83e0e874",
+  "resume-registration.json": "7dc4304f83b861ce85858e29cf117c31a7c63afe03053802b7ba1fe8528e0b63"
+}

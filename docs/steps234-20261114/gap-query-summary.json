@@ -1,0 +1,34 @@
+[
+  {
+    "window": {
+      "startTime": 1787109772383,
+      "endTime": 1787109804282
+    },
+    "count": 3,
+    "complete": true
+  },
+  {
+    "window": {
+      "startTime": 1787109804282,
+      "endTime": 1787109819975
+    },
+    "count": 3,
+    "complete": true
+  },
+  {
+    "window": {
+      "startTime": 1789775449028,
+      "endTime": 1790047562373
+    },
+    "count": 3,
+    "complete": true
+  },
+  {
+    "window": {
+      "startTime": 1790047569323,
+      "endTime": 1790053156443
+    },
+    "count": 3,
+    "complete": true
+  }
+]

@@ -1,0 +1,79 @@
+18:14:51.768 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [xyz.xingfeng.QuanForge.ApiControllerTests]: ApiControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:14:51.864 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration xyz.xingfeng.QuanForge.QuanForgeSpringbootApplication for test class xyz.xingfeng.QuanForge.ApiControllerTests
+18:14:51.957 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [xyz.xingfeng.QuanForge.ApiControllerTests]: ApiControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+18:14:51.958 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration xyz.xingfeng.QuanForge.QuanForgeSpringbootApplication for test class xyz.xingfeng.QuanForge.ApiControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.0)
+
+2026-11-14T18:14:52.628+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] x.xingfeng.QuanForge.ApiControllerTests  : Starting ApiControllerTests using Java 21.0.2 with PID 29496 (started by xingfeng in E:\project\QuanForge-springboot)
+2026-11-14T18:14:52.630+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] x.xingfeng.QuanForge.ApiControllerTests  : No active profile set, falling back to 1 default profile: "default"
+2026-11-14T18:14:53.366+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-14T18:14:53.439+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62 ms. Found 7 JPA repository interfaces.
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\xingfeng\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-11-14T18:14:55.435+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-11-14T18:14:55.457+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-14T18:14:55.458+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-11-14T18:14:55.551+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2893 ms
+2026-11-14T18:14:55.809+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-14T18:14:55.906+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-11-14T18:14:56.342+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-14T18:14:56.390+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-14T18:14:56.538+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@36c1b6ff
+2026-11-14T18:14:56.540+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-14T18:14:56.597+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite::memory:]
+	Database driver: SQLite JDBC
+	Database dialect: SQLiteDialect
+	Database version: 3.53.2
+	Default catalog/schema: undefined/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: SERIALIZABLE [default SERIALIZABLE]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-14T18:14:57.682+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-14T18:14:57.716+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-14T18:14:57.817+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-14T18:14:59.101+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-11-14T18:14:59.519+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 12645 (http) with context path '/'
+2026-11-14T18:14:59.526+08:00  INFO 29496 --- [QuanForge-isolated-test] [           main] x.xingfeng.QuanForge.ApiControllerTests  : Started ApiControllerTests in 7.191 seconds (process running for 8.664)
+2026-11-14T18:14:59.697+08:00  INFO 29496 --- [QuanForge-isolated-test] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-14T18:14:59.697+08:00  INFO 29496 --- [QuanForge-isolated-test] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-14T18:14:59.699+08:00  INFO 29496 --- [QuanForge-isolated-test] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 8.520 s <<< FAILURE! -- in xyz.xingfeng.QuanForge.ApiControllerTests
+[ERROR] xyz.xingfeng.QuanForge.ApiControllerTests.expiredDemoKeyMustReturnVisibleHealthWithoutExposingSecrets -- Time elapsed: 0.544 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: 200
+ but was: 404
+	at xyz.xingfeng.QuanForge.ApiControllerTests.expiredDemoKeyMustReturnVisibleHealthWithoutExposingSecrets(ApiControllerTests.java:43)
+
+[ERROR] Failures:
+[ERROR]   ApiControllerTests.expiredDemoKeyMustReturnVisibleHealthWithoutExposingSecrets:43
+expected: 200
+ but was: 404
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project QuanForge-springboot: There are test failures.
+[ERROR]
+[ERROR] See E:\project\QuanForge-springboot\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

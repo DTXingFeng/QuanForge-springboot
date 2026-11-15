@@ -1,0 +1,37 @@
+{
+  "audit_date_local": "2026-11-12 Asia/Hong_Kong",
+  "repository": "https://github.com/DTXingFeng/QuanForge-springboot.git",
+  "baseline_commit": "23b1a9b5001da28d2a84d87be02a160da83839ae",
+  "deployed_jar_sha256": "980b07de865cbb6714f64dc9cb90847c2cc8670b6dcd146ee9f4258a4dbf697d",
+  "deployment_git_commit": "Not embedded/unknown. Selected bytecode and individual Python sources checked independently.",
+  "services": {
+    "quanforge.service": "active; started 2026-11-09 17:39:14 +08",
+    "quanforge-bridge.service": "active",
+    "quanforge-model.service": "active",
+    "quanforge-v5mech.service": "inactive/enabled; Nov9 17:39:14 start, 17:43:59 stop",
+    "quanforge-paper.service": "inactive/disabled",
+    "quanforge-paper5.service": "inactive/disabled",
+    "quanforge-paper5c.service": "inactive/disabled",
+    "v5_guard.timer": "active, every15min; existing halt flag can stop v5 service"
+  },
+  "safe_runtime_observations": {
+    "mode": "DEMO",
+    "auto_order_enabled": false,
+    "ai_enabled": true,
+    "leverage": 100,
+    "auto_margin_pct": 5,
+    "scan_interval_minutes": 30,
+    "current_linear_usdt_positions": 0,
+    "current_active_orders": 0,
+    "account_scope": "Configured Java Demo account only; not evidence about other accounts"
+  },
+  "python_baseline_vs_deployed": {
+    "paper_trendrule.py": "identical",
+    "backtest.py": "identical",
+    "realtime_bridge.py": "identical",
+    "paper_v5mech.py": "different: deployed has untracked Demo shadow execution",
+    "deployed_v5_sha256": "a2e33d37b5b2e2558f500b9df20288f8cf4a47a6aafe774fd9686409a978d665"
+  },
+  "private_evidence": ".audit-private/qfs-audit-20261112-0805; SQLite online backups, manifest hashes, deployment classes/source, logs, exchange GET responses and historical bars. Excluded from Git.",
+  "mutations": "Local repair/test/report files and new audit artifacts only. No deployed code/config/history/credential changes, no orders."
+}

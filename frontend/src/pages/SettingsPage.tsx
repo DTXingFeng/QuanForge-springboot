@@ -718,7 +718,7 @@ function SettingsPage() {
                   <div className="space-y-1.5 self-end">
                     <p className="text-[11px] leading-relaxed text-zinc-500">
                       开启后 BUY/SELL 建议在 Bybit 模拟盘真实下单：限价挂建议入场价、
-                      TP/SL 由交易所管理、盈亏从 closed-pnl 读取（含滑点，绝对准确）。
+                      TP/SL 由交易所管理，平仓盈亏从 closed-pnl 读取，仍需核对逐笔成交、费用和资金费。
                       下单失败自动回退 K 线推演。
                     </p>
                   </div>

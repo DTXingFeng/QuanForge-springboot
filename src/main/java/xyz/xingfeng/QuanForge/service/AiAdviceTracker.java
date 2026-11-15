@@ -47,6 +47,20 @@ public class AiAdviceTracker {
 	private final TelegramBotService telegram;
 	private final DemoOrderExecutor executor;
 	private final AiConfigService configService;
+	@org.springframework.beans.factory.annotation.Autowired
+	private ExecutionJournal executionJournal;
+
+	private void journal(AiAdviceTrack track, String kind, String evidence) {
+		// Plain unit fixtures have no Spring field injection; production always requires this bean.
+		if (executionJournal != null) {
+			try { executionJournal.record(track, kind, evidence); }
+			catch (org.springframework.dao.DataAccessException e) {
+				log.error("执行观察日志写入失败 #{} {}；不能作为完整事件账本", track.getId(), kind);
+			}
+		}
+	}
+	/** Closed-bar boundary for PAPER replay; replaceable with a fixed clock in offline tests. */
+	private java.time.Clock paperClock = java.time.Clock.systemUTC();
 
 	public AiAdviceTracker(AiAdviceTrackRepository repository, BybitService bybitService,
 			TelegramBotService telegram, DemoOrderExecutor executor, AiConfigService configService) {
@@ -71,35 +85,36 @@ public class AiAdviceTracker {
 	 * 历史教训：全程取代式清理会掐死 60% 的样本（TRACKING 被强平导致胜率失真），
 	 * 因此 TRACKING 绝不因同向新建议被强制结算，只允许反向信号触发市价平仓。
 	 */
-	@Transactional
-	public void track(AiAlert alert, String action, double entry, double stopLoss, double takeProfit) {
+	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED)
+	public synchronized void track(AiAlert alert, String action, double entry, double stopLoss, double takeProfit) {
 		var cfg = configService.getConfig();
 		boolean demo = Boolean.TRUE.equals(cfg.getAutoOrderEnabled());
+		// Retain all old Demo ownership, including uncertain submissions. Also protect it when auto-order is off.
+		if (repository.findByStatusIn(ACTIVE).stream().anyMatch(t -> MODE_DEMO.equals(t.getExecMode()))) {
+			log.info("Demo仍有在途意图或仓位，禁止新增/反转风险");
+			return;
+		}
 		for (AiAdviceTrack old : repository.findBySymbolAndStatusIn(alert.getSymbol(), ACTIVE)) {
 			if (AiAdviceTrack.STATUS_PENDING.equals(old.getStatus())) {
 				// 实单模式：先撤掉还在挂着的限价委托
-				if (demo && MODE_DEMO.equals(old.getExecMode()) && old.getOrderId() != null) {
+				if (MODE_DEMO.equals(old.getExecMode()) && old.getOrderId() != null) {
 					try {
 						executor.cancel(old.getSymbol(), old.getOrderId());
-						// 撤单 ≠ 无成交：轮询间隙里可能已部分/全部成交，核查遗留仓位并平掉
+						// Cancellation acknowledgement is asynchronous: require a terminal exchange fact.
 						var d = executor.orderDetail(old.getSymbol(), old.getOrderId());
 						double cum = Double.parseDouble(d.optString("cumExecQty", "0"));
 						if (cum > 0) {
-							var pos = executor.position(old.getSymbol());
-							if (pos != null) {
-								executor.marketClose(old.getSymbol(), pos.getString("side"),
-										Double.parseDouble(pos.getString("size")));
+							if (isTerminalOrder(d.optString("orderStatus"))) {
+								enterDemo(old, d.optDouble("avgPrice", old.getEntry()), cum);
 							}
-							var c = executor.closedPnlSince(old.getSymbol(), epochMs(
-									old.getCreatedAt()));
-							if (c != null) {
-								old.setActualExit(c.avgExit());
-							}
-							expire(old, "取代时发现已成交，平仓结算", null);
-							continue;
+							return; // retain ownership; a new signal must not orphan an existing fill
+						}
+						if (!isTerminalOrder(d.optString("orderStatus"))) {
+							return;
 						}
 					} catch (Exception e) {
 						log.warn("撤旧委托失败 {} #{}: {}", old.getSymbol(), old.getId(), e.getMessage());
+						return;
 					}
 				}
 				old.setStatus(AiAdviceTrack.STATUS_EXPIRED);
@@ -116,7 +131,9 @@ public class AiAdviceTracker {
 			}
 			// 反向建议：close-and-reverse
 			if (MODE_DEMO.equals(old.getExecMode())) {
-				closeDemoReverse(old);
+				if (!closeDemoReverse(old)) {
+					return;
+				}
 			} else {
 				Double last = lastPrice(alert.getSymbol());
 				expire(old, "反向建议出现，按市价平仓反转",
@@ -152,18 +169,36 @@ public class AiAdviceTracker {
 		t.setSysVersion(xyz.xingfeng.QuanForge.SystemVersion.CURRENT);
 		t.setExecMode(MODE_PAPER);
 		if (demo) {
+			t.setExecMode(MODE_DEMO);
+			t.setOrderLinkId("qf-" + java.util.UUID.randomUUID().toString().replace("-", ""));
+			t.setDemoSlot("DEMO:" + BybitService.DEFAULT_CREDENTIAL_NAME);
+			t.setNote("入场意图已保存；委托结果待核对");
+			// Repository transaction must COMMIT before any remote mutation. Unique slot arbitrates other processes.
 			try {
-				var p = executor.placeEntry(alert.getSymbol(), action, entry, stopLoss, takeProfit,
+				repository.saveAndFlush(t);
+			} catch (org.springframework.dao.DataAccessException e) {
+				log.warn("Demo意图未提交，禁止发单 {}（可能有并发持有者）", t.getSymbol());
+				return;
+			}
+			try {
+				if (executionJournal != null) executionJournal.record(t, "ENTRY_INTENT", "Committed intent; not yet a fill");
+				var p = executor.placeEntry(alert.getSymbol(), action, entry, takeProfit, stopLoss,
 						cfg.getAutoMarginPct() == null ? 5.0 : cfg.getAutoMarginPct(),
-						cfg.getLeverage() == null ? 100 : cfg.getLeverage());
+						cfg.getLeverage() == null ? 100 : cfg.getLeverage(), t.getOrderLinkId());
 				t.setExecMode(MODE_DEMO);
 				t.setOrderId(p.orderId());
 				t.setQty(p.qty());
+				journal(t, "ENTRY_ACK", "Create response; execution unconfirmed");
 				configService.recordEquityBaseline(p.equityUsd());
 			} catch (Exception e) {
-				log.warn("模拟盘下单失败，回退纸面跟踪 {} {}: {}", alert.getSymbol(), action, e.getMessage());
-				t.setNote("模拟盘下单失败(" + truncate(e.getMessage(), 60) + ")，回退纸面");
+				log.warn("Demo结果未确认 {} {}；保留意图，禁止回退PAPER", alert.getSymbol(), action);
+				t.setNote("入场结果未知；按持久化订单编号对账，禁止重下");
+				journal(t, "ENTRY_UNKNOWN", "Reconcile by orderLinkId; never PAPER fallback");
 			}
+			// Failure here leaves the previously committed intent recoverable by orderLinkId.
+			// Do not treat a cancel ACK as compensation for a lost database write.
+			repository.saveAndFlush(t);
+			return;
 		}
 		// v4.8.5: 委托挂出后写库可能撞 SQLITE_BUSY_SNAPSHOT（WAL 快照升级冲突，
 		// busy_timeout 无效，必须重试）。实盘教训 2026-08-21 ETH：save 失败 → 无跟踪行
@@ -318,24 +353,29 @@ public class AiAdviceTracker {
 	}
 
 	/** 实单模式的反向平仓：市价平掉旧仓，从 closed-pnl 读实际盈亏结算 */
-	private void closeDemoReverse(AiAdviceTrack old) {
+	private boolean closeDemoReverse(AiAdviceTrack old) {
 		try {
 			var pos = executor.position(old.getSymbol());
 			if (pos != null) {
 				executor.marketClose(old.getSymbol(), pos.getString("side"),
 						Double.parseDouble(pos.getString("size")));
+				// An accepted close is not a confirmed fill; keep tracking until reconciliation.
+				old.setNote("反向建议平仓已请求，等待交易所确认");
+				repository.save(old);
+				return false;
 			}
 			var c = executor.closedPnlSince(old.getSymbol(), epochMs(
 					old.getEnteredAt() == null ? old.getCreatedAt() : old.getEnteredAt()));
 			if (c != null) {
 				old.setActualExit(c.avgExit());
 				expire(old, "反向建议出现，市价平仓反转", demoPct(c.pnl(), old));
+				return true;
 			} else {
-				expire(old, "反向建议平仓，盈亏待下轮核对", null);
+				return false;
 			}
 		} catch (Exception e) {
 			log.warn("实单反向平仓失败 {} #{}: {}", old.getSymbol(), old.getId(), e.getMessage());
-			expire(old, "反向建议平仓失败: " + truncate(e.getMessage(), 60), null);
+			return false;
 		}
 	}
 
@@ -370,8 +410,8 @@ public class AiAdviceTracker {
 
 	/** 结算心跳：每分钟检查活跃跟踪 */
 	@Scheduled(fixedDelay = 60_000, initialDelay = 45_000)
-	@Transactional
-	public void settle() {
+	@Transactional(propagation = org.springframework.transaction.annotation.Propagation.NOT_SUPPORTED)
+	public synchronized void settle() {
 		List<AiAdviceTrack> active = repository.findByStatusIn(ACTIVE);
 		if (active.isEmpty()) {
 			return;
@@ -386,7 +426,11 @@ public class AiAdviceTracker {
 				}
 				List<double[]> candles = candlesBySymbol.get(t.getSymbol());
 				if (candles == null) {
-					candles = fetchCandles(t.getSymbol(), earliest(t));
+					LocalDateTime deadline = AiAdviceTrack.STATUS_TRACKING.equals(t.getStatus())
+							? orNow(t.getEnteredAt()).plusMinutes(trackingTtlMinutes(t))
+							: orNow(t.getCreatedAt()).plusMinutes(
+									AiAdviceTrack.PENDING_TTL_MINUTES + trackingTtlMinutes(t));
+					candles = fetchCandles(t.getSymbol(), earliest(t), epochMs(deadline));
 					candlesBySymbol.put(t.getSymbol(), candles);
 				}
 				settleOne(t, candles);
@@ -405,12 +449,22 @@ public class AiAdviceTracker {
 	 */
 	private void settleDemo(AiAdviceTrack t) {
 		if (AiAdviceTrack.STATUS_PENDING.equals(t.getStatus())) {
-			var d = executor.orderDetail(t.getSymbol(), t.getOrderId());
+			var d = t.getOrderId() == null
+					? executor.orderDetailByLink(t.getSymbol(), t.getOrderLinkId())
+					: executor.orderDetail(t.getSymbol(), t.getOrderId());
+			if (t.getOrderId() == null) {
+				String recoveredId = d.optString("orderId");
+				if (recoveredId.isBlank()) throw new IllegalStateException("对账未返回委托身份");
+				t.setOrderId(recoveredId);
+				t.setQty(Double.parseDouble(d.getString("qty")));
+				repository.saveAndFlush(t);
+			}
 			String orderStatus = d.optString("orderStatus", "");
+			journal(t, "ORDER_OBSERVED", d.toString());
 			double cumQty = Double.parseDouble(d.optString("cumExecQty", "0"));
 			switch (orderStatus) {
 				case "Filled" -> enterDemo(t, d.optDouble("avgPrice", t.getEntry()), cumQty);
-				case "Cancelled", "Rejected" -> {
+				case "Cancelled", "Rejected", "PartiallyFilledCanceled", "Deactivated" -> {
 					if (cumQty > 0) {
 						// 部分成交后被撤：剩余仓位交给 TRACKING 状态管理
 						enterDemo(t, d.optDouble("avgPrice", t.getEntry()), cumQty);
@@ -422,8 +476,14 @@ public class AiAdviceTracker {
 					// New / PartiallyFilled：继续等；超时撤单
 					if (minutesSince(orNow(t.getCreatedAt())) > AiAdviceTrack.PENDING_TTL_MINUTES) {
 						executor.cancel(t.getSymbol(), t.getOrderId());
+						// Re-read after cancellation: fills may race the cancellation request.
+						var finalOrder = executor.orderDetail(t.getSymbol(), t.getOrderId());
+						if (!isTerminalOrder(finalOrder.optString("orderStatus"))) {
+							return;
+						}
+						cumQty = Double.parseDouble(finalOrder.optString("cumExecQty", "0"));
 						if (cumQty > 0) {
-							enterDemo(t, d.optDouble("avgPrice", t.getEntry()), cumQty);
+							enterDemo(t, finalOrder.optDouble("avgPrice", t.getEntry()), cumQty);
 							t.setNote("等入场超时，按已成交部分跟踪");
 							repository.save(t);
 						} else {
@@ -441,13 +501,17 @@ public class AiAdviceTracker {
 			settleDemoClosed(t, t.getNote());
 			return;
 		}
-		if (minutesSince(orNow(t.getEnteredAt())) > trackingTtlMinutes(t)
-				&& t.getNote() == null) {
+		if (minutesSince(orNow(t.getEnteredAt())) > trackingTtlMinutes(t)) {
+			journal(t, "EXIT_INTENT", "TTL; reduceOnly requested, not confirmed exit");
 			executor.marketClose(t.getSymbol(), pos.getString("side"),
 					Double.parseDouble(pos.getString("size")));
 			t.setNote("持仓超时，市价平仓");
 			repository.save(t);
 		}
+	}
+
+	private boolean isTerminalOrder(String status) {
+		return List.of("Filled", "Cancelled", "Rejected", "PartiallyFilledCanceled", "Deactivated").contains(status);
 	}
 
 	/**
@@ -472,7 +536,7 @@ public class AiAdviceTracker {
 		repository.save(t);
 		log.info("实单跟踪 #{} {} 已成交入场 {} qty={}", t.getId(), t.getSymbol(),
 				t.getActualEntry(), t.getQty());
-		// 成交后才设 TP/SL（挂单附带会被 Bybit 按现价校验拒绝，见 placeEntry 注释）
+		// 新委托已经随单附保护；这里复核/补设，兼容升级前遗留的不带保护委托。
 		// v4.8.1: 失败先退避重试（2s/4s ×2）——瞬时限频/网络抖动不应导致保护性平仓
 		// （实测 3+ 次因瞬时失败被平仓，白亏 ~0.5%）
 		boolean set = false;
@@ -480,6 +544,7 @@ public class AiAdviceTracker {
 		for (int attempt = 1; attempt <= 3 && !set; attempt++) {
 			try {
 				executor.setTradingStop(t.getSymbol(), t.getAction(), t.getTakeProfit(), t.getStopLoss());
+				journal(t, "PROTECTION_ACK", "Trading stop response; exchange observation still required");
 				set = true;
 			} catch (Exception e) {
 				last = e;
@@ -539,34 +604,70 @@ public class AiAdviceTracker {
 				? orNow(t.getEnteredAt()) : orNow(t.getCreatedAt());
 		boolean buy = "BUY".equals(t.getAction());
 		// 入场判定只看建议发出之后开盘的K线；持仓判定只看入场之后开盘的K线
+		long lastClosedStart = paperClock.millis() / 60_000 * 60_000 - 60_000;
+		LocalDateTime filterSince = since;
+		if (AiAdviceTrack.STATUS_TRACKING.equals(t.getStatus())) {
+			for (double[] c : candles) {
+				if (c[0] <= lastClosedStart && candleTime(c).equals(since)
+						&& candleTime(c).isAfter(orNow(t.getCreatedAt()))
+						&& (buy ? c[2] <= t.getStopLoss() : c[1] >= t.getStopLoss())) {
+					settleTrack(t, AiAdviceTrack.STATUS_LOSS, pricePct(t, t.getStopLoss()),
+							"入场同根K线触止损，时序未知保守判损");
+					return;
+				}
+			}
+		}
 		List<double[]> after = candles.stream()
-				.filter(c -> candleTime(c).isAfter(since))
+				.filter(c -> c[0] <= lastClosedStart && candleTime(c).isAfter(filterSince))
 				.toList();
 
 		if (AiAdviceTrack.STATUS_PENDING.equals(t.getStatus())) {
 			boolean touched = false;
+			LocalDateTime entryDeadline = since.plusMinutes(AiAdviceTrack.PENDING_TTL_MINUTES);
 			for (double[] c : after) {
-				if (buy ? c[1] >= t.getEntry() : c[2] <= t.getEntry()) {
+				if (candleTime(c).isAfter(entryDeadline)) {
+					break;
+				}
+				if (buy ? c[2] <= t.getEntry() : c[1] >= t.getEntry()) {
 					t.setStatus(AiAdviceTrack.STATUS_TRACKING);
 					t.setEnteredAt(candleTime(c));
 					t.setNote(null);
 					touched = true;
+					// OHLC cannot establish entry/exit order. Charge a same-bar stop conservatively;
+					// never award a take-profit that could have occurred before the fill.
+					if (buy ? c[2] <= t.getStopLoss() : c[1] >= t.getStopLoss()) {
+						settleTrack(t, AiAdviceTrack.STATUS_LOSS, pricePct(t, t.getStopLoss()),
+								"入场同根K线触止损，时序未知保守判损");
+						return;
+					}
 					break;
 				}
 			}
 			if (AiAdviceTrack.STATUS_TRACKING.equals(t.getStatus())) {
 				repository.save(t);
 				log.info("纸面跟踪 #{} {} 已触及入场 {}", t.getId(), t.getSymbol(), t.getEntry());
-				return; // 入场后的 TP/SL 从下一次心跳开始盯（避免同根K线抢先判定）
+				// Continue through the rest of the replay immediately; no heartbeat may skip an exit.
+				since = t.getEnteredAt();
+				LocalDateTime entered = since;
+				after = after.stream().filter(c -> candleTime(c).isAfter(entered)).toList();
+			} else {
+				if (!touched && minutesSince(since) > AiAdviceTrack.PENDING_TTL_MINUTES) {
+					expire(t, "超时未触及入场价");
+				}
+				return;
 			}
-			if (!touched && minutesSince(since) > AiAdviceTrack.PENDING_TTL_MINUTES) {
-				expire(t, "超时未触及入场价");
-			}
-			return;
 		}
 
 		// TRACKING：先触 SL 判 LOSS（保守），再触 TP 判 WIN
+		LocalDateTime exitDeadline = since.plusMinutes(trackingTtlMinutes(t));
+		double last = t.getEntry();
+		boolean haveClose = false;
 		for (double[] c : after) {
+			if (candleTime(c).plusMinutes(1).isAfter(exitDeadline)) {
+				break;
+			}
+			last = c[3];
+			haveClose = true;
 			boolean hitSl = buy ? c[2] <= t.getStopLoss() : c[1] >= t.getStopLoss();
 			boolean hitTp = buy ? c[1] >= t.getTakeProfit() : c[2] <= t.getTakeProfit();
 			if (hitSl) {
@@ -579,18 +680,19 @@ public class AiAdviceTracker {
 				return;
 			}
 		}
-		if (minutesSince(since) > trackingTtlMinutes(t)) {
-			double last = candles.isEmpty() ? t.getEntry() : candles.get(candles.size() - 1)[3];
-			expire(t, "持仓超时，按现价结算", pricePct(t, last));
+		if (minutesSince(since) > trackingTtlMinutes(t) && haveClose) {
+			expire(t, "持仓超时，按TTL时点已收盘价结算", pricePct(t, last));
 		}
 	}
 
 	private void settleTrack(AiAdviceTrack t, String status, double resultPct, String note) {
 		t.setStatus(status);
+		t.setDemoSlot(null);
 		t.setSettledAt(LocalDateTime.now());
 		t.setResultPct(round2(resultPct));
 		t.setNote(note);
 		repository.save(t);
+		journal(t, "SETTLED_ESTIMATE", "Legacy result_pct is not a reconciled full-cost net ledger");
 		log.info("纸面跟踪 #{} {} 结算: {} {}%", t.getId(), t.getSymbol(), status,
 				String.format(Locale.ROOT, "%.2f", resultPct));
 		if (AiAdviceTrack.STATUS_WIN.equals(status) || AiAdviceTrack.STATUS_LOSS.equals(status)) {
@@ -604,6 +706,7 @@ public class AiAdviceTracker {
 
 	private void expire(AiAdviceTrack t, String note, Double resultPct) {
 		t.setStatus(AiAdviceTrack.STATUS_EXPIRED);
+		t.setDemoSlot(null);
 		t.setSettledAt(LocalDateTime.now());
 		t.setNote(note);
 		if (resultPct != null) {
@@ -703,28 +806,64 @@ public class AiAdviceTracker {
 	// ==================== 数据 ====================
 
 	/** 拉指定时间之后的 1m K 线：[timeMillis, high, low, close] */
-	private List<double[]> fetchCandles(String symbol, LocalDateTime since) throws Exception {
-		String json = bybitService.getPublicRaw("/v5/market/kline",
-				Map.of("category", "linear", "symbol", symbol, "interval", "1", "limit", "200"));
-		JSONObject resp = new JSONObject(json);
-		if (resp.getInt("retCode") != 0) {
-			throw new IllegalStateException("Bybit kline: " + resp.getString("retMsg"));
+	private List<double[]> fetchCandles(String symbol, LocalDateTime since, long deadlineMs) throws Exception {
+		long sinceMs = epochMs(since);
+		long first = sinceMs / 60_000 * 60_000 + 60_000;
+		long lastClosed = paperClock.millis() / 60_000 * 60_000 - 60_000;
+		// Even after a long outage only entry TTL + maximum holding TTL can affect this track.
+		long last = Math.min(lastClosed, deadlineMs / 60_000 * 60_000 - 60_000);
+		if (last - first > (AiAdviceTrack.PENDING_TTL_MINUTES + 240L) * 60_000) {
+			throw new IllegalStateException("PAPER回放时间窗超预算，保留跟踪");
 		}
-		JSONArray list = resp.getJSONObject("result").getJSONArray("list");
-		long sinceMs = since.minusMinutes(2).atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
-		java.util.List<double[]> rows = new java.util.ArrayList<>();
-		for (int i = 0; i < list.length(); i++) {
-			JSONArray k = list.getJSONArray(i);
-			double start = Double.parseDouble(k.getString(0));
-			if ((long) start < sinceMs) {
-				continue;
+		if (first > last) {
+			return List.of();
+		}
+		java.util.NavigableMap<Long, double[]> rows = new java.util.TreeMap<>();
+		long pageEnd = last;
+		for (int page = 0; page < 4 && pageEnd >= first; page++) {
+			String json = bybitService.getPublicRaw("/v5/market/kline", Map.of(
+					"category", "linear", "symbol", symbol, "interval", "1", "limit", "1000",
+					"start", Long.toString(first), "end", Long.toString(pageEnd)));
+			JSONObject resp = new JSONObject(json);
+			if (resp.getInt("retCode") != 0) {
+				throw new IllegalStateException("PAPER回放行情失败: " + resp.optString("retMsg"));
 			}
-			// Bybit 元素顺序 [start, open, high, low, close, volume]，原始倒序
-			rows.add(new double[] { start, Double.parseDouble(k.getString(2)),
-					Double.parseDouble(k.getString(3)), Double.parseDouble(k.getString(4)) });
+			JSONArray list = resp.getJSONObject("result").getJSONArray("list");
+			long minimum = Long.MAX_VALUE;
+			for (int i = 0; i < list.length(); i++) {
+				JSONArray k = list.getJSONArray(i);
+				long start = Long.parseLong(k.getString(0));
+				if (start < first || start > pageEnd) {
+					continue;
+				}
+				double high = Double.parseDouble(k.getString(2));
+				double low = Double.parseDouble(k.getString(3));
+				double close = Double.parseDouble(k.getString(4));
+				if (start % 60_000 != 0 || !Double.isFinite(high) || !Double.isFinite(low)
+						|| !Double.isFinite(close) || low <= 0 || high < low || close < low || close > high) {
+					throw new IllegalStateException("PAPER回放无效K线，保留跟踪: " + start);
+				}
+				double[] row = { start, high, low, close };
+				double[] previous = rows.putIfAbsent(start, row);
+				if (previous != null && !java.util.Arrays.equals(previous, row)) {
+					throw new IllegalStateException("PAPER回放重复K线冲突，保留跟踪: " + start);
+				}
+				minimum = Math.min(minimum, start);
+			}
+			if (minimum == Long.MAX_VALUE) {
+				throw new IllegalStateException("PAPER回放历史缺失/分页无进展，保留跟踪");
+			}
+			pageEnd = minimum - 60_000;
 		}
-		java.util.Collections.reverse(rows);
-		return rows;
+		if (pageEnd >= first) {
+			throw new IllegalStateException("PAPER回放超4页预算，保留跟踪等待补数");
+		}
+		for (long expected = first; expected <= last; expected += 60_000) {
+			if (!rows.containsKey(expected)) {
+				throw new IllegalStateException("PAPER回放K线缺口，保留跟踪: " + expected);
+			}
+		}
+		return new java.util.ArrayList<>(rows.values());
 	}
 
 	private LocalDateTime candleTime(double[] c) {

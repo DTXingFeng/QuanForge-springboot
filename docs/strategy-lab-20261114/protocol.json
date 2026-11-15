@@ -1,0 +1,32 @@
+{
+  "registered_ms": 1794593870865,
+  "symbol": "BTCUSDT",
+  "interval_ms": 900000,
+  "start_ms": 1786817700000,
+  "end_ms": 1794593700000,
+  "warmup": 240,
+  "split_ms": 1792001700000,
+  "arms": [
+    "ema_cross",
+    "breakout",
+    "mean_reversion",
+    "cash"
+  ],
+  "initial_equity": "200",
+  "risk_fraction": "0.01",
+  "max_notional_ratio": "1",
+  "sl_atr": "1.2",
+  "ttl_bars": 96,
+  "daily_new_risk_halt": "0.03",
+  "hard_drawdown_halt": "0.10",
+  "request_budget": 32,
+  "cost_cases": [
+    "MODELED_COSTS",
+    "ZERO_COST_DIAGNOSTIC"
+  ],
+  "source_sha256": "0d44be1a5233a3869fbf56cbe81e9a4daa3762f88fbd6f89a54658c04e24d8ca",
+  "scope": "RETROSPECTIVE_EXPLORATION_NOT_INDEPENDENT_FORWARD_EVIDENCE",
+  "no_production_changes": true,
+  "no_account_orders": true,
+  "no_ai_calls": true
+}

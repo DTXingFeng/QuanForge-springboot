@@ -1,0 +1,27 @@
+{
+  "scope": "REGISTERED_FORWARD_AI_VETO_ONLY",
+  "protocol_hash": "e87363106fffb053d9380f2d9bab6d46a5b9c0f6d5fb67d20b747653fab10960",
+  "registered_ms": 1794592180289,
+  "frames": 0,
+  "due_frames_expected": 0,
+  "closed_opportunities": 0,
+  "missing_ai": 0,
+  "invalid_or_late_ai": 0,
+  "unknown_cost_rows": 0,
+  "baseline_net_known_subset": "0",
+  "ai_net_known_subset": "0",
+  "paired_delta": "0",
+  "weekly_mean_delta_ci95": null,
+  "completed_week_blocks": 0,
+  "blocked": [
+    "AI_NET_NOT_POSITIVE",
+    "INSUFFICIENT_OPPORTUNITIES",
+    "INSUFFICIENT_WEEK_BLOCKS",
+    "MODEL_VERSION_NOT_ATTESTED",
+    "NO_FORWARD_FRAMES",
+    "NO_POSITIVE_PAIRED_INTERVAL"
+  ],
+  "ai_increment_proven": false,
+  "policy": "TAKE/SKIP only; invalid/late falls back to baseline and still pays observed API cost",
+  "warning": "Known subsets are diagnostic, never full performance when costs/coverage are incomplete. Weekly resampling does not guarantee independent markets or future profits."
+}

@@ -1,0 +1,269 @@
+[
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1794593699999
+    },
+    "at": 1794593870866,
+    "sha256": "bae658286525e00caafc7d8e0e27c6bf2720cc5ef3079f857baa9e502b41c1a6"
+  },
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1793693699999
+    },
+    "at": 1794593871988,
+    "sha256": "514e6b83bc95109dcfc41933b027ae853e56c4332fa0dba60ff28b205b955062"
+  },
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1792793699999
+    },
+    "at": 1794593872719,
+    "sha256": "b0afa57e1e491cdb0dce2e907dd1b54bccba76e1c15e3df809a80ba5c5fb50fa"
+  },
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1791893699999
+    },
+    "at": 1794593873324,
+    "sha256": "1513560c00044ead07f53e8b313823cc7707deb3591e6d499e9ae68dd7b3af58"
+  },
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1790993699999
+    },
+    "at": 1794593873942,
+    "sha256": "85fb9b6929ac32afb01dbe71123205a07f8415b147336727f3ca6c684f04f9ea"
+  },
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1790093699999
+    },
+    "at": 1794593874556,
+    "sha256": "d990541d7087874c8cd6549de2d567d9d16696423a03dc361a5ba2692c9a21c2"
+  },
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1789193699999
+    },
+    "at": 1794593875358,
+    "sha256": "0f2e158048d9df444208d0597a4513fca6e93a6866b2b6fb79a884ba43098a5b"
+  },
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1788293699999
+    },
+    "at": 1794593875976,
+    "sha256": "ed950a63351d652ee609256f701a5f216ea34f0810cab6cc789d671538a9e0fd"
+  },
+  {
+    "endpoint": "/v5/market/kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1787393699999
+    },
+    "at": 1794593876577,
+    "sha256": "78e521ae8d58c2ed04479966fc19f88b07e8f8ebe4cc819e089ca5edc32ee884"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1794593699999
+    },
+    "at": 1794593877201,
+    "sha256": "e60fea8a083de9a67368a0c0f50a4a969fd7b38673185693b8d2a9a0c47b9aec"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1793693699999
+    },
+    "at": 1794593877776,
+    "sha256": "e7a40df6060d64ca765bc066ce9cd34e2681933a1eab5c5157cd1230f1d3ab47"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1792793699999
+    },
+    "at": 1794593878347,
+    "sha256": "bf9075a7b1cb251f408e26777a69babf94505470050a1a27a8f50335d21ce4a9"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1791893699999
+    },
+    "at": 1794593878907,
+    "sha256": "543e6da86c8c82b9298394f1b2f1c8e7e80cd4642fdb813ca8aad07889803262"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1790993699999
+    },
+    "at": 1794593879464,
+    "sha256": "b4840f4f94627ec016de4c6c2d8b5e358c00225dafc356f3169c10c22b4c9bbc"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1790093699999
+    },
+    "at": 1794593880215,
+    "sha256": "bc7d6eb9c90dfe4ecceff95e1957b5be6ac7ac7721521512dbf839df56eb6472"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1789193699999
+    },
+    "at": 1794593880788,
+    "sha256": "40017d59eba1f16231fe3350359ba900bb302a8baa51a1a3144f2fd4246ce880"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1788293699999
+    },
+    "at": 1794593881363,
+    "sha256": "4e7d1b2a48094434c8b9e25075a7c901284ecd1252a8c75956b28ac613077057"
+  },
+  {
+    "endpoint": "/v5/market/mark-price-kline",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "interval": 15,
+      "limit": 1000,
+      "start": 1786601700000,
+      "end": 1787393699999
+    },
+    "at": 1794593881943,
+    "sha256": "637bca7c1ddf060eab0a09a4e0fa4bf1759b566e32d594620d9434b5aecc0984"
+  },
+  {
+    "endpoint": "/v5/market/instruments-info",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT"
+    },
+    "at": 1794593882546,
+    "sha256": "0d2f732af0a2ec3649d94b44e67b6b421f617825e44acfcf5b0071cf2a8f9c0d"
+  },
+  {
+    "endpoint": "/v5/market/funding/history",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "startTime": 1786817700000,
+      "endTime": 1794593699999,
+      "limit": 200
+    },
+    "at": 1794593883046,
+    "sha256": "517eefff0c60e3ac93b246265e638cfcaf52c73f1fbaf35d25069e01be33ec40"
+  },
+  {
+    "endpoint": "/v5/market/funding/history",
+    "params": {
+      "category": "linear",
+      "symbol": "BTCUSDT",
+      "startTime": 1786817700000,
+      "endTime": 1788854399999,
+      "limit": 200
+    },
+    "at": 1794593883561,
+    "sha256": "c230a0d36be1f4c5554bc5e9c222e8992719799fe7ff41957529157854dcbfa3"
+  }
+]

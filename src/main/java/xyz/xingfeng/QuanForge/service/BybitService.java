@@ -111,6 +111,30 @@ public class BybitService {
 		}
 	}
 
+	/** Demo-only execution: exact credential selection, no fallback and no global mode race. */
+	public String postDemo(String credentialName, String endpoint, String rawRequestBody) {
+		ApiCredential credential = resolveExactCredential(credentialName);
+		try {
+			return postClient.postDemo(credential.getApiKey(), credential.getApiSecret(), endpoint, rawRequestBody);
+		} catch (Exception e) {
+			throw new RuntimeException("调用 Bybit DEMO POST 失败: " + e.getMessage(), e);
+		}
+	}
+
+	public String getDemoRaw(String credentialName, String endpoint, Map<String, String> params) {
+		ApiCredential credential = resolveExactCredential(credentialName);
+		try {
+			return getClient.getDemo(credential.getApiKey(), credential.getApiSecret(), endpoint, params);
+		} catch (Exception e) {
+			throw new RuntimeException("调用 Bybit DEMO GET 失败: " + e.getMessage(), e);
+		}
+	}
+
+	private ApiCredential resolveExactCredential(String name) {
+		return apiCredentialService.findByName(name)
+				.orElseThrow(() -> new NotFoundException("凭证不存在: " + name));
+	}
+
 	/**
 	 * 虚拟盘申请/调整模拟资金（POST /v5/account/demo-apply-money）。
 	 * <p>

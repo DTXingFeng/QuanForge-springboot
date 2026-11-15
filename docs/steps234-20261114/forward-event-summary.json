@@ -1,0 +1,15 @@
+{
+  "events_by_kind": {
+    "BAR": 1,
+    "CLOCK_CALIBRATION": 2,
+    "EXPERIMENT": 1,
+    "MARK": 13,
+    "QUOTE": 6,
+    "SIGNAL": 1,
+    "WARMUP": 1
+  },
+  "first_event_ms": 1794590100000,
+  "latest_event_ms": 1794591084383,
+  "strategy_edge": "NOT_ESTABLISHED",
+  "running_in_background": false
+}

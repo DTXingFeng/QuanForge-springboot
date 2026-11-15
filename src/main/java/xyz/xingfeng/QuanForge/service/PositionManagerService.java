@@ -50,6 +50,15 @@ public class PositionManagerService {
 	private final ProxiedHttpClients clients;
 	private final AiConfigService configService;
 	private final AiToolRegistry toolRegistry;
+	@org.springframework.beans.factory.annotation.Autowired
+	private ExecutionJournal executionJournal;
+
+	private void protectionObservation(AiAdviceTrack track, String reason) {
+		if (executionJournal != null) {
+			try { executionJournal.record(track, "PROTECTION_CHANGE_ACK", reason); }
+			catch (org.springframework.dao.DataAccessException e) { log.error("保护调整观察未写入 #{}", track.getId()); }
+		}
+	}
 
 	public PositionManagerService(AiAdviceTrackRepository repository, DemoOrderExecutor executor,
 			BybitService bybitService, ProxiedHttpClients clients, AiConfigService configService,
@@ -171,6 +180,7 @@ public class PositionManagerService {
 			t.setRebasedAt(java.time.LocalDateTime.now());
 			t.setNote("换挡扛单(majors): " + reason);
 			repository.save(t);
+			protectionObservation(t, "REBASE response: " + reason);
 			log.info("持仓管理 #{} {} REBASE: sl->{} 总风险{}%: {}",
 					t.getId(), t.getSymbol(), newSl,
 					String.format(Locale.ROOT, "%.2f", totalRisk), reason);
@@ -234,6 +244,7 @@ public class PositionManagerService {
 			}
 			t.setNote("动态管理调整: " + reason);
 			repository.save(t);
+			protectionObservation(t, "Adjustment response: " + reason);
 			log.info("持仓管理 #{} {} 调整 sl={} tp={}: {}", t.getId(), t.getSymbol(), sl, tp, reason);
 		} catch (Exception e) {
 			// 常见原因：新触发价距标记价过近被交易所拒绝

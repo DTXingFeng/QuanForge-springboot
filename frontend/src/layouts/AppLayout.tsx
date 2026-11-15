@@ -10,6 +10,7 @@ import {
 } from "lucide-react"
 import { cn } from "../lib/utils"
 import { useCredentialInit } from "../hooks/useCredentialInit"
+import CredentialHealthBanner from "../components/CredentialHealthStatus"
 
 const NAV_ITEMS = [
   { to: "/", label: "仪表盘", icon: LayoutDashboard, end: true },
@@ -69,6 +70,7 @@ function AppLayout() {
       </aside>
 
       <main className="flex-1 overflow-y-auto">
+        <CredentialHealthBanner />
         <Outlet />
       </main>
     </div>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import xyz.xingfeng.QuanForge.crypto.AesEncryptor;
 import xyz.xingfeng.QuanForge.entity.ApiCredential;
 import xyz.xingfeng.QuanForge.entity.ProxyConfig;
@@ -17,7 +18,20 @@ import xyz.xingfeng.QuanForge.service.ProxyConfigService;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@MockitoBean(types = {xyz.xingfeng.QuanForge.service.BybitService.class,
+			xyz.xingfeng.QuanForge.service.AiAnalysisService.class,
+			xyz.xingfeng.QuanForge.service.AiAdviceTracker.class,
+			xyz.xingfeng.QuanForge.service.NewsService.class,
+			xyz.xingfeng.QuanForge.service.TelegramBotService.class,
+			xyz.xingfeng.QuanForge.service.PositionManagerService.class,
+			xyz.xingfeng.QuanForge.service.OrphanPositionGuard.class})
 class QuanForgeSpringbootApplicationTests {
+	@Autowired
+	private org.springframework.context.ApplicationContext context;
+
+	@Test void observerConfigurationDisablesScheduledTasks() {
+		assertThat(context.containsBean("org.springframework.context.annotation.internalScheduledAnnotationProcessor")).isFalse();
+	}
 
 	@Autowired
 	private ApiCredentialService apiCredentialService;

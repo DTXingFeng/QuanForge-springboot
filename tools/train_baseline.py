@@ -77,7 +77,7 @@ def main():
         df = pd.read_sql_query(
             "SELECT open_time, open, high, low, close, volume FROM kline_1m "
             "WHERE symbol=? ORDER BY open_time", conn, params=(sym.strip(),),
-            parse_dates=["open_time"])
+            parse_dates={"open_time": {"unit": "ms"}})
         if len(df) < 3000:
             print(f"[skip] {sym}: 只有 {len(df)} 根（<3000）")
             continue

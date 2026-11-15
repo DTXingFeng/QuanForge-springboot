@@ -1,0 +1,16 @@
+{
+  "ready_for_controlled_demo": false,
+  "blocked": [
+    "exact_account_mapping_verified",
+    "shadow_account_flat_verified",
+    "durable_exit_reconciliation_verified",
+    "full_trade_cost_ledger_verified",
+    "shared_decision_snapshot_verified",
+    "exchange_protection_handover_verified",
+    "exact_candidate_not_reviewed"
+  ],
+  "checked_ms": 1794592509832,
+  "no_deployment_performed": true,
+  "no_exchange_orders_sent": true,
+  "note": "Local tests and a flat Java account alone do not authorize unattended Demo."
+}

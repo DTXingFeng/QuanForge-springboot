@@ -10,7 +10,7 @@ v5-mech: 1h EMA排列翻转趋势纸面臂(无LLM机械对照).
       反向翻转先平后开; 仓位=风险平价(RISK_PCT=1%, 名义上限5x).
 账本: 同twins schema(ai_advice_track OPEN行 + equity_snap).
 """
-import calendar, json, os, sqlite3, time, urllib.request
+import calendar, copy, json, math, os, sqlite3, time, urllib.request
 
 import pandas as pd
 
@@ -23,7 +23,7 @@ EQUITY0 = 200.0
 POLL_S = 60
 WARMUP = 220
 DB = os.environ.get("V5_DB", "/mnt/nvme/quanforge/data/paper_v5mech.db")
-SYS_VERSION = "v5.0-mech-1hflip-atrsl1.2-ttl24-risk1"
+SYS_VERSION = "v5.0.1-mech-ledger-recovery"
 PROXY = {"http": "http://127.0.0.1:7890", "https": "http://127.0.0.1:7890"}
 opener_px = urllib.request.build_opener(urllib.request.ProxyHandler(PROXY))
 opener_direct = urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -47,13 +47,15 @@ def init_db():
         created_at text, entered_at text, settled_at text, llm_ms integer)""")
     con.execute("""create table if not exists equity_snap(
         ts text, eq_sizing text, equity real, fixed_equity real)""")
+    con.execute("""create table if not exists paper_runtime(
+        symbol text primary key, last_bar integer, last_state text, position_json text)""")
     con.commit()
     return con
 
 
 def restore(con):
     global equity
-    r = con.execute("select equity from equity_snap order by ts desc limit 1").fetchone()
+    r = con.execute("select equity from equity_snap order by rowid desc limit 1").fetchone()
     if r:
         equity = r[0]
         log(f"[restore] equity={equity:.1f}")
@@ -68,6 +70,25 @@ def restore(con):
         pos[sym] = {"action": act, "entry": entry, "sl": sl, "rowid": rid,
                     "entry_ms": entry_ms, "risk0": abs(entry - sl) / entry * 100}
         log(f"[restore] {sym} {act} @{entry} sl={sl}")
+    for sym, ts, state, encoded in con.execute(
+            "select symbol,last_bar,last_state,position_json from paper_runtime"):
+        last_bar[sym], last_state[sym] = ts, state
+        if encoded and sym in pos:
+            saved = json.loads(encoded)
+            if saved["rowid"] == pos[sym]["rowid"]:
+                pos[sym].update(saved)
+    for sym, p in pos.items():
+        if "notional" not in p:
+            # A legacy OPEN row has no entry-size evidence. Do not invent an equity P&L.
+            log(f"[audit-required] {sym} legacy OPEN has no entry notional; settlement blocked")
+
+
+def save_runtime(con, sym):
+    con.execute("insert into paper_runtime values(?,?,?,?) on conflict(symbol) do update "
+                "set last_bar=excluded.last_bar,last_state=excluded.last_state,"
+                "position_json=excluded.position_json",
+                (sym, last_bar[sym], last_state[sym],
+                 json.dumps(pos[sym]) if sym in pos else None))
 
 
 def fmt(ms):
@@ -81,20 +102,22 @@ def open_row(con, sym, action, entry, sl, ts_ms, note):
         "values(?,?,?,?,?,?,?,?,?,?,?,null,0)",
         (sym, action, entry, sl, None, "OPEN", None, note, SYS_VERSION,
          fmt(ts_ms), fmt(ts_ms)))
-    con.commit()
     return cur.lastrowid
 
 
 def settle(con, sym, p, status, pct, ts_ms, note=""):
     global equity
-    sl_pct = p["risk0"] if p["risk0"] > 0.01 else abs(p["entry"] - p["sl"]) / p["entry"] * 100
-    base = min(equity * RISK_PCT / sl_pct, equity * 5.0) if sl_pct > 0.01 else equity * 5.0
+    base = p.get("notional")
+    if base is None:
+        raise RuntimeError(f"{sym}: legacy position missing entry notional; reconcile before resuming")
+    updated = con.execute("update ai_advice_track set status=?, result_pct=?, settled_at=?, "
+                          "note=coalesce(note,'') || ? where id=? and status='OPEN'",
+                          (status, round(pct, 3), fmt(ts_ms), " | exit=" + note, p["rowid"]))
+    if updated.rowcount != 1:
+        raise RuntimeError(f"{sym}: position already settled or missing")
     equity += base * pct / 100
-    con.execute("update ai_advice_track set status=?, result_pct=?, settled_at=? where id=?",
-                (status, round(pct, 3), fmt(ts_ms), p["rowid"]))
     con.execute("insert into equity_snap values(?,?,?,?)",
-                (fmt(ts_ms), "risk", round(equity, 2), round(equity, 2)))
-    con.commit()
+                (fmt(ts_ms), "risk", equity, equity))
     log(f"[settle] {fmt(ts_ms)} {sym} {p['action']} -> {status} {pct:+.3f}% eq={equity:.1f} {note}")
 
 
@@ -136,23 +159,20 @@ def enter(con, sym, action, price, a, ts_ms):
     sl_d = a * SL_ATR_MULT
     sl = price - sl_d if action == "BUY" else price + sl_d
     risk0 = abs(price - sl) / price * 100
+    if not all(math.isfinite(x) and x > 0 for x in (price, a, equity, risk0, sl)):
+        raise ValueError("invalid entry/ATR/equity")
+    notional = min(equity * RISK_PCT / risk0, equity * 5.0) if risk0 > 0.01 else equity * 5.0
     rid = open_row(con, sym, action, price, sl, ts_ms,
                    f"1h翻转->{'UP' if action=='BUY' else 'DOWN'}")
     pos[sym] = {"action": action, "entry": price, "sl": sl, "rowid": rid,
-                "entry_ms": ts_ms, "risk0": risk0}
+                "entry_ms": ts_ms, "risk0": risk0, "notional": notional}
     log(f"[entry] {fmt(ts_ms)} {sym} {action} @{price:.6g} sl={sl:.6g} risk0={risk0:.2f}%")
 
 
-def tick(con, sym, now_ms):
-    bars = rest_klines(sym)
-    closed = [b for b in bars if b[0] + 3600_000 <= now_ms]
-    if len(closed) < WARMUP:
-        return
+def process_bar(con, sym, closed):
+    """One confirmed hour, at its close time. Caller commits ledger and cursor together."""
     ts, o, h, l, c, v = closed[-1]
-    if last_bar.get(sym) == ts:
-        # 无新bar: 仍刷新beat由外部做, 这里跳过
-        return
-    last_bar[sym] = ts
+    close_ms = ts + 3600_000
     closes = pd.Series([b[4] for b in closed])
     st = classify(closes)
 
@@ -160,14 +180,16 @@ def tick(con, sym, now_ms):
     if sym in pos:
         p = pos[sym]
         buy = p["action"] == "BUY"
-        bars_held = int((ts - p["entry_ms"]) / 3600_000)
+        bars_held = int((close_ms - p["entry_ms"]) / 3600_000)
         if (buy and l <= p["sl"]) or (not buy and h >= p["sl"]):
-            pct = (p["sl"] - p["entry"]) / p["entry"] * (100 if buy else -100)
-            settle(con, sym, p, "LOSS", pct, ts, "SL")
+            # A gap through a stop cannot execute at a price better than the open.
+            exit_price = min(o, p["sl"]) if buy else max(o, p["sl"])
+            pct = (exit_price - p["entry"]) / p["entry"] * (100 if buy else -100)
+            settle(con, sym, p, "LOSS", pct, close_ms, "SL")
             pos.pop(sym)
         elif bars_held >= TTL_BARS:
             pct = (c - p["entry"]) / p["entry"] * (100 if buy else -100)
-            settle(con, sym, p, "WIN" if pct >= 0 else "LOSS", pct, ts, "TTL24h")
+            settle(con, sym, p, "WIN" if pct >= 0 else "LOSS", pct, close_ms, "TTL24h")
             pos.pop(sym)
 
     # ---- 翻转触发 ----
@@ -183,11 +205,53 @@ def tick(con, sym, now_ms):
             p = pos.pop(sym)
             buy = p["action"] == "BUY"
             pct = (c - p["entry"]) / p["entry"] * (100 if buy else -100)
-            settle(con, sym, p, "WIN" if pct >= 0 else "LOSS", pct, ts, "反向翻转平仓")
+            settle(con, sym, p, "WIN" if pct >= 0 else "LOSS", pct, close_ms, "反向翻转平仓")
         if sym not in pos:
             a = atr14(closed[-30:])
-            enter(con, sym, action, c, a, ts)
+            enter(con, sym, action, c, a, close_ms)
     last_state[sym] = st
+
+
+def tick(con, sym, now_ms):
+    """Replay every unseen closed bar, reject holes, never trade a future REST candle."""
+    global equity
+    unique = {}
+    for b in rest_klines(sym):
+        ts = b[0]
+        if ts + 3600_000 > now_ms:
+            continue
+        if ts in unique and unique[ts] != b:
+            raise ValueError(f"{sym}: conflicting duplicate {ts}")
+        if not all(math.isfinite(x) for x in b) or min(b[1:5]) <= 0 or b[2] < max(b[1], b[3], b[4]) or b[3] > min(b[1], b[2], b[4]):
+            raise ValueError(f"{sym}: invalid OHLC {ts}")
+        unique[ts] = b
+    closed = [unique[ts] for ts in sorted(unique)]
+    if len(closed) < WARMUP:
+        return
+    cursor = last_bar.get(sym)
+    if cursor is None:
+        if sym in pos:
+            raise RuntimeError(f"{sym}: legacy OPEN has no processing cursor; offline reconciliation required")
+        # Fresh installation warms history without fabricating historical entries.
+        last_state[sym] = classify(pd.Series([b[4] for b in closed[:-1]]))
+        cursor = closed[-2][0]
+    unseen = [i for i, b in enumerate(closed) if b[0] > cursor]
+    if unseen and (closed[unseen[0]][0] != cursor + 3600_000 or any(
+            closed[i][0] - closed[i-1][0] != 3600_000 for i in range(1, len(closed)))):
+        raise RuntimeError(f"{sym}: incomplete hour history; keep cursor {cursor}")
+    for i in unseen:
+        before = (equity, copy.deepcopy(pos), dict(last_bar), dict(last_state))
+        try:
+            with con:
+                process_bar(con, sym, closed[:i+1])
+                last_bar[sym] = closed[i][0]
+                save_runtime(con, sym)
+        except Exception:
+            equity, saved_pos, saved_bar, saved_state = before
+            pos.clear(); pos.update(saved_pos)
+            last_bar.clear(); last_bar.update(saved_bar)
+            last_state.clear(); last_state.update(saved_state)
+            raise
 
 
 def main():

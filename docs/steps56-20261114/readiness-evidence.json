@@ -1,0 +1,15 @@
+{
+  "local_tests_passed": true,
+  "artifact_verified": true,
+  "exact_account_mapping_verified": false,
+  "java_account_flat_verified": true,
+  "shadow_account_flat_verified": false,
+  "durable_exit_reconciliation_verified": false,
+  "full_trade_cost_ledger_verified": false,
+  "shared_decision_snapshot_verified": false,
+  "exchange_protection_handover_verified": false,
+  "runtime_observed_ms": 1794592509204,
+  "candidate_sha256": "7b450347dd31051f68f06839e92470e357128e95b0c3de1da7eb971cfa6efe02",
+  "reviewed_candidate_sha256": null,
+  "notes": "No human review or deployment performed; missing proofs are not inferred from unit tests."
+}

@@ -1,0 +1,20 @@
+--- a/tools/paper_v5mech.py
++++ b/tools/paper_v5mech.py
+@@ -64,4 +64,8 @@
+ def demo_call(method, path, q="", body=None):
++    # Local audit lock: no signed reads or writes until shadow ownership,
++    # idempotency and exchange protection have been independently verified.
++    raise RuntimeError("audit safety lock: deployed shadow execution disabled")
++
+     ts = str(int(time.time() * 1000))
+     recv = "20000"
+     payload = q if body is None else json.dumps(body)
+@@ -148,4 +152,8 @@
+ def demo_open(sym, action, price, notional):
++    # Block before the instrument lookup as well; do not touch the network.
++    log("[demo-blocked] audit safety lock: deployed shadow execution disabled")
++    return None
++
+     """市价开仓; 成功返回下单数量, 失败返回 None(账本不受影响)."""
+     if not DEMO:
+         return None

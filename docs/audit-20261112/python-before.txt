@@ -1,0 +1,79 @@
+test_buy_limit_above_bar_is_fillable (test_paper_engine.PaperTests.test_buy_limit_above_bar_is_fillable) ... FAIL
+test_buy_limit_below_entire_bar_does_not_fill (test_paper_engine.PaperTests.test_buy_limit_below_entire_bar_does_not_fill) ... FAIL
+test_short_loss_does_not_move_break_even (test_paper_engine.PaperTests.test_short_loss_does_not_move_break_even) ... FAIL
+test_short_profit_moves_break_even (test_paper_engine.PaperTests.test_short_profit_moves_break_even) ... FAIL
+test_v5_duplicate_response_does_not_double_settle (test_paper_engine.PaperTests.test_v5_duplicate_response_does_not_double_settle) ... ok
+test_v5_notional_is_fixed_at_entry (test_paper_engine.PaperTests.test_v5_notional_is_fixed_at_entry) ... FAIL
+test_v5_outage_replays_stop_in_intermediate_bar (test_paper_engine.PaperTests.test_v5_outage_replays_stop_in_intermediate_bar) ... FAIL
+test_v5_restart_preserves_cursor_and_regime (test_paper_engine.PaperTests.test_v5_restart_preserves_cursor_and_regime) ... FAIL
+test_v5_unfinished_bar_cannot_trigger_stop (test_paper_engine.PaperTests.test_v5_unfinished_bar_cannot_trigger_stop) ... ok
+test_warmup_excludes_unfinished_rest_bar (test_paper_engine.PaperTests.test_warmup_excludes_unfinished_rest_bar) ... FAIL
+
+======================================================================
+FAIL: test_buy_limit_above_bar_is_fillable (test_paper_engine.PaperTests.test_buy_limit_above_bar_is_fillable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_engine.py", line 128, in test_buy_limit_above_bar_is_fillable
+    self.assertIn(self.sym, m.pos)
+AssertionError: 'ACEUSDT' not found in {}
+
+======================================================================
+FAIL: test_buy_limit_below_entire_bar_does_not_fill (test_paper_engine.PaperTests.test_buy_limit_below_entire_bar_does_not_fill)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_engine.py", line 136, in test_buy_limit_below_entire_bar_does_not_fill
+    self.assertNotIn(self.sym, m.pos)
+AssertionError: 'ACEUSDT' unexpectedly found in {'ACEUSDT': {'action': 'BUY', 'entry': 100.03, 'sl': 90.0, 'tp': 110.0, 'plan_ms': 1700027940000, 'risk0': 10.0, 'breakeven': False, 'fill_ms': 1700028000000, 'rowid': 1}}
+
+======================================================================
+FAIL: test_short_loss_does_not_move_break_even (test_paper_engine.PaperTests.test_short_loss_does_not_move_break_even)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_engine.py", line 121, in test_short_loss_does_not_move_break_even
+    self.assertFalse(m.pos[self.sym]["breakeven"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_short_profit_moves_break_even (test_paper_engine.PaperTests.test_short_profit_moves_break_even)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_engine.py", line 113, in test_short_profit_moves_break_even
+    self.assertTrue(m.pos[self.sym]["breakeven"])
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_v5_notional_is_fixed_at_entry (test_paper_engine.PaperTests.test_v5_notional_is_fixed_at_entry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_engine.py", line 70, in test_v5_notional_is_fixed_at_entry
+    self.assertAlmostEqual(m.equity, 102., places=8)
+AssertionError: 101.0 != 102.0 within 8 places (1.0 difference)
+
+======================================================================
+FAIL: test_v5_outage_replays_stop_in_intermediate_bar (test_paper_engine.PaperTests.test_v5_outage_replays_stop_in_intermediate_bar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_engine.py", line 61, in test_v5_outage_replays_stop_in_intermediate_bar
+    self.assertNotIn(self.sym, m.pos, "intermediate stopped position must not survive outage")
+AssertionError: 'ACEUSDT' unexpectedly found in {'ACEUSDT': {'action': 'BUY', 'entry': 100.0, 'sl': 99.0, 'rowid': 1, 'entry_ms': 1700791200000, 'risk0': 1.0}} : intermediate stopped position must not survive outage
+
+======================================================================
+FAIL: test_v5_restart_preserves_cursor_and_regime (test_paper_engine.PaperTests.test_v5_restart_preserves_cursor_and_regime)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_engine.py", line 80, in test_v5_restart_preserves_cursor_and_regime
+    self.assertEqual(m.last_bar.get(self.sym), cursor)
+AssertionError: None != 1700794800000
+
+======================================================================
+FAIL: test_warmup_excludes_unfinished_rest_bar (test_paper_engine.PaperTests.test_warmup_excludes_unfinished_rest_bar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_paper_engine.py", line 144, in test_warmup_excludes_unfinished_rest_bar
+    self.assertEqual(m.bars[self.sym][-1][0], self.start+499*60000)
+AssertionError: 1700032800000 != 1700032740000
+
+----------------------------------------------------------------------
+Ran 10 tests in 1.121s
+
+FAILED (failures=8)

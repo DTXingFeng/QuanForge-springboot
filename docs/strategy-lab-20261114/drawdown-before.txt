@@ -1,0 +1,18 @@
+test_appending_future_crash_does_not_change_past_signals (test_strategy_lab.StrategyLabTests.test_appending_future_crash_does_not_change_past_signals) ... ok
+test_cash_control_and_costs_cannot_create_profit (test_strategy_lab.StrategyLabTests.test_cash_control_and_costs_cannot_create_profit) ... ok
+test_drawdown_halt_is_from_equity_peak_even_while_total_profit_is_positive (test_strategy_lab.StrategyLabTests.test_drawdown_halt_is_from_equity_peak_even_while_total_profit_is_positive) ... FAIL
+test_funding_payment_and_receipt_have_opposite_signs (test_strategy_lab.StrategyLabTests.test_funding_payment_and_receipt_have_opposite_signs) ... ok
+test_signal_uses_next_open_and_gap_stop_uses_worse_price (test_strategy_lab.StrategyLabTests.test_signal_uses_next_open_and_gap_stop_uses_worse_price) ... ok
+
+======================================================================
+FAIL: test_drawdown_halt_is_from_equity_peak_even_while_total_profit_is_positive (test_strategy_lab.StrategyLabTests.test_drawdown_halt_is_from_equity_peak_even_while_total_profit_is_positive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\project\QuanForge-springboot\tools\tests\test_strategy_lab.py", line 15, in test_drawdown_halt_is_from_equity_peak_even_while_total_profit_is_positive
+    self.assertTrue(result['hard_drawdown_halt'])
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.015s
+
+FAILED (failures=1)

@@ -1,0 +1,34 @@
+{
+  "rows": 1176,
+  "type_counts": {
+    "TRADE": 1082,
+    "SETTLEMENT": 90,
+    "TRANSFER_IN": 2,
+    "TRANSFER_OUT": 2
+  },
+  "row_equation_violations": 0,
+  "ambiguous_timestamp_groups": [],
+  "balance_gaps": [],
+  "opening_cash_inferred_from_first_transaction": "6.5599076",
+  "final_recorded_cash": "170.4665741",
+  "gross_cashflow_all_types": "320.703583",
+  "fees": "155.17534257",
+  "funding_received_signed": "-1.62157393",
+  "observed_change": "163.9066665",
+  "transfers_net": "338.2",
+  "change_excluding_transfers": "-174.2933335",
+  "chain_residual": "0",
+  "recorded_balance_chain_reconciled": true,
+  "full_account_activity_coverage": false,
+  "account_rate_of_return": null,
+  "note": "Captured linear USDT logs plus bounded gap queries; chain reconciliation is not a complete NAV/return audit.",
+  "exact_execution_linked_cashflows": {
+    "rows": 1139,
+    "captured_executions": 1139,
+    "change": "-174.7484871",
+    "gross_cashflow": "-18.308442",
+    "fees": "154.80584569",
+    "funding_received_signed": "-1.63419941",
+    "note": "Exact tradeId=execId scope; do not mix this cash ledger delta with closedPnl or full-window totals."
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "scope": "EXPLORATORY_DIAGNOSIS_OF_SIMULATED_CLOSED_TRADES",
+  "dataset_sha256": "ef031cc96ba3d64c3ec3b072919cfe2a6180e340683ad099bda6be068b9889ff",
+  "summaries": [
+    {
+      "arm": "ema_cross",
+      "closed": 28,
+      "wins": 1,
+      "losses": 27,
+      "exit_reasons": {
+        "SL_INTRABAR_TIME_UNKNOWN": 23,
+        "TTL": 2,
+        "REVERSE": 3
+      },
+      "price_pnl_after_slippage": "-14.72645471988829098948036511",
+      "fees": "5.866309537524498221581322718",
+      "funding_cost": "-0.02550656674325689968823590693",
+      "net_closed": "-20.56725769066953231137345191",
+      "losses_with_fully_observed_pre_exit_bars": 20,
+      "losses_with_observed_mfe_at_least_half_r": 14,
+      "losses_with_observed_mfe_at_least_one_r": 8,
+      "stopped_in_entry_bar": 7,
+      "fast_same_direction_reentries": 0,
+      "median_initial_stop_pct": 0.27634192716187617,
+      "median_holding_minutes": 75.0,
+      "side_net": {
+        "BUY": "-13.10537726993800474250410791",
+        "SELL": "-7.461880420731527568869344008"
+      },
+      "trade_source_sha256": "3de77b8e4371af0c3dad1bab5c92ddef345ac75d7f3491614314564fed4c4d25"
+    },
+    {
+      "arm": "breakout",
+      "closed": 32,
+      "wins": 1,
+      "losses": 31,
+      "exit_reasons": {
+        "SL_INTRABAR_TIME_UNKNOWN": 31,
+        "TTL": 1
+      },
+      "price_pnl_after_slippage": "-13.56841896293603154083197765",
+      "fees": "6.650540601944519436341867404",
+      "funding_cost": "0.06199249097301058703480234624",
+      "net_closed": "-20.28095205585356156420864743",
+      "losses_with_fully_observed_pre_exit_bars": 19,
+      "losses_with_observed_mfe_at_least_half_r": 14,
+      "losses_with_observed_mfe_at_least_one_r": 11,
+      "stopped_in_entry_bar": 12,
+      "fast_same_direction_reentries": 2,
+      "median_initial_stop_pct": 0.2125801526784812,
+      "median_holding_minutes": 60.0,
+      "side_net": {
+        "BUY": "-8.013800243994500636108438477",
+        "SELL": "-12.26715181185906092810020892"
+      },
+      "trade_source_sha256": "2b79ce1896b646b3a99ccaf228766b6b5ef190cf4a8e2a3585c06b7e021ae37f"
+    },
+    {
+      "arm": "mean_reversion",
+      "closed": 50,
+      "wins": 11,
+      "losses": 39,
+      "exit_reasons": {
+        "SL_INTRABAR_TIME_UNKNOWN": 39,
+        "REVERSE": 11
+      },
+      "price_pnl_after_slippage": "-8.897068534278604999929509397",
+      "fees": "10.60544077027749266102310963",
+      "funding_cost": "0.0041820157923354002302407401",
+      "net_closed": "-19.50669132034843306118285976",
+      "losses_with_fully_observed_pre_exit_bars": 27,
+      "losses_with_observed_mfe_at_least_half_r": 14,
+      "losses_with_observed_mfe_at_least_one_r": 9,
+      "stopped_in_entry_bar": 12,
+      "fast_same_direction_reentries": 29,
+      "median_initial_stop_pct": 0.2600827125290719,
+      "median_holding_minutes": 45.0,
+      "side_net": {
+        "BUY": "-11.1146627758277439629624572",
+        "SELL": "-8.392028544520689098220402555"
+      },
+      "trade_source_sha256": "0c65a7bf0a403eee13eb38294f5005e94625f2dd8c9c1615c4b501415a60793a"
+    }
+  ],
+  "notes": [
+    "MFE excludes the unknown-order stop bar; missing coverage stays unknown",
+    "Prior floating profit does not prove an earlier exit would improve net performance",
+    "Frequent reentry does not by itself prove chasing or a bug",
+    "No causal loss percentages or profitable strategy certification"
+  ]
+}

@@ -1,0 +1,21 @@
+test_crypto_edge_research (unittest.loader._FailedTest.test_crypto_edge_research) ... ERROR
+
+======================================================================
+ERROR: test_crypto_edge_research (unittest.loader._FailedTest.test_crypto_edge_research)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_crypto_edge_research
+Traceback (most recent call last):
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 407, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\xingfeng\AppData\Local\Programs\Python\Python311\Lib\unittest\loader.py", line 350, in _get_module_from_name
+    __import__(name)
+  File "E:\project\QuanForge-springboot\tools\tests\test_crypto_edge_research.py", line 5, in <module>
+    from crypto_edge_research import carry, daily_signals, DAY
+ModuleNotFoundError: No module named 'crypto_edge_research'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

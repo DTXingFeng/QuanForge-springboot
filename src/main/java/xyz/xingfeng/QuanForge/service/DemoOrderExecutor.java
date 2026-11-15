@@ -18,8 +18,8 @@ import java.util.Map;
  *   <li>入场用<b>限价单</b>挂在建议入场价（保真"回调入场"语义），TP/SL 随单附带，
  *       成交后由交易所管理——结算判定不依赖本地 K 线回放</li>
  *   <li>数量按 保证金占比 × 杠杆（取品种上限截断）计算，对齐 qtyStep/tickSize</li>
- *   <li>实际盈亏从 /v5/position/closed-pnl 读取（含滑点；模拟盘零手续费），
- *       这是"绝对准确"的记账来源</li>
+ *   <li>平仓盈亏从 /v5/position/closed-pnl 读取；必须另行核对手续费、资金费与订单归属，
+ *       当前时间窗聚合不等同逐单完整账本</li>
  * </ul>
  * 研判逻辑（LLM × 双域模型共振）不在此层，本层只做忠实的执行与回报。
  */
@@ -58,6 +58,22 @@ public class DemoOrderExecutor {
 	 */
 	public Placement placeEntry(String symbol, String action, double entry, double tp, double sl,
 			double marginPct, int habitLeverage) {
+		return placeEntry(symbol, action, entry, tp, sl, marginPct, habitLeverage,
+				"qf-" + java.util.UUID.randomUUID().toString().replace("-", ""));
+	}
+
+	public Placement placeEntry(String symbol, String action, double entry, double tp, double sl,
+			double marginPct, int habitLeverage, String orderLinkId) {
+		if (orderLinkId == null || !orderLinkId.matches("[A-Za-z0-9_-]{1,36}")) {
+			throw new IllegalArgumentException("必须提供已持久化的订单编号");
+		}
+		if (!("BUY".equals(action) || "SELL".equals(action))
+				|| !Double.isFinite(entry) || !Double.isFinite(tp) || !Double.isFinite(sl)
+				|| entry <= 0 || tp <= 0 || sl <= 0 || !Double.isFinite(marginPct)
+				|| marginPct <= 0 || marginPct > 100 || habitLeverage < 1
+				|| !("BUY".equals(action) ? sl < entry && entry < tp : tp < entry && entry < sl)) {
+			throw new IllegalArgumentException("非法入场方向、价位或仓位预算");
+		}
 		Instrument inst = instrument(symbol);
 		double equity = equityUsd();
 		int lev = (int) Math.max(1, Math.min(habitLeverage, inst.maxLeverage()));
@@ -65,7 +81,7 @@ public class DemoOrderExecutor {
 
 		BigDecimal qty = floorToStep(notional / entry, inst.qtyStep());
 		if (qty.compareTo(BigDecimal.valueOf(inst.minQty())) < 0) {
-			qty = BigDecimal.valueOf(inst.minQty());
+			throw new IllegalStateException("预算不足最小下单量，禁止向上扩大仓位");
 		}
 		if (qty.doubleValue() * entry < inst.minNotional()) {
 			throw new IllegalStateException(String.format(
@@ -94,9 +110,16 @@ public class DemoOrderExecutor {
 			body.put("price", plain(roundToTick(entry, inst.tickSize())));
 			body.put("timeInForce", "GTC");
 		}
-		body.put("orderLinkId", "qf-" + System.currentTimeMillis());
+		// Never submit an unprotected entry. Exchange rejection leaves no naked fallback order.
+		body.put("takeProfit", plain(roundToTick(tp, inst.tickSize())));
+		body.put("stopLoss", plain(roundToTick(sl, inst.tickSize())));
+		body.put("tpslMode", "Full");
+		body.put("tpTriggerBy", "LastPrice");
+		body.put("slTriggerBy", "LastPrice");
+		body.put("positionIdx", 0);
+		body.put("orderLinkId", orderLinkId);
 
-		JSONObject resp = new JSONObject(bybit.post(BybitService.DEFAULT_CREDENTIAL_NAME,
+		JSONObject resp = new JSONObject(bybit.postDemo(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/order/create", body.toString()));
 		requireOk(resp, "下单");
 		String orderId = resp.getJSONObject("result").optString("orderId", "");
@@ -133,7 +156,7 @@ public class DemoOrderExecutor {
 		body.put("tpTriggerBy", "LastPrice");
 		body.put("slTriggerBy", "LastPrice");
 		body.put("positionIdx", 0);
-		JSONObject resp = new JSONObject(bybit.post(BybitService.DEFAULT_CREDENTIAL_NAME,
+		JSONObject resp = new JSONObject(bybit.postDemo(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/position/trading-stop", body.toString()));
 		requireOk(resp, "设置TP/SL");
 		log.info("模拟盘TP/SL已设: {} {} tp={} sl={}", symbol, action,
@@ -154,7 +177,7 @@ public class DemoOrderExecutor {
 		body.put("orderType", "Market");
 		body.put("qty", plain(q));
 		body.put("reduceOnly", true);
-		JSONObject resp = new JSONObject(bybit.post(BybitService.DEFAULT_CREDENTIAL_NAME,
+		JSONObject resp = new JSONObject(bybit.postDemo(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/order/create", body.toString()));
 		requireOk(resp, "市价平仓");
 		log.info("模拟盘市价平仓: {} qty={}", symbol, plain(q));
@@ -166,7 +189,7 @@ public class DemoOrderExecutor {
 				.put("category", "linear")
 				.put("symbol", symbol)
 				.put("orderId", orderId);
-		JSONObject resp = new JSONObject(bybit.post(BybitService.DEFAULT_CREDENTIAL_NAME,
+		JSONObject resp = new JSONObject(bybit.postDemo(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/order/cancel", body.toString()));
 		if (resp.optInt("retCode", -1) == 0) {
 			return true;
@@ -180,7 +203,7 @@ public class DemoOrderExecutor {
 
 	/** 账户总权益（USDT） */
 	public double equityUsd() {
-		JSONObject resp = new JSONObject(bybit.getUnifiedWalletBalance());
+		JSONObject resp = new JSONObject(bybit.getDemoRaw(BybitService.DEFAULT_CREDENTIAL_NAME, "/v5/account/wallet-balance", Map.of("accountType", "UNIFIED")));
 		requireOk(resp, "查余额");
 		JSONArray list = resp.getJSONObject("result").getJSONArray("list");
 		if (list.isEmpty()) {
@@ -197,22 +220,37 @@ public class DemoOrderExecutor {
 	 * realtime（工作单）两段查询组合。
 	 */
 	public JSONObject orderDetail(String symbol, String orderId) {
+		return findOrder(symbol, "orderId", orderId);
+	}
+
+	/** Absence is not proof of rejection; callers must retain the unresolved intent. */
+	public JSONObject orderDetailByLink(String symbol, String orderLinkId) {
+		return findOrder(symbol, "orderLinkId", orderLinkId);
+	}
+
+	private JSONObject findOrder(String symbol, String identityField, String identity) {
+		if (identity == null || identity.isBlank()) throw new IllegalArgumentException("缺少订单身份");
 		for (String endpoint : new String[] { "/v5/order/history", "/v5/order/realtime" }) {
 			Map<String, String> params = new LinkedHashMap<>();
 			params.put("category", "linear");
 			params.put("symbol", symbol);
-			params.put("orderId", orderId);
-			JSONObject resp = new JSONObject(bybit.getRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
+			params.put(identityField, identity);
+			JSONObject resp = new JSONObject(bybit.getDemoRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
 					endpoint, params));
 			if (resp.optInt("retCode", -1) != 0) {
 				throw new IllegalStateException("查委托失败: " + resp.optString("retMsg"));
 			}
 			JSONArray list = resp.getJSONObject("result").optJSONArray("list");
 			if (list != null && !list.isEmpty()) {
-				return list.getJSONObject(0);
+				for (int i = 0; i < list.length(); i++) {
+					JSONObject order = list.getJSONObject(i);
+					if (identity.equals(order.optString(identityField)) && symbol.equals(order.optString("symbol"))) {
+						return order;
+					}
+				}
 			}
 		}
-		throw new IllegalStateException("委托 " + orderId + " 在 history/realtime 均未找到");
+		throw new IllegalStateException("委托在 history/realtime 均未确认，保留未知意图");
 	}
 
 	/** 当前持仓：size/side/avgPrice；无仓位返回 null */
@@ -220,7 +258,7 @@ public class DemoOrderExecutor {
 		Map<String, String> params = new LinkedHashMap<>();
 		params.put("category", "linear");
 		params.put("symbol", symbol);
-		JSONObject resp = new JSONObject(bybit.getRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
+		JSONObject resp = new JSONObject(bybit.getDemoRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/position/list", params));
 		requireOk(resp, "查持仓");
 		JSONArray list = resp.getJSONObject("result").optJSONArray("list");
@@ -236,7 +274,7 @@ public class DemoOrderExecutor {
 		Map<String, String> params = new LinkedHashMap<>();
 		params.put("category", "linear");
 		params.put("settleCoin", "USDT");
-		JSONObject resp = new JSONObject(bybit.getRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
+		JSONObject resp = new JSONObject(bybit.getDemoRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/position/list", params));
 		requireOk(resp, "查全部持仓");
 		JSONArray list = resp.getJSONObject("result").optJSONArray("list");
@@ -253,7 +291,7 @@ public class DemoOrderExecutor {
 		body.put("tpslMode", "Full");
 		body.put("slTriggerBy", "LastPrice");
 		body.put("positionIdx", 0);
-		JSONObject resp = new JSONObject(bybit.post(BybitService.DEFAULT_CREDENTIAL_NAME,
+		JSONObject resp = new JSONObject(bybit.postDemo(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/position/trading-stop", body.toString()));
 		requireOk(resp, "设保护性止损");
 		log.info("保护性止损已设: {} sl={}", symbol, body.getString("stopLoss"));
@@ -270,7 +308,7 @@ public class DemoOrderExecutor {
 		params.put("symbol", symbol);
 		params.put("limit", "50");
 		params.put("startTime", String.valueOf(sinceMs - 60_000));
-		JSONObject resp = new JSONObject(bybit.getRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
+		JSONObject resp = new JSONObject(bybit.getDemoRaw(BybitService.DEFAULT_CREDENTIAL_NAME,
 				"/v5/position/closed-pnl", params));
 		requireOk(resp, "查平仓盈亏");
 		JSONArray list = resp.getJSONObject("result").optJSONArray("list");
@@ -321,7 +359,7 @@ public class DemoOrderExecutor {
 					.put("symbol", symbol)
 					.put("buyLeverage", String.valueOf(lev))
 					.put("sellLeverage", String.valueOf(lev));
-			bybit.post(BybitService.DEFAULT_CREDENTIAL_NAME, "/v5/position/set-leverage",
+			bybit.postDemo(BybitService.DEFAULT_CREDENTIAL_NAME, "/v5/position/set-leverage",
 					body.toString());
 		} catch (Exception e) {
 			log.debug("设置杠杆 {} {}x: {}", symbol, lev, e.getMessage());

@@ -7,6 +7,7 @@ import { Label } from "../components/ui/label"
 import { Badge } from "../components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table"
 import { useTradeStore } from "../store/tradeStore"
+import { CredentialHealthStatus } from "../components/CredentialHealthStatus"
 
 interface CredentialSummary {
   id: number
@@ -131,13 +132,14 @@ function CredentialsPage() {
     setName("")
     setApiKey("")
     setApiSecret("")
+    window.dispatchEvent(new Event("qfs-credentials-changed"))
     load()
   }
 
   const handleDelete = async (id: number, credentialName: string) => {
     if (!window.confirm(`确认删除凭证「${credentialName}」？此操作不可恢复。`)) return
     const ok = await removeCredential(id)
-    if (ok) load()
+    if (ok) { load(); window.dispatchEvent(new Event("qfs-credentials-changed")) }
   }
 
   return (
@@ -189,7 +191,10 @@ function CredentialsPage() {
                           {c.name === credentialName && <Badge variant="outline" className="text-[10px] text-emerald-400 border-emerald-500/30">使用中</Badge>}
                         </span>
                       </TableCell>
-                      <TableCell className="font-mono text-xs text-zinc-400">{c.maskedApiKey}</TableCell>
+                      <TableCell className="min-w-[220px] max-w-[300px] whitespace-normal text-xs text-zinc-400">
+                        <div className="mb-2 font-mono">{c.maskedApiKey}</div>
+                        <CredentialHealthStatus id={c.id} />
+                      </TableCell>
                       <TableCell className="text-xs text-zinc-500">{formatTime(c.updatedAt)}</TableCell>
                       <TableCell className="text-right">
                         <Button

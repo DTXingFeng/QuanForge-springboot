@@ -20,6 +20,9 @@ import java.util.TreeMap;
  */
 @Component
 public class BybitGetClient extends BybitBaseClient {
+	public record SignedResponse(int httpStatus,String body) {}
+	@org.springframework.beans.factory.annotation.Autowired
+	private xyz.xingfeng.QuanForge.service.CredentialHealthRegistry credentialHealth;
 
 	public BybitGetClient(ProxyConfigService proxyConfigService, BybitModeHolder modeHolder) {
 		super(proxyConfigService, modeHolder);
@@ -36,6 +39,33 @@ public class BybitGetClient extends BybitBaseClient {
 	 */
 	public String get(String apiKey, String apiSecret, String endpoint, Map<String, String> params)
 			throws Exception {
+		return getFrom(baseUrl(), apiKey, apiSecret, endpoint, params);
+	}
+
+	/** Read demo state from the same account environment as automatic demo orders. */
+	public String getDemo(String apiKey, String apiSecret, String endpoint, Map<String, String> params)
+			throws Exception {
+		return getFrom(BybitMode.DEMO.getBaseUrl(), apiKey, apiSecret, endpoint, params);
+	}
+
+	public String getInMode(BybitMode mode, String key, String secret, String endpoint, Map<String,String> params) throws Exception {
+		return getFrom(mode.getBaseUrl(),key,secret,endpoint,params);
+	}
+
+	public SignedResponse probeCredentials(BybitMode mode,String key,String secret) throws Exception {
+		return requestFrom(mode.getBaseUrl(),key,secret,"/v5/account/wallet-balance",Map.of("accountType","UNIFIED"));
+	}
+	public SignedResponse probeKeyInformation(BybitMode mode,String key,String secret) throws Exception {
+		return requestFrom(mode.getBaseUrl(),key,secret,"/v5/user/query-api",Map.of());
+	}
+
+	private String getFrom(String requestBase, String apiKey, String apiSecret,
+			String endpoint, Map<String, String> params) throws Exception {
+		return requestFrom(requestBase,apiKey,apiSecret,endpoint,params).body();
+	}
+
+	private SignedResponse requestFrom(String requestBase, String apiKey, String apiSecret,
+			String endpoint, Map<String, String> params) throws Exception {
 		// 1. 参数按 key 字典序排序后拼接为签名原文
 		TreeMap<String, String> sorted = new TreeMap<>(params == null ? Collections.emptyMap() : params);
 		String paramStr = joinSorted(sorted);
@@ -50,7 +80,7 @@ public class BybitGetClient extends BybitBaseClient {
 		String sign = hmacSha256Hex(apiSecret, signSource);
 
 		// 5. 拼接完整 URL（签名与 URL 均使用未编码原文，符合 Bybit 要求）
-		String url = baseUrl() + endpoint + (paramStr.isEmpty() ? "" : "?" + paramStr);
+		String url = requestBase + endpoint + (paramStr.isEmpty() ? "" : "?" + paramStr);
 
 		// 6. 构建带签名的请求头并执行
 		Request request = new Request.Builder()
@@ -64,7 +94,14 @@ public class BybitGetClient extends BybitBaseClient {
 				.build();
 
 		try (Response response = obtainClient().newCall(request).execute()) {
-			return response.body() != null ? response.body().string() : "";
+			String raw=response.body() != null ? response.body().string() : "";
+			if(credentialHealth!=null) credentialHealth.observe(apiKey,apiSecret,
+					requestBase.equals(BybitMode.DEMO.getBaseUrl())?BybitMode.DEMO:BybitMode.REAL,response.code(),raw);
+			return new SignedResponse(response.code(),raw);
+		} catch(java.io.IOException e) {
+			if(credentialHealth!=null) credentialHealth.networkFailure(apiKey,apiSecret,
+					requestBase.equals(BybitMode.DEMO.getBaseUrl())?BybitMode.DEMO:BybitMode.REAL);
+			throw e;
 		}
 	}
 

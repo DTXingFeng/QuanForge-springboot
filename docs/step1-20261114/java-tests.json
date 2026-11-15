@@ -1,0 +1,64 @@
+{
+  "suites": [
+    {
+      "suite": "xyz.xingfeng.QuanForge.ApiControllerTests",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "xyz.xingfeng.QuanForge.QuanForgeSpringbootApplicationTests",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "xyz.xingfeng.QuanForge.service.AutopsyEvidenceTests",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "xyz.xingfeng.QuanForge.service.DemoEnvironmentTests",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "xyz.xingfeng.QuanForge.service.DurableEntryTests",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "xyz.xingfeng.QuanForge.service.ExecutionSafetyTests",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "xyz.xingfeng.QuanForge.service.MarketDataAuditTests",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "suite": "xyz.xingfeng.QuanForge.service.PaperSettlementAuditTests",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "tests": 53,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0
+}

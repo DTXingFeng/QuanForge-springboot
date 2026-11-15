@@ -1,0 +1,22 @@
+{
+  "name": "qfs-forward-ai-veto-v1",
+  "model": "gemini-3.8-flash-high",
+  "model_identity_verified": false,
+  "prompt_hash": "75a65f7605b3ced6c7e46bd978b634f419037669e056c5c52007962cb4b0aab1",
+  "baseline_config_hash": "aee7bad0c215b8e277f393f66271f1b0aec31ba0bb7b257ec29d807431497f91",
+  "symbol": "BTCUSDT",
+  "interval_ms": 900000,
+  "decision_ttl_ms": 90000,
+  "window_days": 56,
+  "min_opportunities": 100,
+  "min_week_blocks": 8,
+  "bootstrap_samples": 5000,
+  "seed": 20261114,
+  "max_paid_calls": 0,
+  "api_cost_budget_usdt": "0",
+  "ai_role": "TAKE_OR_SKIP_EXISTING_BASELINE_ENTRY_ONLY",
+  "primary": "paired weekly cash PnL delta including all costs and API fees",
+  "control": "ALWAYS_TAKE_SAME_COST_AND_CLOCK",
+  "price_data": "registered forward frames only",
+  "late_or_invalid": "TAKE_BASELINE_PRESERVE_FAILURE_AND_COST"
+}

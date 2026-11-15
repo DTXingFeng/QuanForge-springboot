@@ -26,6 +26,11 @@ import java.time.Instant;
  */
 @Component
 public class BybitPostClient extends BybitBaseClient {
+	@org.springframework.beans.factory.annotation.Autowired
+	private xyz.xingfeng.QuanForge.service.CredentialHealthRegistry credentialHealth;
+	/** All signed account mutations require a separate, explicit deployment switch. */
+	@org.springframework.beans.factory.annotation.Value("${app.execution.account-writes-enabled:false}")
+	private boolean accountWritesEnabled = false;
 
 	/** JSON 请求体媒体类型 */
 	private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -45,6 +50,20 @@ public class BybitPostClient extends BybitBaseClient {
 	 */
 	public String post(String apiKey, String apiSecret, String endpoint, String rawRequestBody)
 			throws Exception {
+		return postTo(baseUrl(), apiKey, apiSecret, endpoint, rawRequestBody);
+	}
+
+	/** Automatic demo execution is pinned to the demo host, independent of UI mode changes. */
+	public String postDemo(String apiKey, String apiSecret, String endpoint, String rawRequestBody)
+			throws Exception {
+		return postTo(BybitMode.DEMO.getBaseUrl(), apiKey, apiSecret, endpoint, rawRequestBody);
+	}
+
+	private String postTo(String requestBase, String apiKey, String apiSecret,
+			String endpoint, String rawRequestBody) throws Exception {
+		if (!accountWritesEnabled) {
+			throw new IllegalStateException("账户写操作未启用：候选版本默认仅允许只读验证");
+		}
 		// 空请求体按空串处理，签名仍需包含该段（Bybit 约定）
 		String body = rawRequestBody == null ? "" : rawRequestBody;
 
@@ -58,7 +77,7 @@ public class BybitPostClient extends BybitBaseClient {
 		String sign = hmacSha256Hex(apiSecret, signSource);
 
 		// 4. 拼接完整 URL
-		String url = baseUrl() + endpoint;
+		String url = requestBase + endpoint;
 
 		// 5. 构建带签名请求头的 POST（请求体原样发送）
 		Request request = new Request.Builder()
@@ -73,7 +92,14 @@ public class BybitPostClient extends BybitBaseClient {
 				.build();
 
 		try (Response response = obtainClient().newCall(request).execute()) {
-			return response.body() != null ? response.body().string() : "";
+			String raw=response.body() != null ? response.body().string() : "";
+			if(credentialHealth!=null)credentialHealth.observe(apiKey,apiSecret,
+					requestBase.equals(BybitMode.DEMO.getBaseUrl())?BybitMode.DEMO:BybitMode.REAL,response.code(),raw);
+			return raw;
+		} catch(java.io.IOException e) {
+			if(credentialHealth!=null)credentialHealth.networkFailure(apiKey,apiSecret,
+					requestBase.equals(BybitMode.DEMO.getBaseUrl())?BybitMode.DEMO:BybitMode.REAL);
+			throw e;
 		}
 	}
 }

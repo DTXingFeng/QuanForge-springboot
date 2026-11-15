@@ -1,0 +1,174 @@
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -----------------< xyz.xingfeng:QuanForge-springboot >------------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- resources:3.5.0:resources (default-resources) @ QuanForge-springboot ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO]
+[INFO] --- compiler:3.15.0:compile (default-compile) @ QuanForge-springboot ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 66 source files with javac [debug parameters release 21] to target\classes
+[INFO]
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ QuanForge-springboot ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO]
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ QuanForge-springboot ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 7 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /E:/project/QuanForge-springboot/src/test/java/xyz/xingfeng/QuanForge/service/MarketDataAuditTests.java: E:\project\QuanForge-springboot\src\test\java\xyz\xingfeng\QuanForge\service\MarketDataAuditTests.javaʹ����δ�����򲻰�ȫ�Ĳ�����
+[INFO] /E:/project/QuanForge-springboot/src/test/java/xyz/xingfeng/QuanForge/service/MarketDataAuditTests.java: �й���ϸ��Ϣ, ��ʹ�� -Xlint:unchecked ���±��롣
+[INFO]
+[INFO] --- surefire:3.5.6:test (default-test) @ QuanForge-springboot ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running xyz.xingfeng.QuanForge.ApiControllerTests
+08:22:18.271 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [xyz.xingfeng.QuanForge.ApiControllerTests]: ApiControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+08:22:18.355 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration xyz.xingfeng.QuanForge.QuanForgeSpringbootApplication for test class xyz.xingfeng.QuanForge.ApiControllerTests
+08:22:18.419 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [xyz.xingfeng.QuanForge.ApiControllerTests]: ApiControllerTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+08:22:18.420 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration xyz.xingfeng.QuanForge.QuanForgeSpringbootApplication for test class xyz.xingfeng.QuanForge.ApiControllerTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.0)
+
+2026-11-12T08:22:18.862+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.xingfeng.QuanForge.ApiControllerTests  : Starting ApiControllerTests using Java 21.0.2 with PID 34964 (started by xingfeng in E:\project\QuanForge-springboot)
+2026-11-12T08:22:18.862+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.xingfeng.QuanForge.ApiControllerTests  : No active profile set, falling back to 1 default profile: "default"
+2026-11-12T08:22:19.396+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-12T08:22:19.449+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 44 ms. Found 7 JPA repository interfaces.
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\xingfeng\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-11-12T08:22:20.791+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 0 (http)
+2026-11-12T08:22:20.808+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-11-12T08:22:20.808+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-11-12T08:22:20.897+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2013 ms
+2026-11-12T08:22:21.151+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-12T08:22:21.244+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-11-12T08:22:21.573+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-12T08:22:21.617+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-12T08:22:21.739+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.sqlite.jdbc4.JDBC4Connection@47d4468a
+2026-11-12T08:22:21.741+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-12T08:22:21.781+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite::memory:]
+	Database driver: SQLite JDBC
+	Database dialect: SQLiteDialect
+	Database version: 3.53.2
+	Default catalog/schema: undefined/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: SERIALIZABLE [default SERIALIZABLE]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-12T08:22:22.521+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-12T08:22:22.545+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-12T08:22:22.620+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-12T08:22:23.503+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-11-12T08:22:23.817+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 6435 (http) with context path '/'
+2026-11-12T08:22:23.824+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.xingfeng.QuanForge.ApiControllerTests  : Started ApiControllerTests in 5.208 seconds (process running for 6.324)
+2026-11-12T08:22:23.931+08:00  INFO 34964 --- [QuanForge-isolated-test] [o-auto-1-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-11-12T08:22:23.931+08:00  INFO 34964 --- [QuanForge-isolated-test] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-11-12T08:22:23.932+08:00  INFO 34964 --- [QuanForge-isolated-test] [o-auto-1-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-11-12T08:22:24.180+08:00  WARN 34964 --- [QuanForge-isolated-test] [o-auto-1-exec-2] org.hibernate.orm.jdbc.error             : HHH000247: ErrorCode: 19, SQLState: null
+2026-11-12T08:22:24.180+08:00  WARN 34964 --- [QuanForge-isolated-test] [o-auto-1-exec-2] org.hibernate.orm.jdbc.error             : [SQLITE_CONSTRAINT_UNIQUE] A UNIQUE constraint failed (UNIQUE constraint failed: api_credential.name)
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.306 s -- in xyz.xingfeng.QuanForge.ApiControllerTests
+[INFO] Running xyz.xingfeng.QuanForge.QuanForgeSpringbootApplicationTests
+2026-11-12T08:22:24.422+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [xyz.xingfeng.QuanForge.QuanForgeSpringbootApplicationTests]: QuanForgeSpringbootApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-12T08:22:24.423+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration xyz.xingfeng.QuanForge.QuanForgeSpringbootApplication for test class xyz.xingfeng.QuanForge.QuanForgeSpringbootApplicationTests
+2026-11-12T08:22:24.424+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [xyz.xingfeng.QuanForge.QuanForgeSpringbootApplicationTests]: QuanForgeSpringbootApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-12T08:22:24.425+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration xyz.xingfeng.QuanForge.QuanForgeSpringbootApplication for test class xyz.xingfeng.QuanForge.QuanForgeSpringbootApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.0)
+
+2026-11-12T08:22:24.469+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .x.Q.QuanForgeSpringbootApplicationTests : Starting QuanForgeSpringbootApplicationTests using Java 21.0.2 with PID 34964 (started by xingfeng in E:\project\QuanForge-springboot)
+2026-11-12T08:22:24.469+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .x.Q.QuanForgeSpringbootApplicationTests : No active profile set, falling back to 1 default profile: "default"
+2026-11-12T08:22:24.608+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-12T08:22:24.625+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 7 JPA repository interfaces.
+2026-11-12T08:22:24.689+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-12T08:22:24.710+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-12T08:22:24.712+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-11-12T08:22:24.713+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.sqlite.jdbc4.JDBC4Connection@76fabd1
+2026-11-12T08:22:24.713+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-11-12T08:22:24.714+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:sqlite::memory:]
+	Database driver: SQLite JDBC
+	Database dialect: SQLiteDialect
+	Database version: 3.53.2
+	Default catalog/schema: undefined/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: SERIALIZABLE [default SERIALIZABLE]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-12T08:22:24.782+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-12T08:22:24.785+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-12T08:22:24.859+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] o.s.b.w.a.WelcomePageHandlerMapping      : Adding welcome page: class path resource [static/index.html]
+2026-11-12T08:22:24.933+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] .x.Q.QuanForgeSpringbootApplicationTests : Started QuanForgeSpringbootApplicationTests in 0.499 seconds (process running for 7.433)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.610 s -- in xyz.xingfeng.QuanForge.QuanForgeSpringbootApplicationTests
+[INFO] Running xyz.xingfeng.QuanForge.service.AutopsyEvidenceTests
+2026-11-12T08:22:25.221+08:00  WARN 34964 --- [QuanForge-isolated-test] [           main] x.x.Q.service.TradeAutopsyService        : ��ʬʧ�� #null TESTUSDT: java.lang.IllegalStateException: offline
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.194 s -- in xyz.xingfeng.QuanForge.service.AutopsyEvidenceTests
+[INFO] Running xyz.xingfeng.QuanForge.service.DemoEnvironmentTests
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.260 s -- in xyz.xingfeng.QuanForge.service.DemoEnvironmentTests
+[INFO] Running xyz.xingfeng.QuanForge.service.ExecutionSafetyTests
+2026-11-12T08:22:25.529+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ʵ������ #null ALTUSDT �ѳɽ��볡 100.0 qty=1.0
+2026-11-12T08:22:25.535+08:00  WARN 34964 --- [QuanForge-isolated-test] [           main] x.x.Q.service.OrphanPositionGuard        : �¶���λ�ѱ���: ALTUSDT Buy qty=1 entry=100.0 upl=0.0 -> SL=98.7030
+2026-11-12T08:22:25.539+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ʵ������ #null ALTUSDT �ѳɽ��볡 100.0 qty=1.0
+2026-11-12T08:22:25.549+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.DemoOrderExecutor  : ģ����ί���ѹ�: ALTUSDT BUY Market qty=5 entry=100.0000(last) lev=10x margin=5.0%
+2026-11-12T08:22:25.552+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ʵ������ #null ALTUSDT �ѳɽ��볡 100.0 qty=1.0
+2026-11-12T08:22:25.555+08:00  WARN 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ���ٽ���ʧ�� ALTUSDT #null: timeout
+2026-11-12T08:22:25.556+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ֽ����� #null ALTUSDT ����: LOSS -5.00%
+2026-11-12T08:22:25.556+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ʵ������ #null ALTUSDT: pnl=-5.0000 ������=95.0
+2026-11-12T08:22:25.558+08:00  WARN 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ʵ������ƽ��ʧ�� ALTUSDT #null: timeout
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in xyz.xingfeng.QuanForge.service.ExecutionSafetyTests
+[INFO] Running xyz.xingfeng.QuanForge.service.MarketDataAuditTests
+2026-11-12T08:22:25.566+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiToolRegistry     : [AI����] get_kline ��ʱ 1ms ��� 198 �ֽ�
+2026-11-12T08:22:25.566+08:00  WARN 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiToolRegistry     : [AI����] get_kline ִ��ʧ��: K line gap before 1794442860000
+2026-11-12T08:22:25.577+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiToolRegistry     : [AI����] get_indicators ��ʱ 4ms ��� 327 �ֽ�
+2026-11-12T08:22:25.777+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.Q.service.KlineHistoryService        : [KlineDL] BTCUSDT ������ɣ�У��/д�� 1 �������ڹ� 0 ��
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.222 s -- in xyz.xingfeng.QuanForge.service.MarketDataAuditTests
+[INFO] Running xyz.xingfeng.QuanForge.service.PaperSettlementAuditTests
+2026-11-12T08:22:25.786+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ֽ����� #null BTCUSDT ����: LOSS -5.00%
+2026-11-12T08:22:25.796+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ֽ����� #null BTCUSDT ����: LOSS -5.00%
+2026-11-12T08:22:25.803+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ֽ����� #null BTCUSDT ����: �ֲֳ�ʱ����TTLʱ�������̼۽���
+2026-11-12T08:22:25.807+08:00  WARN 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ���ٽ���ʧ�� BTCUSDT #null: PAPER�طų�4ҳԤ�㣬�������ٵȴ�����
+2026-11-12T08:22:25.810+08:00  WARN 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ���ٽ���ʧ�� BTCUSDT #null: PAPER�ط�K��ȱ�ڣ���������: 1794442740000
+2026-11-12T08:22:25.811+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ֽ����� #null BTCUSDT ����: LOSS -5.00%
+2026-11-12T08:22:25.813+08:00  WARN 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ���ٽ���ʧ�� BTCUSDT #null: PAPER�ط��ظ�K�߳�ͻ����������: 1794442800000
+2026-11-12T08:22:25.817+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ֽ����� #null BTCUSDT ����: LOSS -5.00%
+2026-11-12T08:22:25.820+08:00  INFO 34964 --- [QuanForge-isolated-test] [           main] x.x.QuanForge.service.AiAdviceTracker    : ֽ����� #null BTCUSDT �Ѵ����볡 100.0
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.037 s -- in xyz.xingfeng.QuanForge.service.PaperSettlementAuditTests
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 45, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  13.522 s
+[INFO] Finished at: 2026-11-12T08:22:26+08:00
+[INFO] ------------------------------------------------------------------------

@@ -1,0 +1,68 @@
+{
+  "start": 1787097600000,
+  "end": 1793145599999,
+  "page_cap_per_week": 5,
+  "weeks": [
+    {
+      "week": 0,
+      "count": 509,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 1,
+      "count": 87,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 2,
+      "count": 148,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 3,
+      "count": 107,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 4,
+      "count": 70,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 5,
+      "count": 48,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 6,
+      "count": 36,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 7,
+      "count": 64,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 8,
+      "count": 47,
+      "complete": true,
+      "retCode": 0
+    },
+    {
+      "week": 9,
+      "count": 56,
+      "complete": true,
+      "retCode": 0
+    }
+  ],
+  "bounded_first_week_extra_pages": 10
+}

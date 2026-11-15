@@ -1,0 +1,111 @@
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\xingfeng\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+08:05:52.711 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null ALTUSDT ����: ���볡��ʱ����
+08:05:52.761 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null ALTUSDT �Ѵ����볡 100.0
+08:05:52.765 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null ALTUSDT �Ѵ����볡 100.0
+08:05:52.789 [main] INFO xyz.xingfeng.QuanForge.service.DemoOrderExecutor -- ģ����ί���ѹ�: ALTUSDT BUY Market qty=5 entry=100.0000(last) lev=10x margin=5.0%
+08:05:52.801 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ʵ������ƽ��ʧ�� ALTUSDT #null: timeout
+08:05:52.801 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ����� #null ALTUSDT ����: ������ƽ��ʧ��: timeout
+08:05:52.801 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- �����۶ϼ��ʧ�� ALTUSDT : Cannot invoke "String.length()" because "s" is null
+08:05:52.802 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- �������ż����ʧ�� ALTUSDT: Cannot invoke "String.length()" because "s" is null
+08:05:52.803 [main] WARN xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ģ�����µ�ʧ�ܣ�����ֽ����� ALTUSDT SELL: Cannot invoke "xyz.xingfeng.QuanForge.service.DemoOrderExecutor$Placement.orderId()" because "p" is null
+08:05:52.803 [main] INFO xyz.xingfeng.QuanForge.service.AiAdviceTracker -- ֽ������ѽ���[DEMO]: ALTUSDT SELL entry=100.0 sl=105.0 tp=90.0
+[ERROR] Tests run: 6, Failures: 6, Errors: 0, Skipped: 0, Time elapsed: 1.142 s <<< FAILURE! -- in xyz.xingfeng.QuanForge.service.ExecutionSafetyTests
+[ERROR] xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.managementNoteMustNotDisableTtlExit -- Time elapsed: 1.026 s <<< FAILURE!
+Wanted but not invoked:
+demoOrderExecutor.marketClose(
+    "ALTUSDT",
+    "Buy",
+    1.0d
+);
+-> at xyz.xingfeng.QuanForge.service.DemoOrderExecutor.marketClose(DemoOrderExecutor.java:145)
+
+However, there was exactly 1 interaction with this mock:
+demoOrderExecutor.position("ALTUSDT");
+-> at xyz.xingfeng.QuanForge.service.AiAdviceTracker.settleDemo(AiAdviceTracker.java:439)
+
+
+	at xyz.xingfeng.QuanForge.service.DemoOrderExecutor.marketClose(DemoOrderExecutor.java:145)
+	at xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.managementNoteMustNotDisableTtlExit(ExecutionSafetyTests.java:57)
+
+[ERROR] xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.cancelAcknowledgementWithoutFinalOrderStateMustNotExpirePending -- Time elapsed: 0.048 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "PENDING"
+ but was: "EXPIRED"
+	at xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.cancelAcknowledgementWithoutFinalOrderStateMustNotExpirePending(ExecutionSafetyTests.java:79)
+
+[ERROR] xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.sellLimitMustNotFillOnCandleWhollyBelowLimit -- Time elapsed: 0.008 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "PENDING"
+ but was: "TRACKING"
+	at xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.sellLimitMustNotFillOnCandleWhollyBelowLimit(ExecutionSafetyTests.java:95)
+
+[ERROR] xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.buyLimitMustNotFillOnCandleWhollyAboveLimit -- Time elapsed: 0.002 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "PENDING"
+ but was: "TRACKING"
+	at xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.buyLimitMustNotFillOnCandleWhollyAboveLimit(ExecutionSafetyTests.java:87)
+
+[ERROR] xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.entryMustCarryExchangeProtectionFromSubmission -- Time elapsed: 0.028 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "95"
+ but was: ""
+	at xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.entryMustCarryExchangeProtectionFromSubmission(ExecutionSafetyTests.java:111)
+
+[ERROR] xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.failedReverseMustKeepOldPositionManagedAndBlockNewEntry -- Time elapsed: 0.008 s <<< FAILURE!
+org.opentest4j.AssertionFailedError:
+
+expected: "TRACKING"
+ but was: "EXPIRED"
+	at xyz.xingfeng.QuanForge.service.ExecutionSafetyTests.failedReverseMustKeepOldPositionManagedAndBlockNewEntry(ExecutionSafetyTests.java:68)
+
+[ERROR] Failures:
+[ERROR]   ExecutionSafetyTests.buyLimitMustNotFillOnCandleWhollyAboveLimit:87
+expected: "PENDING"
+ but was: "TRACKING"
+[ERROR]   ExecutionSafetyTests.cancelAcknowledgementWithoutFinalOrderStateMustNotExpirePending:79
+expected: "PENDING"
+ but was: "EXPIRED"
+[ERROR]   ExecutionSafetyTests.entryMustCarryExchangeProtectionFromSubmission:111
+expected: "95"
+ but was: ""
+[ERROR]   ExecutionSafetyTests.failedReverseMustKeepOldPositionManagedAndBlockNewEntry:68
+expected: "TRACKING"
+ but was: "EXPIRED"
+[ERROR]   ExecutionSafetyTests.managementNoteMustNotDisableTtlExit:57
+Wanted but not invoked:
+demoOrderExecutor.marketClose(
+    "ALTUSDT",
+    "Buy",
+    1.0d
+);
+-> at xyz.xingfeng.QuanForge.service.DemoOrderExecutor.marketClose(DemoOrderExecutor.java:145)
+
+However, there was exactly 1 interaction with this mock:
+demoOrderExecutor.position("ALTUSDT");
+-> at xyz.xingfeng.QuanForge.service.AiAdviceTracker.settleDemo(AiAdviceTracker.java:439)
+
+
+[ERROR]   ExecutionSafetyTests.sellLimitMustNotFillOnCandleWhollyBelowLimit:95
+expected: "PENDING"
+ but was: "TRACKING"
+[ERROR] Tests run: 6, Failures: 6, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project QuanForge-springboot: There are test failures.
+[ERROR]
+[ERROR] See E:\project\QuanForge-springboot\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -69,6 +69,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<exclusions>
+				<!-- JSONAssert's Android fork shadows the production org.json API in tests. -->
+				<exclusion>
+					<groupId>com.vaadin.external.google</groupId>
+					<artifactId>android-json</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Source: https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
@@ -89,6 +96,20 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>application-local.*</exclude>
+					<exclude>**/.env*</exclude>
+					<exclude>static/**</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>frontend/dist</directory>
+				<targetPath>static</targetPath>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

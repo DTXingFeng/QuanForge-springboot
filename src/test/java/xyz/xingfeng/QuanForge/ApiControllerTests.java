@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -20,7 +21,39 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 数据隔离：凭证使用唯一 name，代理单例在用例开头先删除。
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@MockitoBean(types = {xyz.xingfeng.QuanForge.service.BybitService.class,
+			xyz.xingfeng.QuanForge.service.AiAnalysisService.class,
+			xyz.xingfeng.QuanForge.service.AiAdviceTracker.class,
+			xyz.xingfeng.QuanForge.service.NewsService.class,
+			xyz.xingfeng.QuanForge.service.TelegramBotService.class,
+			xyz.xingfeng.QuanForge.service.PositionManagerService.class,
+			xyz.xingfeng.QuanForge.service.OrphanPositionGuard.class})
 class ApiControllerTests {
+	@MockitoBean
+	private xyz.xingfeng.QuanForge.client.BybitGetClient credentialProbe;
+
+	@Test void expiredDemoKeyMustReturnVisibleHealthWithoutExposingSecrets() throws Exception {
+		String name="expired-demo-"+UUID.randomUUID();
+		var created=http("POST","/api/credentials",new JSONObject().put("name",name).put("apiKey","fake-expired-key").put("apiSecret","fake-secret"));
+		int id=new JSONObject(created.body()).getInt("id");
+		org.mockito.Mockito.when(credentialProbe.probeCredentials(org.mockito.ArgumentMatchers.eq(xyz.xingfeng.QuanForge.client.BybitMode.DEMO),
+				org.mockito.ArgumentMatchers.eq("fake-expired-key"),org.mockito.ArgumentMatchers.eq("fake-secret")))
+				.thenReturn(new xyz.xingfeng.QuanForge.client.BybitGetClient.SignedResponse(200,"{\"retCode\":33004,\"retMsg\":\"api key expired: fake-expired-key\"}"));
+		var response=http("POST","/api/credentials/"+id+"/validate?mode=DEMO",new JSONObject());
+		assertThat(response.statusCode()).isEqualTo(200);
+		var health=new JSONObject(response.body());
+		assertThat(health.getString("status")).isEqualTo("EXPIRED");
+		assertThat(health.getString("message")).contains("过期");
+		assertThat(response.body()).doesNotContain("fake-expired-key","fake-secret");
+		assertThat(new JSONObject(http("GET","/api/credentials/"+id+"/health?mode=DEMO",null).body()).getString("status")).isEqualTo("EXPIRED");
+		// Renewal at Bybit can recover without changing the saved key/secret.
+		org.mockito.Mockito.when(credentialProbe.probeKeyInformation(org.mockito.ArgumentMatchers.eq(xyz.xingfeng.QuanForge.client.BybitMode.DEMO),
+				org.mockito.ArgumentMatchers.eq("fake-expired-key"),org.mockito.ArgumentMatchers.eq("fake-secret")))
+				.thenReturn(new xyz.xingfeng.QuanForge.client.BybitGetClient.SignedResponse(200,"{\"retCode\":0,\"result\":{\"expiredAt\":\"2030-01-01T00:00:00Z\",\"deadlineDay\":91,\"readOnly\":0,\"permissions\":{\"ContractTrade\":[\"Order\",\"Position\"]}}}"));
+		var renewed=http("POST","/api/credentials/"+id+"/validate?mode=DEMO",new JSONObject());
+		assertThat(new JSONObject(renewed.body()).getString("status")).isEqualTo("VALID");
+		assertThat(renewed.body()).doesNotContain("fake-expired-key","fake-secret");
+	}
 
 	@LocalServerPort
 	int port;

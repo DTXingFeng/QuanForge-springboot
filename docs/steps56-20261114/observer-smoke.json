@@ -1,0 +1,13 @@
+{
+  "mode": {
+    "mode": "DEMO"
+  },
+  "local_http_status": 200,
+  "current_frontend": true,
+  "credential_rows": 0,
+  "isolated_database": true,
+  "scheduled_tasks_disabled_by_cli": true,
+  "account_writes_disabled_by_cli": true,
+  "not_an_exchange_test": true,
+  "observer_process_stopped": true
+}

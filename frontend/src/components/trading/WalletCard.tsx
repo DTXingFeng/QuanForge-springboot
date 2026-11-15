@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { Card } from "../ui/card"
 import { Wallet, TrendingUp, Eye, RefreshCw, ArrowDown, ArrowUp, ArrowLeftRight, Clock, Bitcoin, Loader2, X } from "lucide-react"
@@ -15,12 +15,15 @@ interface WalletData {
 
 // 拉取 Bybit 统一账户余额
 async function fetchWallet(name: string): Promise<WalletData | null> {
-  try {
     const res = await fetch(`/api/bybit/wallet-balance?name=${encodeURIComponent(name)}`)
-    if (!res.ok) return null
+    if (!res.ok) throw new Error(`账户查询失败（HTTP ${res.status}），余额暂不可用`)
     const json = await res.json()
+    if (json.retCode !== 0) {
+      const reason = [33004, -2015].includes(json.retCode) ? "Bybit API 密钥已过期，请更新凭证" : json.retCode === 10003 ? "Bybit 密钥无效或环境不匹配" : "Bybit 账户查询失败"
+      throw new Error(`${reason}（错误码 ${json.retCode ?? "未知"}）`)
+    }
     const account = json?.result?.list?.[0]
-    if (!account) return null
+    if (!account) throw new Error("未取得账户余额，不能按零余额处理")
     return {
       totalWalletBalance: account.totalWalletBalance ?? "0",
       totalMarginBalance: account.totalMarginBalance ?? "0",
@@ -31,9 +34,6 @@ async function fetchWallet(name: string): Promise<WalletData | null> {
         .filter((c: any) => c.coin)
         .map((c: any) => ({ coin: c.coin, equity: c.equity ?? "0", walletBalance: c.walletBalance ?? "0" })),
     }
-  } catch {
-    return null
-  }
 }
 
 // 拉取 BTC 价格用于折算
@@ -74,6 +74,8 @@ function WalletCard() {
   const [btcPrice, setBtcPrice] = useState(0)
   const [hidden, setHidden] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [walletError, setWalletError] = useState("")
+  const walletRequest = useRef(0)
   const [mode, setMode] = useState("DEMO")
   const [adjustModal, setAdjustModal] = useState(false)
   const [amount, setAmount] = useState("")
@@ -84,17 +86,21 @@ function WalletCard() {
   const credentialName = useTradeStore((s) => s.credentialName)
 
   const load = async () => {
+    const token = ++walletRequest.current
     setLoading(true)
-    const [wallet, price] = await Promise.all([fetchWallet(credentialName), fetchBtcPrice()])
-    setData(wallet)
-    setBtcPrice(price)
-    setLoading(false)
+    try {
+      const [wallet, price] = await Promise.all([fetchWallet(credentialName), fetchBtcPrice()])
+      if (token === walletRequest.current) { setData(wallet); setBtcPrice(price); setWalletError("") }
+    } catch (error) {
+      if (token === walletRequest.current) { setData(null); setWalletError(error instanceof Error ? error.message : "网络请求失败，余额暂不可用") }
+    } finally { if (token === walletRequest.current) setLoading(false) }
   }
 
   useEffect(() => {
+    setData(null); setWalletError("")
     load()
     const timer = setInterval(load, 60000)
-    return () => clearInterval(timer)
+    return () => { ++walletRequest.current; clearInterval(timer) }
     // 凭证切换后立即重拉余额
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [credentialName])
@@ -110,7 +116,9 @@ function WalletCard() {
 
   // 打开调整弹窗时拉取当前 USDT 余额
   const openAdjustModal = async () => {
-    const w = await fetchWallet(credentialName)
+    let w: WalletData | null
+    try { w = await fetchWallet(credentialName) }
+    catch { toast.error("无法读取当前余额，请检查凭证后再调整模拟资金"); return }
     const usdt = w?.coins.find((c) => c.coin === "USDT")?.walletBalance
     setCurrentUsdt(Number(usdt) || 0)
     setAmount("")
@@ -149,6 +157,12 @@ function WalletCard() {
   const totalEquity = Number(data?.totalEquity) || 0
   const btcAmount = btcPrice > 0 ? totalEquity / btcPrice : 0
   const upnl = Number(data?.totalPerpUPL) || 0
+
+  if (walletError) return <Card role="alert" className="border-rose-500/40 bg-rose-500/10 p-5 text-sm text-rose-200">
+    <p>{walletError}</p><p className="mt-2 text-xs">余额暂不可用，未按零余额处理。请到凭证管理检查密钥及环境。</p>
+    <button type="button" disabled={loading} onClick={load} className="mt-3 rounded border px-3 py-1">重新读取余额</button>
+  </Card>
+  if (loading && !data) return <Card role="status" className="border-zinc-800 p-5 text-sm text-zinc-400">正在读取账户余额…</Card>
 
   return (
     <div className="mx-auto w-full max-w-md">

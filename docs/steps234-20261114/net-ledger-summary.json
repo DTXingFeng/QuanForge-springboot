@@ -1,0 +1,24 @@
+{
+  "scope": "CAPTURED_DEMO_HISTORY_ONLY",
+  "executions": 1139,
+  "closed_records": 522,
+  "trade_executions": 1052,
+  "funding_executions": 87,
+  "closed_pnl_reported_usdt": "-174.78388015",
+  "closed_open_fees_usdt": "67.18036788",
+  "closed_close_fees_usdt": "87.66087086",
+  "trade_execution_fees_usdt": "154.80584569",
+  "funding_execution_cost_observed_usdt": "1.63419941",
+  "tracks": 431,
+  "exact_entry_fee_tracks": 411,
+  "complete_trade_net_tracks": 0,
+  "wallet_reconciled": false,
+  "net_account_return": null,
+  "unknown": [
+    "complete exit ownership",
+    "wallet opening/closing balance and transfers",
+    "funding ownership",
+    "costs/slippage absent from source evidence"
+  ],
+  "note": "Do not subtract fees or funding again from reported closedPnl; no causal loss percentages."
+}

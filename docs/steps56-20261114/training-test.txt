@@ -1,0 +1,6 @@
+test_training_and_inference_share_epoch_millisecond_minutes (test_audit_training_timestamps.TrainingTimestampTests.test_training_and_inference_share_epoch_millisecond_minutes) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.729s
+
+OK

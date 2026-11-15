@@ -1,0 +1,30 @@
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.184 s <<< FAILURE! -- in xyz.xingfeng.QuanForge.service.MarketDataAuditTests
+[ERROR] xyz.xingfeng.QuanForge.service.MarketDataAuditTests.oldButContinuousBarsMustNotBeAcceptedAsCurrentMarket -- Time elapsed: 0.157 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at xyz.xingfeng.QuanForge.service.MarketDataAuditTests.oldButContinuousBarsMustNotBeAcceptedAsCurrentMarket(MarketDataAuditTests.java:24)
+
+[ERROR] xyz.xingfeng.QuanForge.service.MarketDataAuditTests.invalidOhlcAndUnalignedTimestampMustBeRejected -- Time elapsed: 0.006 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at xyz.xingfeng.QuanForge.service.MarketDataAuditTests.invalidOhlcAndUnalignedTimestampMustBeRejected(MarketDataAuditTests.java:30)
+
+[ERROR] Failures:
+[ERROR]   MarketDataAuditTests.invalidOhlcAndUnalignedTimestampMustBeRejected:30
+Expecting code to raise a throwable.
+[ERROR]   MarketDataAuditTests.oldButContinuousBarsMustNotBeAcceptedAsCurrentMarket:24
+Expecting code to raise a throwable.
+[ERROR] Tests run: 2, Failures: 2, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project QuanForge-springboot: There are test failures.
+[ERROR]
+[ERROR] See E:\project\QuanForge-springboot\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

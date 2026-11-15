@@ -1,0 +1,28 @@
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\xingfeng\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.095 s <<< FAILURE! -- in xyz.xingfeng.QuanForge.service.DemoEnvironmentTests
+[ERROR] xyz.xingfeng.QuanForge.service.DemoEnvironmentTests.defaultClientMustBlockAllAccountWritesBeforeCreatingRequest -- Time elapsed: 1.070 s <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting code to raise a throwable.
+	at xyz.xingfeng.QuanForge.service.DemoEnvironmentTests.defaultClientMustBlockAllAccountWritesBeforeCreatingRequest(DemoEnvironmentTests.java:22)
+
+[ERROR] Failures:
+[ERROR]   DemoEnvironmentTests.defaultClientMustBlockAllAccountWritesBeforeCreatingRequest:22
+Expecting code to raise a throwable.
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.6:test (default-test) on project QuanForge-springboot: There are test failures.
+[ERROR]
+[ERROR] See E:\project\QuanForge-springboot\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR]
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR]
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

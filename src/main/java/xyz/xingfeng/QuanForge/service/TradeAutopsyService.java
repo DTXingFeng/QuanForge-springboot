@@ -17,7 +17,7 @@ import java.util.Map;
  * <p>
  * 分类学（与 tools/trade_autopsy.py 同口径）：
  * <ul>
- *   <li>LOSS-chop-stop：止损打掉后 4h 内价格到达止盈位——方向对，止损位错（REBASE 靶子）</li>
+ *   <li>LOSS-chop-stop：结算后价格曾到原目标位；事后路径不证明方向正确或止损错误</li>
  *   <li>LOSS-right-side-trend：打掉后继续逆行 >1.5×止损距——方向本身就错（研判问题）</li>
  *   <li>LOSS-drift-flat：既不恢复也不崩——无边界震荡磨损（出手时机问题）</li>
  *   <li>WIN-capped-early：止盈后趋势延续 >50% 止盈距——利润截断（持盈问题）</li>
@@ -66,14 +66,14 @@ public class TradeAutopsyService {
 					.put("messages", new JSONArray()
 							.put(new JSONObject().put("role", "system").put("content", """
 									你是量化交易复盘教练。用户是 100 倍杠杆的超短线交易者，看得懂中文但看不懂统计表。
-									把死因分布翻译成他能行动的结论：
+									把事后价格路径分布解释为可验证观察，不能把相关性当交易死因：
 									1) 用大白话解释每类死因是什么意思（一句话一类，带笔数与占比）
-									2) 指出最大的钱漏在哪里（按"如果修好能多赚/少亏多少"排序）
-									3) 给 2~3 条具体可改的建议（对应：REBASE换挡/持盈更久/少出手/研判改进）
-									类别含义：LOSS-chop-stop=方向对但止损被噪音扫掉（价格后来到了止盈位）；
-									LOSS-right-side-trend=方向本身就错（价格打掉止损后继续逆行）；
-									LOSS-drift-flat=无方向震荡磨损；WIN-capped-early=止盈太早利润截断；
-									WIN-clean=止盈即顶完美离场。
+									2) 明确这些标签只描述结算后的价格，不证明当时方向正确、止损错误或可提前识别。
+									3) 只能建议需用冻结参数和独立样本验证的假说；不得据事后走势建议放宽止损。
+									类别含义：LOSS-chop-stop=结算后4小时内价格曾到原目标；
+									LOSS-right-side-trend=观察窗口内继续逆行；LOSS-drift-flat=未达到上述路径阈值；
+									WIN-capped-early=止盈后价格继续运行；WIN-clean=未观察到该延续阈值；UNKNOWN=证据不足。
+									不能估算改规则能多赚多少钱或把UNKNOWN算亏损；缺成本和完整覆盖时直说未知。
 									要求：中文、口语化、直接、500字内、不要表格、不要客套。数字要具体。"""))
 							.put(new JSONObject().put("role", "user").put("content", data.toString())));
 			okhttp3.Request request = new okhttp3.Request.Builder()
@@ -122,7 +122,7 @@ public class TradeAutopsyService {
 					t.getResultPct() == null ? 0 : t.getResultPct()));
 			if (cat.startsWith("WIN")) {
 				wins++;
-			} else {
+			} else if (cat.startsWith("LOSS")) {
 				losses++;
 			}
 		}
